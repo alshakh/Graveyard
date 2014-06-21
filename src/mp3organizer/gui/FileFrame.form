@@ -25,16 +25,16 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jFileChooser1" min="-2" pref="673" max="-2" attributes="0"/>
+              <Component id="jFileChooser" min="-2" pref="673" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
               <Component id="jButton1" min="-2" pref="133" max="-2" attributes="0"/>
               <EmptySpace pref="28" max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="187" max="-2" attributes="0"/>
-              <Component id="jButton2" min="-2" pref="150" max="-2" attributes="0"/>
+              <Component id="changeButton" min="-2" pref="150" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
-              <Component id="jButton3" min="-2" pref="150" max="-2" attributes="0"/>
+              <Component id="sortButton" min="-2" pref="150" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="160" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -45,7 +45,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jFileChooser1" min="-2" pref="241" max="-2" attributes="0"/>
+                      <Component id="jFileChooser" min="-2" pref="241" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="103" max="-2" attributes="0"/>
@@ -54,8 +54,8 @@
               </Group>
               <EmptySpace min="-2" pref="81" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jButton2" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
-                  <Component id="jButton3" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
+                  <Component id="changeButton" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
+                  <Component id="sortButton" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="25" max="32767" attributes="0"/>
           </Group>
@@ -63,9 +63,9 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JFileChooser" name="jFileChooser1">
+    <Component class="javax.swing.JFileChooser" name="jFileChooser">
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jFileChooser1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jFileChooserActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButton1">
@@ -78,12 +78,12 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton2">
+    <Component class="javax.swing.JButton" name="changeButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Change Tag"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton3">
+    <Component class="javax.swing.JButton" name="sortButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Sort Files"/>
         <Property name="actionCommand" type="java.lang.String" value=""/>
