@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<project name="Mp3 Organizer" company="" manager="" phase="" project-start="20140620T000000Z" mrproject-version="2" calendar="1">
+  <properties/>
+  <phases/>
+  <calendars>
+    <day-types>
+      <day-type id="0" name="Working" description="A default working day"/>
+      <day-type id="1" name="Nonworking" description="A default non working day"/>
+      <day-type id="2" name="Use base" description="Use day from base calendar"/>
+    </day-types>
+    <calendar id="1" name="Default">
+      <default-week mon="0" tue="0" wed="0" thu="0" fri="0" sat="0" sun="0"/>
+      <overridden-day-types>
+        <overridden-day-type id="0">
+          <interval start="0800" end="1200"/>
+          <interval start="1300" end="1700"/>
+        </overridden-day-type>
+      </overridden-day-types>
+      <days/>
+    </calendar>
+  </calendars>
+  <tasks>
+    <task id="1" name="Design GUI" note="All team members&#10;&#10;The design need to contain:&#10;&#10;1. File selecting frame&#10;2. Tag changing frame&#10;3. Path and file hierarchy &#10;&#10;" work="28800" start="20140620T000000Z" end="20140620T104000Z" work-start="20140620T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <constraint type="must-start-on" time="20140620T000000Z"/>
+    </task>
+    <task id="2" name="Design Core" note="" work="28800" start="20140621T000000Z" end="20140621T104000Z" work-start="20140621T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <constraint type="must-start-on" time="20140621T000000Z"/>
+    </task>
+    <task id="3" name="" note="" work="28800" start="20140620T000000Z" end="20140620T170000Z" work-start="20140620T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work"/>
+  </tasks>
+  <resource-groups/>
+  <resources>
+    <resource id="1" name="Abdulaziz Aldayel" short-name="Aziz" type="1" units="0" email="" note="" std-rate="0"/>
+    <resource id="2" name="Ahmed Alshakh" short-name="Ahmed" type="1" units="0" email="" note="" std-rate="0"/>
+    <resource id="3" name="Yousef Alsaber" short-name="Yousef" type="1" units="0" email="" note="" std-rate="0"/>
+  </resources>
+  <allocations>
+    <allocation task-id="2" resource-id="1" units="100"/>
+    <allocation task-id="1" resource-id="1" units="100"/>
+    <allocation task-id="2" resource-id="2" units="100"/>
+    <allocation task-id="1" resource-id="2" units="100"/>
+    <allocation task-id="2" resource-id="3" units="100"/>
+    <allocation task-id="1" resource-id="3" units="100"/>
+  </allocations>
+</project>
