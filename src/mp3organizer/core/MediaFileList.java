@@ -19,8 +19,15 @@ public class MediaFileList {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
+    public String getField(FieldKey field){
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
     
     public void setField(FieldKey field,String value){
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public void commit(){
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -1,37 +1,64 @@
 package mp3organizer.core;
 
 import java.io.File;
-import java.util.EnumMap;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.CannotWriteException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.KeyNotFoundException;
+import org.jaudiotagger.tag.TagException;
 
 /**
  *
  * @author Ahmed Alshakh <ahmed.s.alshakh@gmail.com>
  */
 public class MediaFile {
-    /**
-     * data structure to handle the values of the fields
-     */
-    private EnumMap<FieldKey, String> fieldMap;
+
+    private AudioFile audioFile;
 
     /**
      *
      * @param file File instance of media file
+     * @throws java.io.FileNotFoundException
+     * @throws org.jaudiotagger.audio.exceptions.CannotReadException
+     * @throws org.jaudiotagger.tag.TagException
+     * @throws org.jaudiotagger.audio.exceptions.ReadOnlyFileException
+     * @throws org.jaudiotagger.audio.exceptions.InvalidAudioFrameException
      */
-    public MediaFile(File file) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public MediaFile(File file) throws CannotReadException,
+                                       IOException, TagException,
+                                       ReadOnlyFileException, 
+                                       InvalidAudioFrameException {
+        if (!file.exists()) {
+            throw new FileNotFoundException("File does not exist");
+        }
+        audioFile = org.jaudiotagger.audio.AudioFileIO.read(file);
     }
 
     /**
      *
      * @param path String path of file
+     * @throws org.jaudiotagger.audio.exceptions.CannotReadException
+     * @throws java.io.IOException
+     * @throws org.jaudiotagger.tag.TagException
+     * @throws org.jaudiotagger.audio.exceptions.ReadOnlyFileException
+     * @throws org.jaudiotagger.audio.exceptions.InvalidAudioFrameException
      */
-    public MediaFile(String path) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public MediaFile(String path)  throws CannotReadException,
+                                       IOException, TagException,
+                                       ReadOnlyFileException, 
+                                       InvalidAudioFrameException {
+        this(new File(path));
     }
 
     /**
-     * move to appropriate path/name
+     * move to appropriate path/name and reopen the file. non-commited changes
+     * are discarded.
      *
      * @param newPath
      */
@@ -44,7 +71,7 @@ public class MediaFile {
      * @return complete path of file
      */
     public String getPath() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return audioFile.getFile().getPath();
     }
 
     /**
@@ -53,16 +80,16 @@ public class MediaFile {
      * @param field
      * @param value
      */
-    public void setField(FieldKey field, String value) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void setField(FieldKey field, String value) throws KeyNotFoundException, FieldDataInvalidException {
+        audioFile.getTag().setField(field, value);
     }
 
     /**
-     * 
-     * @param file
-     * @return 
+     * commit changes and if true resets the values to unchanged in tagMap.
+     *
+     * @throws org.jaudiotagger.audio.exceptions.CannotWriteException
      */
-    private static EnumMap<FieldKey, String> readFields(MediaFile file) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void commit() throws CannotWriteException {
+        audioFile.commit();
     }
 }

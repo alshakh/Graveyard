@@ -4,9 +4,9 @@ import java.util.EnumMap;
 import org.jaudiotagger.tag.FieldKey;
 
 /**
- * Handles the patterns for sorting the files.
- * It cannot be changed after instantiating. to change the pattern create new
- * object
+ * Handles the patterns for sorting the files. It cannot be changed after
+ * instantiating. to change the pattern create new object
+ *
  * @author Ahmed Alshakh <ahmed.s.alshakh@gmail.com>
  */
 class SortPattern {
@@ -31,6 +31,7 @@ class SortPattern {
 
     /**
      * Constructor takes pattern in string to instantiate the object.
+     *
      * @param patternStr
      */
     public SortPattern(String patternStr) {
