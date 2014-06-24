@@ -12,7 +12,7 @@ class SortPattern {
     /**
      * Aliases for fields
      */
-    private static final EnumMap<Field,String> ALIASES = 
+    public static final EnumMap<Field,String> ALIASES = 
             new EnumMap<Field,String>(Field.class);
     static {
             ALIASES.put(Field.ARTIST, "<artist>");
