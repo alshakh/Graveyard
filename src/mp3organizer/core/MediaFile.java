@@ -2,6 +2,7 @@ package mp3organizer.core;
 
 import java.io.File;
 import java.util.EnumMap;
+import org.jaudiotagger.tag.FieldKey;
 
 /**
  *
@@ -11,7 +12,7 @@ public class MediaFile {
     /**
      * data structure to handle the values of the fields
      */
-    private EnumMap<Field, String> fieldMap;
+    private EnumMap<FieldKey, String> fieldMap;
 
     /**
      *
@@ -52,7 +53,7 @@ public class MediaFile {
      * @param field
      * @param value
      */
-    public void setField(Field field, String value) {
+    public void setField(FieldKey field, String value) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -61,7 +62,7 @@ public class MediaFile {
      * @param file
      * @return 
      */
-    private static EnumMap<Field, String> readFields(MediaFile file) {
+    private static EnumMap<FieldKey, String> readFields(MediaFile file) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

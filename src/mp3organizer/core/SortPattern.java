@@ -2,6 +2,7 @@
 package mp3organizer.core;
 
 import java.util.EnumMap;
+import org.jaudiotagger.tag.FieldKey;
 
 
 /**
@@ -12,13 +13,13 @@ class SortPattern {
     /**
      * Aliases for fields
      */
-    public static final EnumMap<Field,String> ALIASES = 
-            new EnumMap<Field,String>(Field.class);
+    public static final EnumMap<FieldKey,String> ALIASES = 
+            new EnumMap<FieldKey,String>(FieldKey.class);
     static {
-            ALIASES.put(Field.ARTIST, "<artist>");
-            ALIASES.put(Field.YEAR, "<year>");
-            ALIASES.put(Field.ALBUM, "<album>");
-            ALIASES.put(Field.TITLE, "<title>");
+            ALIASES.put(FieldKey.ARTIST, "<artist>");
+            ALIASES.put(FieldKey.YEAR, "<year>");
+            ALIASES.put(FieldKey.ALBUM, "<album>");
+            ALIASES.put(FieldKey.TITLE, "<title>");
     }
    
     

@@ -2,6 +2,7 @@
 package mp3organizer.core;
 
 import java.util.ArrayList;
+import org.jaudiotagger.tag.FieldKey;
 
 /**
  *
@@ -19,7 +20,7 @@ public class MediaFileList {
     }
     
     
-    public void setField(Field field,String value){
+    public void setField(FieldKey field,String value){
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
