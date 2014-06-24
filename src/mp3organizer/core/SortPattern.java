@@ -19,7 +19,6 @@ class SortPattern {
             ALIASES.put(Field.YEAR, "<year>");
             ALIASES.put(Field.ALBUM, "<album>");
             ALIASES.put(Field.TITLE, "<title>");
-            //TODO the rest of fields;
     }
    
     
