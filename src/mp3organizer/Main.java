@@ -1,5 +1,7 @@
 package mp3organizer;
 
+import mp3organizer.gui.*;
+
 /**
  *
  * @author Ahmed Alshakh <ahmed.s.alshakh@gmail.com>
@@ -11,6 +13,7 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        
     }
     
 }
