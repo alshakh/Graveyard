@@ -32,7 +32,7 @@ public class MediaFile {
      */
     public MediaFile(File file) throws CannotReadException,
                                        IOException, TagException,
-                                       ReadOnlyFileException, 
+                                       ReadOnlyFileException,
                                        InvalidAudioFrameException {
         if (!file.exists()) {
             throw new FileNotFoundException("File does not exist");
@@ -49,10 +49,10 @@ public class MediaFile {
      * @throws org.jaudiotagger.audio.exceptions.ReadOnlyFileException
      * @throws org.jaudiotagger.audio.exceptions.InvalidAudioFrameException
      */
-    public MediaFile(String path)  throws CannotReadException,
-                                       IOException, TagException,
-                                       ReadOnlyFileException, 
-                                       InvalidAudioFrameException {
+    public MediaFile(String path) throws CannotReadException,
+                                         IOException, TagException,
+                                         ReadOnlyFileException,
+                                         InvalidAudioFrameException {
         this(new File(path));
     }
 
@@ -82,6 +82,15 @@ public class MediaFile {
      */
     public void setField(FieldKey field, String value) throws KeyNotFoundException, FieldDataInvalidException {
         audioFile.getTag().setField(field, value);
+    }
+
+    /**
+     * get the first instance of the FieldKey.
+     * @param field FieldKey 
+     * @return value first instance of the FieldKey.
+     */
+    public String getField(FieldKey field) {
+        return audioFile.getTag().getFirst(field);
     }
 
     /**
