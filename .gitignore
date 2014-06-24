@@ -1,2 +1,5 @@
 /dist/
 /build/
+
+*.mp3
+!testFile.mp3
