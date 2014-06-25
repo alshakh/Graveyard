@@ -57,21 +57,21 @@ public class MediaFile {
     }
 
     /**
-     * move to appropriate path/name and reopen the file. non-commited changes
+     * move to appropriate File and reopen the file. non-commited changes
      * are discarded.
      *
-     * @param newPath
+     * @param newFile
      */
-    public void setPath(String newPath) {
+    public void setFile(File newFile) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**
      *
-     * @return complete path of file
+     * @return
      */
-    public String getPath() {
-        return audioFile.getFile().getPath();
+    public File getFile() {
+        return audioFile.getFile();
     }
 
     /**
