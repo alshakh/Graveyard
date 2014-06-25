@@ -27,6 +27,7 @@ class SortPattern {
         ALIASES.put(FieldKey.YEAR, "<year>");
         ALIASES.put(FieldKey.ALBUM, "<album>");
         ALIASES.put(FieldKey.TITLE, "<title>");
+        //
     }
 
     /**
@@ -64,7 +65,9 @@ class SortPattern {
      * @param patternStr
      * @return true if valid pattern, false otherwise
      */
+        //^((<\w+>)|([\w\d\_\-]))+(\/((<\w+>)|([\w\d\_\-]))+)*(\.EXT)$
+    public static String PATTERN_REGEX="^((<\\w+>)|([\\w\\d\\_\\-]))+(\\/((<\\w+>)|([\\w\\d\\_\\-]))+)*(\\.EXT)$";
     public static boolean isValid(String patternStr) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return patternStr.matches(PATTERN_REGEX);
     }
 }
