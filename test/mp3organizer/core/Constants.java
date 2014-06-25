@@ -11,12 +11,15 @@ import org.jaudiotagger.tag.FieldKey;
  */
 public class Constants {
 
-    public static String origTestFile = "testFile.mp3";
-    public static String tmpTestFile = "tmpTestFile.mp3";
+    public static File origTestFile;
+    public static File tmpTestFile;
     //
     public static final EnumMap<FieldKey, String> defaultFields;
 
     static {
+        origTestFile = new File("testFile.mp3");
+        tmpTestFile = new File("tmpTestFile.mp3");
+        //
         defaultFields = new EnumMap<>(FieldKey.class);
         defaultFields.put(FieldKey.ARTIST, "artistTest");
         defaultFields.put(FieldKey.TITLE, "titleTest");
@@ -34,13 +37,12 @@ public class Constants {
         }
     }
 
-    public static File copyTestFile() {
+    public static void copyTestFile() {
         try {
             FileOperations.copyFile(origTestFile, tmpTestFile);
         } catch (IOException ex) {
             System.out.println("ERROR : Cannot copy " + origTestFile + " : " + ex.getMessage());
         }
-        return new File(tmpTestFile);
     }
     
     public static String getRandomWord(){

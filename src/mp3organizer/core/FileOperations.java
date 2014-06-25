@@ -11,18 +11,17 @@ import java.nio.file.Files;
  */
 public class FileOperations {
 
-    public static void deleteFile(String path) throws IOException {
-        File f = new File(path);
+    public static void deleteFile(File f) throws IOException {
         if (f.exists()) {
             Files.delete(f.toPath());
         }
     }
 
-    public static void copyFile(String from, String to) throws IOException {
-        Files.copy(new File(from).toPath(), new File(to).toPath());
+    public static void copyFile(File from, File to) throws IOException {
+        Files.copy(from.toPath(),to.toPath());
     }
     
-    public static boolean fileExists(String path){
-        return new File(path).exists();
+    public static boolean fileExists(File f){
+        return f.exists();
     }
 }
