@@ -3,7 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/shakh/NetBeansProjects/Mp3organizer/src/mp3organizer/Main.java</file>
+            <file>file:/home/shakh/NetBeansProjects/mp3organizer/test/mp3organizer/core/Constants.java</file>
+            <file>file:/home/shakh/NetBeansProjects/mp3organizer/src/mp3organizer/core/MediaFileList.java</file>
+            <file>file:/home/shakh/NetBeansProjects/mp3organizer/test/mp3organizer/core/MediaFileTest.java</file>
+            <file>file:/home/shakh/NetBeansProjects/mp3organizer/src/mp3organizer/core/MediaFile.java</file>
+            <file>file:/home/shakh/NetBeansProjects/mp3organizer/src/mp3organizer/core/SortPattern.java</file>
         </group>
     </open-files>
 </project-private>

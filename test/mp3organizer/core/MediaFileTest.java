@@ -40,19 +40,54 @@ public class MediaFileTest {
     }
 
     /**
-     * Test of getField method, of class MediaFile.
+     * Test of getField with ARTIST
      */
     @Test
-    public void testGetField() {
-        String result = "";
+    public void testGetField_ARTIST() {
+        assertEquals(Constants.defaultFields.get(FieldKey.ARTIST)
+                ,readField(FieldKey.ARTIST));
+    }
+
+    /**
+     * Test of getField with ALBUM
+     */
+    @Test
+    public void testGetField_ALBUM() {
+        assertEquals(Constants.defaultFields.get(FieldKey.ALBUM)
+                ,readField(FieldKey.ALBUM));
+    }
+
+    /**
+     * Test of getField with TITLE
+     */
+    @Test
+    public void testGetField_TITLE() {
+        assertEquals(Constants.defaultFields.get(FieldKey.TITLE)
+                ,readField(FieldKey.TITLE));
+    }
+
+    /**
+     * Test of getField with TITLE
+     */
+    @Test
+    public void testGetField_YEAR() {
+        assertEquals(Constants.defaultFields.get(FieldKey.YEAR)
+                ,readField(FieldKey.YEAR));
+    }
+
+    /**
+     *
+     * @param field
+     * @return
+     */
+    public String readField(FieldKey field) {
+        String result;
         try {
-            result = new MediaFile(Constants.tmpTestFile).getField(FieldKey.ARTIST);
+            result = new MediaFile(Constants.tmpTestFile).getField(field);
         } catch (Exception ex) {
             Logger.getLogger(MediaFileTest.class.getName()).log(Level.SEVERE, null, ex);
+            return "CANNOT READ";
         }
-        
-        
-        
-        assertEquals("artistTest", result);
+        return result;
     }
 }
