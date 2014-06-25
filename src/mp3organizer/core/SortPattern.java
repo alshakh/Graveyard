@@ -9,7 +9,7 @@ import org.jaudiotagger.tag.FieldKey;
  *
  * @author Ahmed Alshakh <ahmed.s.alshakh@gmail.com>
  */
-class SortPattern {
+public class SortPattern {
 
     /**
      * handles the pattern in a String object
