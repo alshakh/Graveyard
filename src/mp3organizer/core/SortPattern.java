@@ -9,7 +9,7 @@ import org.jaudiotagger.tag.FieldKey;
  *
  * @author Ahmed Alshakh <ahmed.s.alshakh@gmail.com>
  */
-class SortPattern {
+public class SortPattern {
 
     /**
      * handles the pattern in a String object
@@ -60,13 +60,16 @@ class SortPattern {
     }
 
     /**
-     * check if sort pattern is valid.
-     *
-     * @param patternStr
-     * @return true if valid pattern, false otherwise
+     * 
+     * ^((<\w+>)|([\w\d\_\-]))+(\/((<\w+>)|([\w\d\_\-]))+)*(\.EXT)$
      */
-        //^((<\w+>)|([\w\d\_\-]))+(\/((<\w+>)|([\w\d\_\-]))+)*(\.EXT)$
     public static String PATTERN_REGEX="^((<\\w+>)|([\\w\\d\\_\\-]))+(\\/((<\\w+>)|([\\w\\d\\_\\-]))+)*(\\.EXT)$";
+    
+    /**
+     * check if sort pattern is valid.
+     * @param patternStr
+     * @return 
+     */
     public static boolean isValid(String patternStr) {
         return patternStr.matches(PATTERN_REGEX);
     }
