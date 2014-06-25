@@ -2,6 +2,7 @@ package mp3organizer.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 
 /**
@@ -20,7 +21,10 @@ public class FileOperations {
     public static void copyFile(File from, File to) throws IOException {
         Files.copy(from.toPath(),to.toPath());
     }
-    
+    public static void moveFile(File from, File to) throws FileAlreadyExistsException,
+                                                           IOException{
+        Files.move(from.toPath(), to.toPath());
+    }
     public static boolean fileExists(File f){
         return f.exists();
     }
