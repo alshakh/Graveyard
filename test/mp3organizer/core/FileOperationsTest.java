@@ -5,16 +5,14 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * Test if can work with files. copy, delete, move.
  * @author Ahmed Alshakh <ahmed.s.alshakh@gmail.com>
  */
-public class FileOperations {
+public class FileOperationsTest {
     
-    public FileOperations() {
+    public FileOperationsTest() {
     }
     
     @BeforeClass
