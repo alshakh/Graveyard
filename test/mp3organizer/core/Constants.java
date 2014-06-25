@@ -42,5 +42,13 @@ public class Constants {
         }
         return new File(tmpTestFile);
     }
+    
+    public static String getRandomWord(){
+        StringBuilder str = new StringBuilder();
+        for(int i=0 ; i<7 ; i++){
+            str.append((char)('a'+Math.random()*('z'-'a')));
+        }
+        return str.toString();
+    }
 
 }
