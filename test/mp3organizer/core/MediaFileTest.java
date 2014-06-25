@@ -70,24 +70,24 @@ public class MediaFileTest {
     }
     @Test
     public void testSetField_MultipleFields() throws Exception {
-        MediaFile mf = new MediaFile(new File(Constants.tmpTestFile));
+        MediaFile mf = new MediaFile(Constants.tmpTestFile);
         String f1 = Constants.getRandomWord();
         String f2 = Constants.getRandomWord();
         mf.setField(FieldKey.ARTIST, f1);
         mf.setField(FieldKey.ALBUM, f2);
         mf.commit();
-        MediaFile mff = new MediaFile(new File(Constants.tmpTestFile));
+        MediaFile mff = new MediaFile(Constants.tmpTestFile);
         assertEquals(mff.getField(FieldKey.ARTIST)+mff.getField(FieldKey.ALBUM)
                 ,f1+f2);
        
     }
     
     public boolean setFieldTest(FieldKey field) throws Exception {
-        MediaFile mf = new MediaFile(new File(Constants.tmpTestFile));
+        MediaFile mf = new MediaFile(Constants.tmpTestFile);
         String newFieldValue = Constants.getRandomWord();
         mf.setField(field, newFieldValue);
         mf.commit();
-        MediaFile mff = new MediaFile(new File(Constants.tmpTestFile));
+        MediaFile mff = new MediaFile(Constants.tmpTestFile);
         return mff.getField(field).equals(newFieldValue);
     }
 
