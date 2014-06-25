@@ -82,12 +82,18 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Change Tag"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="changeButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="sortButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Sort Files"/>
         <Property name="actionCommand" type="java.lang.String" value=""/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sortButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

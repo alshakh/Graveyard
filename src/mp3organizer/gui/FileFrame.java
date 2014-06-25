@@ -51,9 +51,19 @@ public class FileFrame extends javax.swing.JFrame {
         });
 
         changeButton.setText("Change Tag");
+        changeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeButtonActionPerformed(evt);
+            }
+        });
 
         sortButton.setText("Sort Files");
         sortButton.setActionCommand("");
+        sortButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sortButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -100,6 +110,22 @@ public class FileFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
 
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void changeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeButtonActionPerformed
+        // TODO add your handling code here:
+        TagesFrame tagesFrame = new TagesFrame();
+        tagesFrame.setVisible(true);
+        this.setVisible(false);
+        this.dispose();
+    }//GEN-LAST:event_changeButtonActionPerformed
+
+    private void sortButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortButtonActionPerformed
+        // TODO add your handling code here:
+        SortFrame sortFrame = new SortFrame();
+        sortFrame.setVisible(true);
+        this.setVisible(false);
+        this.dispose();
+    }//GEN-LAST:event_sortButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton changeButton;
