@@ -1,6 +1,7 @@
 package mp3organizer.core;
 
-import java.util.EnumMap;
+import java.io.File;
+import java.util.HashMap;
 import org.jaudiotagger.tag.FieldKey;
 
 /**
@@ -19,14 +20,15 @@ public class SortPattern {
     /**
      * Aliases for fields
      */
-    public static final EnumMap<FieldKey, String> ALIASES
-            = new EnumMap<FieldKey, String>(FieldKey.class);
+    public static final HashMap< String,FieldKey> ALIASES
+            = new HashMap< String,FieldKey>();
 
     static {
-        ALIASES.put(FieldKey.ARTIST, "<artist>");
-        ALIASES.put(FieldKey.YEAR, "<year>");
-        ALIASES.put(FieldKey.ALBUM, "<album>");
-        ALIASES.put(FieldKey.TITLE, "<title>");
+        // XXX : must be lowercase
+        ALIASES.put("<artist>",FieldKey.ARTIST);
+        ALIASES.put("<year>",FieldKey.YEAR);
+        ALIASES.put("<album>",FieldKey.ALBUM);
+        ALIASES.put("<title>",FieldKey.TITLE);
         //
     }
 
@@ -34,21 +36,35 @@ public class SortPattern {
      * Constructor takes pattern in string to instantiate the object.
      *
      * @param patternStr
+     * @throws mp3organizer.core.NotValidPatternException
      */
-    public SortPattern(String patternStr) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public SortPattern(String patternStr) throws NotValidPatternException {
+        if(!isValid(patternStr)) throw new NotValidPatternException();
+        this.patternStr = patternStr;
     }
 
     /**
      * process original path to new path,
      *
-     * @param file original file to get the original path/tag from
+     * @param mediaFile original file to get the original path/tag from
+     * @param rootDir
      * @return
+     * @throws mp3organizer.core.FileIsNotInRootDirException
      */
-    public String proccessFilePath(MediaFile file) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public File proccessFilePath(MediaFile mediaFile,File rootDir) throws FileIsNotInRootDirException {
+        if(mediaFile.getFile().getAbsolutePath().startsWith(rootDir.getAbsolutePath())) 
+            throw new FileIsNotInRootDirException();
+        //
+        return new File(rootDir.getAbsolutePath()+"/"+getSortedPath(mediaFile));
     }
-
+    
+    public String getSortedPath(MediaFile mf){
+        String newPath = patternStr;
+        for(String key : ALIASES.keySet()){
+            newPath = newPath.replace(key, mf.getField(ALIASES.get(key)));
+        }
+        return newPath;
+    }
     /**
      * cleans trailing spaces and double slashes.
      */
@@ -71,6 +87,7 @@ public class SortPattern {
      * @return 
      */
     public static boolean isValid(String patternStr) {
+        //TODO: check if <word> is valid.
         return patternStr.matches(PATTERN_REGEX);
     }
 }
