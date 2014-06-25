@@ -1,5 +1,6 @@
 package mp3organizer.core;
 
+import mp3organizer.core.sortpattern.SortPattern;
 import java.util.ArrayList;
 import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.tag.FieldDataInvalidException;

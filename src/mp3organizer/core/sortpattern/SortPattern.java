@@ -1,7 +1,8 @@
-package mp3organizer.core;
+package mp3organizer.core.sortpattern;
 
 import java.io.File;
 import java.util.HashMap;
+import mp3organizer.core.MediaFile;
 import org.jaudiotagger.tag.FieldKey;
 
 /**

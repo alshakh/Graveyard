@@ -1,5 +1,5 @@
 
-package mp3organizer.core;
+package mp3organizer.core.sortpattern;
 
 /**
  *
