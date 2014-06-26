@@ -22,7 +22,7 @@ public class SortPattern {
      * Aliases for fields
      */
     public static final HashMap< String,FieldKey> ALIASES
-            = new HashMap< String,FieldKey>();
+            = new HashMap< >();
 
     static {
         // XXX : must be lowercase
@@ -37,7 +37,7 @@ public class SortPattern {
      * Constructor takes pattern in string to instantiate the object.
      *
      * @param patternStr
-     * @throws mp3organizer.core.NotValidPatternException
+     * @throws mp3organizer.core.sortpattern.NotValidPatternException
      */
     public SortPattern(String patternStr) throws NotValidPatternException {
         if(!isValid(patternStr)) throw new NotValidPatternException();

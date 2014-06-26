@@ -16,7 +16,7 @@ public class MediaFileList {
     ArrayList<MediaFile> files;
 
     public MediaFileList() {
-        files = new ArrayList<MediaFile>();
+        files = new ArrayList<>();
     }
 
     public void sort(SortPattern pattern) {
