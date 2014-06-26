@@ -1,7 +1,8 @@
 package mp3organizer.core;
 
-import mp3organizer.core.sortpattern.SortPattern;
+import java.io.File;
 import java.util.ArrayList;
+import mp3organizer.core.sortpattern.SortPattern;
 import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.FieldKey;
@@ -19,9 +20,11 @@ public class MediaFileList {
         files = new ArrayList<>();
     }
 
-    public void sort(SortPattern pattern) {
-        throw new UnsupportedOperationException("Not supported yet.");
-        //TODO
+    public void sort(SortPattern pattern, File rootDir, boolean removeEmptyDirs) {
+        for(MediaFile mf:files){
+            mf.setFile(pattern.proccessFilePath(mf, rootDir));
+        }
+        // TODO remove empty folders of files
     }
 
     public String getField(FieldKey field) throws NotEqualKeyException {
