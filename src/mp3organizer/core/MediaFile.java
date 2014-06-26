@@ -4,14 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.CannotWriteException;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.KeyNotFoundException;
-import org.jaudiotagger.tag.TagException;
 
 /**
  *
@@ -24,35 +20,37 @@ public class MediaFile {
     /**
      *
      * @param file File instance of media file
+     * @throws mp3organizer.core.FileNotChangeableException
      * @throws java.io.FileNotFoundException
-     * @throws org.jaudiotagger.audio.exceptions.CannotReadException
-     * @throws org.jaudiotagger.tag.TagException
-     * @throws org.jaudiotagger.audio.exceptions.ReadOnlyFileException
-     * @throws org.jaudiotagger.audio.exceptions.InvalidAudioFrameException
+     * @throws mp3organizer.core.ProblemWithAudioFileException
      */
-    public MediaFile(File file) throws CannotReadException,
-                                       IOException, TagException,
-                                       ReadOnlyFileException,
-                                       InvalidAudioFrameException {
+    public MediaFile(File file) throws FileNotChangeableException,
+                                       FileNotFoundException,
+                                       ProblemWithAudioFileException {
         if (!file.exists()) {
             throw new FileNotFoundException("File does not exist");
         }
-        audioFile = org.jaudiotagger.audio.AudioFileIO.read(file);
+        if (file.canRead() && file.canWrite()) {
+            try {
+                audioFile= org.jaudiotagger.audio.AudioFileIO.read(file);
+            } catch (Exception e) {
+                throw new ProblemWithAudioFileException(e.getMessage());
+            }
+        } else {
+            throw new FileNotChangeableException("File is not readable/wriatable");
+        }
     }
 
     /**
      *
      * @param path String path of file
-     * @throws org.jaudiotagger.audio.exceptions.CannotReadException
-     * @throws java.io.IOException
-     * @throws org.jaudiotagger.tag.TagException
-     * @throws org.jaudiotagger.audio.exceptions.ReadOnlyFileException
-     * @throws org.jaudiotagger.audio.exceptions.InvalidAudioFrameException
+     * @throws mp3organizer.core.FileNotChangeableException
+     * @throws java.io.FileNotFoundException
+     * @throws mp3organizer.core.ProblemWithAudioFileException
      */
-    public MediaFile(String path) throws CannotReadException,
-                                         IOException, TagException,
-                                         ReadOnlyFileException,
-                                         InvalidAudioFrameException {
+    public MediaFile(String path) throws FileNotChangeableException,
+                                         FileNotFoundException,
+                                         ProblemWithAudioFileException {
         this(new File(path));
     }
 
@@ -61,14 +59,22 @@ public class MediaFile {
      * discarded.
      *
      * @param newFile
+     * @throws mp3organizer.core.FileNotChangeableException
      */
-    public void setFile(File newFile) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void moveFile(File newFile) throws FileNotChangeableException {
+
+        try {
+            FileOperations.moveFile(audioFile.getFile(), newFile);
+        } catch (IOException ex) {
+            throw new FileNotChangeableException(ex.getMessage());
+        }
+        audioFile = null;
     }
 
     /**
+     * get file object of mediafile
      *
-     * @return
+     * @return file object represent file
      */
     public File getFile() {
         return audioFile.getFile();
@@ -79,6 +85,7 @@ public class MediaFile {
      *
      * @param field
      * @param value
+     * @throws org.jaudiotagger.tag.FieldDataInvalidException
      */
     public void setField(FieldKey field, String value) throws KeyNotFoundException, FieldDataInvalidException {
         audioFile.getTag().setField(field, value);
@@ -103,11 +110,24 @@ public class MediaFile {
         audioFile.commit();
     }
 
+    /**
+     * get extension of file.
+     *
+     * @return extention with the dot, empty string if no extension
+     */
     public String getExt() {
         String name = getFile().getName();
         if (name.contains(".")) {
             return name.substring(name.lastIndexOf('.'));
         }
         return "";
+    }
+
+    /**
+     * check if mediafile is connected to actual file in file system.
+     * @return true if connected, false otherwise.
+     */
+    public boolean isGood(){
+        return (audioFile!=null);
     }
 }
