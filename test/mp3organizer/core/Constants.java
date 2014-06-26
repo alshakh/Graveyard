@@ -14,11 +14,14 @@ public class Constants {
     public static File origTestFile;
     public static File tmpTestFile;
     //
+    public static File TestTmpFolder;
+    //
     public static final EnumMap<FieldKey, String> defaultFields;
 
     static {
         origTestFile = new File("testFile.mp3");
         tmpTestFile = new File("tmpTestFile.mp3");
+        TestTmpFolder = new File("tmp");
         //
         defaultFields = new EnumMap<>(FieldKey.class);
         defaultFields.put(FieldKey.ARTIST, "artistTest");

@@ -1,6 +1,5 @@
 package mp3organizer.core;
 
-import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jaudiotagger.tag.FieldKey;
