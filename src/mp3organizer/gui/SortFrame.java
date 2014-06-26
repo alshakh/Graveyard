@@ -1,4 +1,5 @@
 package mp3organizer.gui;
+import javax.swing.JOptionPane;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -93,7 +94,17 @@ public class SortFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void sortFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortFileButtonActionPerformed
-        // TODO add your handling code here:
+        // TODO connect to mp3 core and fix the bug:
+        String layout = layoutTextField.getText();
+        if(layout.isEmpty())
+            JOptionPane.showMessageDialog(this, 
+                    "You didn't insert anything for the layout", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        else
+            System.out.print(JOptionPane.showConfirmDialog(this.sortFileButton, layout, 
+                    "Sort confirmation", JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.WARNING_MESSAGE));
+        
     }//GEN-LAST:event_sortFileButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
