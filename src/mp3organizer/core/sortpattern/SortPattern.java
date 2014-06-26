@@ -50,14 +50,13 @@ public class SortPattern {
      * @param mediaFile original file to get the original path/tag from
      * @param rootDir
      * @return
-     * @throws mp3organizer.core.FileIsNotInRootDirException
      */
     public File proccessFilePath(MediaFile mediaFile,File rootDir){
         //
-        return new File(rootDir.getAbsolutePath()+"/"+getSortedPath(mediaFile));
+        return new File(rootDir.getAbsolutePath()+"/"+getSortPatternPart(mediaFile));
     }
     
-    public String getSortedPath(MediaFile mf){
+    public String getSortPatternPart(MediaFile mf){
         String newPath = patternStr;
         for(String key : ALIASES.keySet()){
             newPath = newPath.replace(key, mf.getField(ALIASES.get(key)));
