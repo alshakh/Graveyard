@@ -28,18 +28,16 @@ import org.fest.swing.fixture.ContainerFixture;
  *
  * @author yousef-alsber
  */
-public class FileFrameTest
-{
+public class SortFrameTest {
     
-    public FileFrameTest() {
+    public SortFrameTest() {
     }
-    
     private FrameFixture window;
-       
+    
     @Before
     public void setUp() 
     {
-        window = new FrameFixture(new FileFrame());
+        window = new FrameFixture(new SortFrame());
         window.show();
     }
     
@@ -50,19 +48,19 @@ public class FileFrameTest
     }
 
     @Test
-    public void testChangeClick()
+    public void testCancelClick()
     { 
       window.button(new GenericTypeMatcher<JButton>() 
       {
          @Override protected boolean isMatching(JButton button) 
          {
-                return "Change Tag".equals(button.getText());
+                return "Cancel".equals(button.getText());
          } 
        });
     }
     
     @Test
-    public void testCancelClick()
+    public void testSortClick()
     { 
       window.button(new GenericTypeMatcher<JButton>() 
       {
@@ -72,18 +70,5 @@ public class FileFrameTest
          } 
        });
     }
-    
-//    @Test
-//    public void testFileChooserClick()
-//    { 
-//      window.button(new GenericTypeMatcher<JButton>() 
-//      {
-//         @Override protected boolean isMatching(JButton button) 
-//         {
-//                return "File Chooser".equals(button.getText());
-//         } 
-//       });
-//    }
-    
     
 }
