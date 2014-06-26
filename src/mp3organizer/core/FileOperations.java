@@ -42,6 +42,11 @@ public class FileOperations {
     public static boolean fileExists(File f){
         return f.exists();
     }
+    /**
+     * Remove every file and folder in file.
+     * @param f
+     * @throws IOException 
+     */
     public static void removeFile(File f) throws IOException{
         if(!f.isDirectory()){
             f.delete();
@@ -70,5 +75,21 @@ public class FileOperations {
             if(!isDirectoryEmpty(f))return false;
         }
         return true;
+    }
+    /**
+     * remove all emtpy folders inside of root dir.
+     * @param dir 
+     */
+    public static void cleanFolder(File dir) throws IOException{
+        File[] in = dir.listFiles();
+        for(File f : in){
+            if (f.isDirectory()) {
+                if (isDirectoryEmpty(f)) {
+                    removeFile(f);
+                } else {
+                    cleanFolder(f);
+                }
+            }
+        }
     }
 }
