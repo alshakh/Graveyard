@@ -57,8 +57,8 @@ public class MediaFile {
     }
 
     /**
-     * move to appropriate File and reopen the file. non-commited changes
-     * are discarded.
+     * move to appropriate File and reopen the file. non-commited changes are
+     * discarded.
      *
      * @param newFile
      */
@@ -86,7 +86,8 @@ public class MediaFile {
 
     /**
      * get the first instance of the FieldKey.
-     * @param field FieldKey 
+     *
+     * @param field FieldKey
      * @return value first instance of the FieldKey.
      */
     public String getField(FieldKey field) {
@@ -100,5 +101,13 @@ public class MediaFile {
      */
     public void commit() throws CannotWriteException {
         audioFile.commit();
+    }
+
+    public String getExt() {
+        String name = getFile().getName();
+        if (name.contains(".")) {
+            return name.substring(name.lastIndexOf('.'));
+        }
+        return "";
     }
 }

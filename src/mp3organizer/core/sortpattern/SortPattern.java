@@ -56,11 +56,12 @@ public class SortPattern {
         return new File(rootDir.getAbsolutePath()+"/"+getSortPatternPart(mediaFile));
     }
     
-    public String getSortPatternPart(MediaFile mf){
+    private String getSortPatternPart(MediaFile mf){
         String newPath = patternStr;
         for(String key : ALIASES.keySet()){
             newPath = newPath.replace(key, mf.getField(ALIASES.get(key)));
         }
+        newPath = newPath.replace(".EXT", mf.getExt());
         return newPath;
     }
     /**
