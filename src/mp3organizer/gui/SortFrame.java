@@ -92,18 +92,22 @@ public class SortFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
     private void sortFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortFileButtonActionPerformed
-        // TODO connect to mp3 core and fix the bug:
+        // TODO connect to mp3 core:
+        int jOption;
         String layout = layoutTextField.getText();
         if(layout.isEmpty())
             JOptionPane.showMessageDialog(this, 
                     "You didn't insert anything for the layout", "Error",
                     JOptionPane.ERROR_MESSAGE);
-        else
-            System.out.print(JOptionPane.showConfirmDialog(this.sortFileButton, layout, 
+        else {
+            jOption = JOptionPane.showConfirmDialog(this.sortFileButton, layout, 
                     "Sort confirmation", JOptionPane.YES_NO_CANCEL_OPTION,
-                    JOptionPane.WARNING_MESSAGE));
+                    JOptionPane.WARNING_MESSAGE);
+            if(jOption == 0);
+                //TODO send to core
+        }
         
     }//GEN-LAST:event_sortFileButtonActionPerformed
 

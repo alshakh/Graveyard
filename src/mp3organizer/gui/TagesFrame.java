@@ -154,19 +154,21 @@ public class TagesFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        // TODO add your handling code here:
+        
         FileFrame fileFrame = new FileFrame();
         fileFrame.setVisible(true);
         this.setVisible(false);
         this.dispose();
+        
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void songTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_songTextFieldMouseClicked
-        // TODO add your handling code here:
+        // TODO make it just the first click
         songTextField.setText("");
     }//GEN-LAST:event_songTextFieldMouseClicked
 
     private void changeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeButtonActionPerformed
+       // TODO connect to mp3 core
         String title = songTextField.getText();
         String artist = artistTextField.getText();
         String album = albumTextField.getText();
@@ -180,15 +182,18 @@ public class TagesFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_changeButtonActionPerformed
 
     private void artistTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_artistTextFieldMouseClicked
+        // TODO make it just the first click
         artistTextField.setText("");
     }//GEN-LAST:event_artistTextFieldMouseClicked
 
     private void albumTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_albumTextFieldMouseClicked
+        // TODO make it just the first click
         albumTextField.setText("");
     }//GEN-LAST:event_albumTextFieldMouseClicked
 
     private void yearTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_yearTextFieldMouseClicked
-       yearTextField.setText("");
+       // TODO make it just the first click
+        yearTextField.setText("");
     }//GEN-LAST:event_yearTextFieldMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
