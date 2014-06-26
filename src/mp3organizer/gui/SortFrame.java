@@ -36,6 +36,12 @@ public class SortFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        layoutTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                layoutTextFieldActionPerformed(evt);
+            }
+        });
+
         layoutLabel.setText("Chose Sorting Layout");
 
         exLabel.setText("Example: <Artist><Title>/<Album>/<Year>");
@@ -103,6 +109,10 @@ public class SortFrame extends javax.swing.JFrame {
         this.setVisible(false);
         this.dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void layoutTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_layoutTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_layoutTextFieldActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;

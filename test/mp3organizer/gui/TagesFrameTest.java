@@ -31,16 +31,19 @@ import org.fest.swing.fixture.ContainerFixture;
  *
  * @author yousef-alsber
  */
-public class SortFrameTest {
+public class TagesFrameTest {
     
-    public SortFrameTest() {
+    public TagesFrameTest() 
+    {
+        
     }
+    
     private FrameFixture window;
     
     @Before
     public void setUp() 
     {
-        window = new FrameFixture(new SortFrame());
+        window = new FrameFixture(new TagesFrame());
         window.show();
     }
     
@@ -61,25 +64,14 @@ public class SortFrameTest {
          } 
        });
     }
-    
-    @Test
-    public void testSortClick()
+    public void testChangeClick()
     { 
       window.button(new GenericTypeMatcher<JButton>() 
       {
          @Override protected boolean isMatching(JButton button) 
          {
-                return "Sort Files".equals(button.getText());
+                return "Change".equals(button.getText());
          } 
        });
     }
-    
-    @Test
-    public void testTextField()
-    {
-        window.textBox().enterText("<Artist>/<Year>/<Album><Song Titel>");
-        window.textBox().requireText("<Artist>/<Year>/<Album><Song Titel>");
-
-    }
-    
 }

@@ -11,19 +11,19 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+
 import javax.swing.JLabel;
 import org.fest.swing.finder.WindowFinder;
 import org.fest.swing.fixture.FrameFixture;
-import org.fest.swing.fixture.JComboBoxFixture;
-import org.fest.swing.fixture.JLabelFixture;
-import org.fest.swing.fixture.JTextComponentFixture;
-import org.fest.swing.exception.ComponentLookupException;
-import org.fest.swing.format.IntrospectionComponentFormatter;
-import org.fest.swing.format.Formatting;
 import org.fest.swing.core.GenericTypeMatcher;
-import javax.swing.JButton;
-import org.fest.swing.fixture.ContainerFixture;
-
+import static org.fest.assertions.Assertions.assertThat;
+import org.fest.swing.fixture.JFileChooserFixture;
+import org.fest.swing.core.Robot;
+import org.fest.swing.finder.JFileChooserFinder;
 /**
  *
  * @author yousef-alsber
@@ -34,13 +34,16 @@ public class FileFrameTest
     public FileFrameTest() {
     }
     
-    private FrameFixture window;
+    private FrameFixture window;  
+    private Robot robot;
+    final JFileChooser fileChooser = new JFileChooser();
        
     @Before
     public void setUp() 
     {
         window = new FrameFixture(new FileFrame());
         window.show();
+        
     }
     
     @After
@@ -72,18 +75,18 @@ public class FileFrameTest
          } 
        });
     }
-    
+        
 //    @Test
-//    public void testFileChooserClick()
-//    { 
-//      window.button(new GenericTypeMatcher<JButton>() 
-//      {
-//         @Override protected boolean isMatching(JButton button) 
-//         {
-//                return "File Chooser".equals(button.getText());
-//         } 
-//       });
+//    public void shouldFindFileChooser() 
+//    {
+//      asserNotNull(window);  
+//      window.button("Browes").click();
+//      JFileChooserFixture found = JFileChooserFinder.findFileChooser().using(robot);
+//      assertThat(found.target).isSameAs(window.fileChooser);
+//  }
+//    public void shouldFailIfFileChooserNotFound() 
+//    {
+//        JFileChooserFinder.findFileChooser().using(robot);
 //    }
-    
-    
+
 }

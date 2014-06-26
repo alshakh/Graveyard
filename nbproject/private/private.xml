@@ -3,7 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/shakh/NetBeansProjects/Mp3organizer/src/mp3organizer/Main.java</file>
+            <file>file:/Users/yousef-alsber/NetBeansProjects/mp3organizer/src/mp3organizer/gui/FileFrame.java</file>
+            <file>file:/Users/yousef-alsber/NetBeansProjects/mp3organizer/test/mp3organizer/gui/TagesFrameTest.java</file>
+            <file>file:/Users/yousef-alsber/NetBeansProjects/mp3organizer/src/mp3organizer/gui/TagesFrame.java</file>
+            <file>file:/Users/yousef-alsber/NetBeansProjects/mp3organizer/test/mp3organizer/gui/SortFrameTest.java</file>
         </group>
     </open-files>
 </project-private>
