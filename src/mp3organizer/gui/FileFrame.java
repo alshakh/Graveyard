@@ -29,7 +29,7 @@ public class FileFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jFileChooser = new javax.swing.JFileChooser();
-        jButton1 = new javax.swing.JButton();
+        browseButtton = new javax.swing.JButton();
         changeButton = new javax.swing.JButton();
         sortButton = new javax.swing.JButton();
 
@@ -41,16 +41,18 @@ public class FileFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Browse");
-        jButton1.setToolTipText("");
-        jButton1.setActionCommand("Brow");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        browseButtton.setText("Browse");
+        browseButtton.setToolTipText("");
+        browseButtton.setActionCommand("Brow");
+        browseButtton.setName("browseButtton"); // NOI18N
+        browseButtton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                browseButttonActionPerformed(evt);
             }
         });
 
         changeButton.setText("Change Tag");
+        changeButton.setName("changeButton"); // NOI18N
         changeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 changeButtonActionPerformed(evt);
@@ -59,6 +61,7 @@ public class FileFrame extends javax.swing.JFrame {
 
         sortButton.setText("Sort Files");
         sortButton.setActionCommand("");
+        sortButton.setName("sortButton"); // NOI18N
         sortButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sortButtonActionPerformed(evt);
@@ -73,7 +76,7 @@ public class FileFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jFileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 673, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(48, 48, 48)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(browseButtton, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(28, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(187, 187, 187)
@@ -91,12 +94,12 @@ public class FileFrame extends javax.swing.JFrame {
                         .addComponent(jFileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(103, 103, 103)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(81, 81, 81)
+                        .addComponent(browseButtton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(84, 84, 84)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(changeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(sortButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         pack();
@@ -106,10 +109,10 @@ public class FileFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jFileChooserActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void browseButttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButttonActionPerformed
         // TODO add your handling code here:
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_browseButttonActionPerformed
 
     private void changeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeButtonActionPerformed
         // TODO add your handling code here:
@@ -128,8 +131,8 @@ public class FileFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_sortButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton browseButtton;
     private javax.swing.JButton changeButton;
-    private javax.swing.JButton jButton1;
     private javax.swing.JFileChooser jFileChooser;
     private javax.swing.JButton sortButton;
     // End of variables declaration//GEN-END:variables
