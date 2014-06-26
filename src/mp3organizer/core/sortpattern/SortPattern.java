@@ -23,6 +23,7 @@ public class SortPattern {
      */
     public static final HashMap< String,FieldKey> ALIASES
             = new HashMap< >();
+    public static final String EXTALIAS = ".EXT";
 
     static {
         // XXX : must be lowercase
@@ -31,6 +32,7 @@ public class SortPattern {
         ALIASES.put("<album>",FieldKey.ALBUM);
         ALIASES.put("<title>",FieldKey.TITLE);
         //
+        
     }
 
     /**
@@ -61,7 +63,7 @@ public class SortPattern {
         for(String key : ALIASES.keySet()){
             newPath = newPath.replace(key, mf.getField(ALIASES.get(key)));
         }
-        newPath = newPath.replace(".EXT", mf.getExt());
+        newPath = newPath.replace(EXTALIAS, mf.getExt());
         return newPath;
     }
     /**
