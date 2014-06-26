@@ -52,9 +52,7 @@ public class SortPattern {
      * @return
      * @throws mp3organizer.core.FileIsNotInRootDirException
      */
-    public File proccessFilePath(MediaFile mediaFile,File rootDir) throws FileIsNotInRootDirException {
-        if(mediaFile.getFile().getAbsolutePath().startsWith(rootDir.getAbsolutePath())) 
-            throw new FileIsNotInRootDirException();
+    public File proccessFilePath(MediaFile mediaFile,File rootDir){
         //
         return new File(rootDir.getAbsolutePath()+"/"+getSortedPath(mediaFile));
     }
