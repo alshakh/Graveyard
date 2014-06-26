@@ -43,11 +43,21 @@ public class TagesFrame extends javax.swing.JFrame {
 
         yearTextField.setForeground(java.awt.SystemColor.controlShadow);
         yearTextField.setText("Year");
+        yearTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                yearTextFieldMouseClicked(evt);
+            }
+        });
 
         yearLabel.setText("Year:");
 
         albumTextField.setForeground(java.awt.SystemColor.controlShadow);
         albumTextField.setText("Album");
+        albumTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                albumTextFieldMouseClicked(evt);
+            }
+        });
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -57,16 +67,31 @@ public class TagesFrame extends javax.swing.JFrame {
         });
 
         changeButton.setText("Change");
+        changeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeButtonActionPerformed(evt);
+            }
+        });
 
         songTitleLabel.setText("Song Title:");
 
         artistTextField.setForeground(java.awt.SystemColor.controlShadow);
         artistTextField.setText("Artist");
+        artistTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                artistTextFieldMouseClicked(evt);
+            }
+        });
 
         albumLabel.setText("Album:");
 
         songTextField.setForeground(java.awt.SystemColor.controlShadow);
         songTextField.setText("Song Title");
+        songTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                songTextFieldMouseClicked(evt);
+            }
+        });
 
         artistLabel.setText("Artist:");
 
@@ -135,6 +160,36 @@ public class TagesFrame extends javax.swing.JFrame {
         this.setVisible(false);
         this.dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void songTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_songTextFieldMouseClicked
+        // TODO add your handling code here:
+        songTextField.setText("");
+    }//GEN-LAST:event_songTextFieldMouseClicked
+
+    private void changeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeButtonActionPerformed
+        String title = songTextField.getText();
+        String artist = artistTextField.getText();
+        String album = albumTextField.getText();
+        String year = yearTextField.getText();
+        
+        System.out.println(title);
+        System.out.println(artist);
+        System.out.println(album);
+        System.out.println(year);
+        
+    }//GEN-LAST:event_changeButtonActionPerformed
+
+    private void artistTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_artistTextFieldMouseClicked
+        artistTextField.setText("");
+    }//GEN-LAST:event_artistTextFieldMouseClicked
+
+    private void albumTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_albumTextFieldMouseClicked
+        albumTextField.setText("");
+    }//GEN-LAST:event_albumTextFieldMouseClicked
+
+    private void yearTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_yearTextFieldMouseClicked
+       yearTextField.setText("");
+    }//GEN-LAST:event_yearTextFieldMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel albumLabel;
