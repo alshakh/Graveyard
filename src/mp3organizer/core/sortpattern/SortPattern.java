@@ -2,6 +2,7 @@ package mp3organizer.core.sortpattern;
 
 import java.io.File;
 import java.util.HashMap;
+import mp3organizer.core.FileOperations;
 import mp3organizer.core.MediaFile;
 import org.jaudiotagger.tag.FieldKey;
 
@@ -63,7 +64,7 @@ public class SortPattern {
         for(String key : ALIASES.keySet()){
             newPath = newPath.replace(key, mf.getField(ALIASES.get(key)));
         }
-        newPath = newPath.replace(EXTALIAS, mf.getExt());
+        newPath = newPath.replace(EXTALIAS, FileOperations.getExt(mf.getFile()));
         return newPath;
     }
     /**

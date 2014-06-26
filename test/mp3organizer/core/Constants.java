@@ -41,11 +41,11 @@ public class Constants {
     }
 
     public static void copyTestFile() {
-        try {
-            FileOperations.copyFile(origTestFile, tmpTestFile);
-        } catch (IOException ex) {
-            System.out.println("ERROR : Cannot copy " + origTestFile + " : " + ex.getMessage());
-        }
+//        try {
+//            FileOperations.copyFile(origTestFile, tmpTestFile);
+//        } catch (IOException ex) {
+//            System.out.println("ERROR : Cannot copy " + origTestFile + " : " + ex.getMessage());
+//        }
     }
     
     public static String getRandomWord(){
@@ -55,5 +55,4 @@ public class Constants {
         }
         return str.toString();
     }
-
 }

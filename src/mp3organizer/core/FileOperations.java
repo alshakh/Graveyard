@@ -18,19 +18,47 @@ public class FileOperations {
         }
     }
 
-    public static void copyFile(File from, File to) throws IOException {
+    public static File copyFile(File from, File to, boolean ifExistsIncrement) throws IOException {
         if(!createDir(to.getAbsoluteFile().getParentFile())){
-            //TODO
+            //TODO dir cannot be created
+        }
+        if(to.exists()){
+            if(ifExistsIncrement){
+                to=findEmptyFile(to);
+            } else {
+                throw new FileAlreadyExistsException(to.toPath()+ " already exists");
+            }
         }
         Files.copy(from.toPath(),to.toPath());
+        return to;
     }
-    public static void moveFile(File from, File to) throws FileAlreadyExistsException,
+    public static File moveFile(File from, File to, boolean ifExistsIncrement) throws FileAlreadyExistsException,
                                                            IOException{
         
         if(!createDir(to.getAbsoluteFile().getParentFile())){
             //TODO
         }
+        if(to.exists()){
+            if(ifExistsIncrement){
+                to=findEmptyFile(to);
+            } else {
+                throw new FileAlreadyExistsException(to.toPath()+ " already exists");
+            }
+        }
         Files.move(from.toPath(), to.toPath());
+        return to;
+    }
+    public static File findEmptyFile(File f){
+        int i = 0;
+        File retFile = new File(f.getPath());
+        while(retFile.exists()){
+            retFile = new File(
+                    f.getPath().substring(0,f.getPath().length() - getExt(f).length())
+                    + i + getExt(f)
+            );
+            i++;
+        }
+        return retFile;
     }
     public static boolean createDir(File f){
         File dir = f.getAbsoluteFile();
@@ -39,6 +67,7 @@ public class FileOperations {
         }
         return true;
     }
+
     public static boolean fileExists(File f){
         return f.exists();
     }
@@ -91,5 +120,19 @@ public class FileOperations {
                 }
             }
         }
+    }
+    
+    /**
+     * get extension of file.
+     *
+     * @param file
+     * @return extention with the dot, empty string if no extension
+     */
+    public static String getExt(File file) {
+        String name = file.getName();
+        if (name.contains(".")) {
+            return name.substring(name.lastIndexOf('.'));
+        }
+        return "";
     }
 }

@@ -64,7 +64,7 @@ public class MediaFile {
     public void moveFile(File newFile) throws FileNotChangeableException {
 
         try {
-            FileOperations.moveFile(audioFile.getFile(), newFile);
+            FileOperations.moveFile(audioFile.getFile(), newFile,true);
         } catch (IOException ex) {
             throw new FileNotChangeableException(ex.getMessage());
         }
@@ -110,18 +110,6 @@ public class MediaFile {
         audioFile.commit();
     }
 
-    /**
-     * get extension of file.
-     *
-     * @return extention with the dot, empty string if no extension
-     */
-    public String getExt() {
-        String name = getFile().getName();
-        if (name.contains(".")) {
-            return name.substring(name.lastIndexOf('.'));
-        }
-        return "";
-    }
 
     /**
      * check if mediafile is connected to actual file in file system.
