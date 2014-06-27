@@ -12,13 +12,8 @@ import java.nio.file.Files;
  */
 public class FileOperations {
 
-    public static void deleteFile(File f) throws IOException {
-        if (f.exists()) {
-            Files.delete(f.toPath());
-        }
-    }
-
-    public static File copyFile(File from, File to, boolean ifExistsIncrement) throws IOException {
+    public static File copyFile(File from, File to, boolean ifExistsIncrement)
+            throws FileAlreadyExistsException,IOException{ 
         if(!createDir(to.getAbsoluteFile().getParentFile())){
             //TODO dir cannot be created
         }

@@ -3,6 +3,8 @@ package mp3organizer.core;
 import java.io.File;
 import java.io.IOException;
 import java.util.EnumMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jaudiotagger.tag.FieldKey;
 
 /**
@@ -34,7 +36,7 @@ public class Constants {
 
     public static void deleteTmpTestFile() {
         try {
-            FileOperations.deleteFile(tmpTestFile);
+            FileOperations.removeFile(tmpTestFile);
         } catch (IOException ex) {
             System.out.println("ERROR : Cannot remove " + tmpTestFile + " : " + ex.getMessage());
         }
@@ -54,5 +56,16 @@ public class Constants {
             str.append((char)('a'+Math.random()*('z'-'a')));
         }
         return str.toString();
+    }
+    
+    public static void emptyTmpDir(){
+        File[] f = TestTmpFolder.listFiles();
+        for( File t : f){
+            try {
+                FileOperations.removeFile(t);
+            } catch (IOException ex) {
+                Logger.getLogger(Constants.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }
