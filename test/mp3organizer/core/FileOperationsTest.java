@@ -37,6 +37,7 @@ public class FileOperationsTest {
 
     @After
     public void tearDown() {
+        Constants.emptyTmpDir();
     }
 
     // The methods must be annotated with annotation @Test. For example:
