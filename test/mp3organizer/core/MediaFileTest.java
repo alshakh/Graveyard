@@ -46,11 +46,18 @@ public class MediaFileTest {
     @Test
     public void testGetField_ARTIST() {
         assertEquals(Constants.defaultFields.get(FieldKey.ARTIST)
-                ,readField(FieldKey.ARTIST));
+                ,readFieldOfTmpTestFile(FieldKey.ARTIST));
     }
-    
-    
-    
+    @Test
+    public void testGetField_YEAR() {
+        assertEquals(Constants.defaultFields.get(FieldKey.YEAR)
+                ,readFieldOfTmpTestFile(FieldKey.YEAR));
+    }
+    @Test
+    public void testGetField_ALBUM() {
+        assertEquals(Constants.defaultFields.get(FieldKey.ALBUM)
+                ,readFieldOfTmpTestFile(FieldKey.ALBUM));
+    }
     @Test
     public void testSetField_ARTIST() throws Exception {
         assertTrue(setFieldTest(FieldKey.ARTIST));
@@ -91,38 +98,21 @@ public class MediaFileTest {
     }
 
     /**
-     * Test of getField with ALBUM
-     */
-    @Test
-    public void testGetField_ALBUM() {
-        assertEquals(Constants.defaultFields.get(FieldKey.ALBUM)
-                ,readField(FieldKey.ALBUM));
-    }
-
-    /**
      * Test of getField with TITLE
      */
     @Test
     public void testGetField_TITLE() {
         assertEquals(Constants.defaultFields.get(FieldKey.TITLE)
-                ,readField(FieldKey.TITLE));
+                ,readFieldOfTmpTestFile(FieldKey.TITLE));
     }
 
-    /**
-     * Test of getField with TITLE
-     */
-    @Test
-    public void testGetField_YEAR() {
-        assertEquals(Constants.defaultFields.get(FieldKey.YEAR)
-                ,readField(FieldKey.YEAR));
-    }
 
     /**
      *
      * @param field
      * @return
      */
-    public String readField(FieldKey field) {
+    public String readFieldOfTmpTestFile(FieldKey field) {
         String result;
         try {
             result = new MediaFile(Constants.tmpTestFile).getField(field);

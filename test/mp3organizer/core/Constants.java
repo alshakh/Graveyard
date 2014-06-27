@@ -21,9 +21,10 @@ public class Constants {
     public static final EnumMap<FieldKey, String> defaultFields;
 
     static {
-        origTestFile = new File("testFile.mp3");
-        tmpTestFile = new File("tmpTestFile.mp3");
         TestTmpFolder = new File("tmp");
+        origTestFile = new File("testFile.mp3");
+        tmpTestFile = new File(TestTmpFolder.getAbsolutePath() +"/tmpTestFile.mp3");
+
         //
         defaultFields = new EnumMap<>(FieldKey.class);
         defaultFields.put(FieldKey.ARTIST, "artistTest");
@@ -43,11 +44,11 @@ public class Constants {
     }
 
     public static void copyTestFile() {
-//        try {
-//            FileOperations.copyFile(origTestFile, tmpTestFile);
-//        } catch (IOException ex) {
-//            System.out.println("ERROR : Cannot copy " + origTestFile + " : " + ex.getMessage());
-//        }
+        try {
+            FileOperations.copyFile(origTestFile, tmpTestFile,false);
+        } catch (IOException ex) {
+            System.out.println("ERROR : Cannot copy " + origTestFile + " : " + ex.getMessage());
+        }
     }
     
     public static String getRandomWord(){
