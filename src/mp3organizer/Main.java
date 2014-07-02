@@ -2,6 +2,7 @@ package mp3organizer;
 
 import java.io.File;
 import mp3organizer.core.FileOperations;
+import mp3organizer.gui.FileFrame;
 
 /**
  *
@@ -14,7 +15,9 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        System.out.println(FileOperations.findEmptyFile(new File("testFile.mp3")));
+      
+        FileFrame fileFrame = new FileFrame();
+        fileFrame.setVisible(true);
     }
     
 }

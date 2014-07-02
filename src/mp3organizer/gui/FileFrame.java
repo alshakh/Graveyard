@@ -21,6 +21,7 @@ public class FileFrame extends javax.swing.JFrame {
      */
     public FileFrame() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
