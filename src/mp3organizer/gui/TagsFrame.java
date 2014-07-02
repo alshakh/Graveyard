@@ -10,12 +10,12 @@ package mp3organizer.gui;
  *
  * @author yousef-alsber
  */
-public class TagesFrame extends javax.swing.JFrame {
+public class TagsFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form TagesFrame
      */
-    public TagesFrame() {
+    public TagsFrame() {
         initComponents();
     }
 

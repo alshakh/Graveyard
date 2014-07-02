@@ -139,7 +139,7 @@ public class FileFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addButttonActionPerformed
 
     private void changeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeButtonActionPerformed
-        TagesFrame tagesFrame = new TagesFrame();
+        TagsFrame tagesFrame = new TagsFrame();
         tagesFrame.setVisible(true);
         this.setVisible(false);
         this.dispose();
