@@ -1,4 +1,8 @@
 package mp3organizer.gui;
+import javax.swing.JFileChooser;
+import java.io.File;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -28,26 +32,22 @@ public class FileFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jFileChooser = new javax.swing.JFileChooser();
-        browseButtton = new javax.swing.JButton();
+        addButtton = new javax.swing.JButton();
         changeButton = new javax.swing.JButton();
         sortButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        songList = new javax.swing.JList();
+        removeButtton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jFileChooser.addActionListener(new java.awt.event.ActionListener() {
+        addButtton.setText("Add");
+        addButtton.setToolTipText("");
+        addButtton.setActionCommand("Brow");
+        addButtton.setName("addButtton"); // NOI18N
+        addButtton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jFileChooserActionPerformed(evt);
-            }
-        });
-
-        browseButtton.setText("Browse");
-        browseButtton.setToolTipText("");
-        browseButtton.setActionCommand("Brow");
-        browseButtton.setName("browseButtton"); // NOI18N
-        browseButtton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                browseButttonActionPerformed(evt);
+                addButttonActionPerformed(evt);
             }
         });
 
@@ -68,22 +68,37 @@ public class FileFrame extends javax.swing.JFrame {
             }
         });
 
+        songList.setName("songList"); // NOI18N
+        jScrollPane1.setViewportView(songList);
+
+        removeButtton.setText("Remove");
+        removeButtton.setToolTipText("");
+        removeButtton.setActionCommand("Brow");
+        removeButtton.setName("removeButtton"); // NOI18N
+        removeButtton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeButttonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jFileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 673, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48)
-                .addComponent(browseButtton, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(187, 187, 187)
-                .addComponent(changeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(sortButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(160, 160, 160))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(addButtton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(removeButtton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(changeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(38, 38, 38)
+                        .addComponent(sortButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -91,31 +106,41 @@ public class FileFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jFileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(103, 103, 103)
-                        .addComponent(browseButtton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(84, 84, 84)
+                        .addGap(28, 28, 28)
+                        .addComponent(addButtton)
+                        .addGap(18, 18, 18)
+                        .addComponent(removeButtton)))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(changeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(sortButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(22, Short.MAX_VALUE))
+                    .addComponent(changeButton)
+                    .addComponent(sortButton))
+                .addGap(0, 17, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jFileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFileChooserActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jFileChooserActionPerformed
-
-    private void browseButttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButttonActionPerformed
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_browseButttonActionPerformed
+    private void addButttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButttonActionPerformed
+        File [] mp3Files;
+//        JList jlist;
+        DefaultListModel model = new DefaultListModel();
+        JList list = new JList(model);
+        JFileChooser fc = new JFileChooser();
+        fc.setMultiSelectionEnabled(true);
+        fc.showOpenDialog(this);
+        mp3Files = fc.getSelectedFiles();
+//        jlist = new JList(mp3Files);
+        for(int i=0; i<mp3Files.length; i++){
+            System.out.print(mp3Files[i].getName());
+            model.addElement(mp3Files[i].getName());
+        }
+        //songList.setModel(jlist);
+    }//GEN-LAST:event_addButttonActionPerformed
 
     private void changeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeButtonActionPerformed
-        // TODO add your handling code here:
+       
         TagesFrame tagesFrame = new TagesFrame();
         tagesFrame.setVisible(true);
         this.setVisible(false);
@@ -123,17 +148,22 @@ public class FileFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_changeButtonActionPerformed
 
     private void sortButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortButtonActionPerformed
-        // TODO add your handling code here:
         SortFrame sortFrame = new SortFrame();
         sortFrame.setVisible(true);
         this.setVisible(false);
         this.dispose();
     }//GEN-LAST:event_sortButtonActionPerformed
 
+    private void removeButttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButttonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_removeButttonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton browseButtton;
+    private javax.swing.JButton addButtton;
     private javax.swing.JButton changeButton;
-    private javax.swing.JFileChooser jFileChooser;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton removeButtton;
+    private javax.swing.JList songList;
     private javax.swing.JButton sortButton;
     // End of variables declaration//GEN-END:variables
 }
