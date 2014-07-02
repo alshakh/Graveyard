@@ -3,9 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/home/shakh/NetBeansProjects/mp3organizer%20(copy)/test/mp3organizer/core/FileOperationsTest.java</file>
             <file>file:/home/shakh/NetBeansProjects/mp3organizer%20(copy)/src/mp3organizer/Main.java</file>
             <file>file:/home/shakh/NetBeansProjects/mp3organizer%20(copy)/test/mp3organizer/core/MediaFileTest.java</file>
+=======
+            <file>file:/home/aziz/NetBeansProjects/mp3organizer/src/mp3organizer/gui/Interface.java</file>
+            <file>file:/home/aziz/NetBeansProjects/mp3organizer/src/mp3organizer/gui/FileFrame.java</file>
+            <file>file:/home/aziz/NetBeansProjects/mp3organizer/src/mp3organizer/gui/TagesFrame.java</file>
+            <file>file:/home/aziz/NetBeansProjects/mp3organizer/src/mp3organizer/gui/SortFrame.java</file>
+>>>>>>> yousef
         </group>
     </open-files>
 </project-private>

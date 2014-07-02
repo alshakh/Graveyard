@@ -1,7 +1,11 @@
 package mp3organizer;
 
+<<<<<<< HEAD
 import java.io.File;
 import mp3organizer.core.FileOperations;
+=======
+import mp3organizer.gui.*;
+>>>>>>> yousef
 
 /**
  *
@@ -14,7 +18,11 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+<<<<<<< HEAD
         System.out.println(FileOperations.findEmptyFile(new File("testFile.mp3")));
+=======
+        
+>>>>>>> yousef
     }
     
 }
