@@ -6,24 +6,15 @@
 
 package mp3organizer.gui;
 
+import java.awt.Robot;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JTextField;
-import javax.swing.UIManager;
-
-import javax.swing.JLabel;
-import org.fest.swing.finder.WindowFinder;
 import org.fest.swing.fixture.FrameFixture;
 import org.fest.swing.core.GenericTypeMatcher;
-import static org.fest.assertions.Assertions.assertThat;
-import org.fest.swing.fixture.JFileChooserFixture;
-import org.fest.swing.core.Robot;
-import org.fest.swing.finder.JFileChooserFinder;
 /**
  *
  * @author yousef-alsber
