@@ -31,7 +31,7 @@ public class FileOperations {
                                                            IOException{
         
         if(!createDir(to.getAbsoluteFile().getParentFile())){
-            //TODO
+            throw new IOException();
         }
         if(to.exists()){
             if(ifExistsIncrement){

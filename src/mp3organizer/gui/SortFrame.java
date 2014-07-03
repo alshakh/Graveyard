@@ -1,23 +1,34 @@
 package mp3organizer.gui;
+
+import java.io.File;
+import java.util.ArrayList;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import mp3organizer.core.FailedFile;
+import mp3organizer.core.MediaFileList;
+import mp3organizer.core.sortpattern.SortPattern;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
- *
+ 
  * @author yousef-alsber
  */
 public class SortFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form SortFrame
+     *
+     * @param mediaFileList
      */
-    public SortFrame() {
+    public SortFrame(MediaFileList mediaFileList) {
         initComponents();
+
+        setLocationRelativeTo(null);
+        this.mediaFileList = mediaFileList;
     }
 
     /**
@@ -36,6 +47,8 @@ public class SortFrame extends javax.swing.JFrame {
         sortFileButton = new javax.swing.JButton();
         saveLabel = new javax.swing.JLabel();
         saveTextField = new javax.swing.JTextField();
+        chooseFolderBtn = new javax.swing.JButton();
+        exLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -43,7 +56,7 @@ public class SortFrame extends javax.swing.JFrame {
 
         layoutLabel.setText("Chose Sorting Layout");
 
-        exLabel.setText("Example: <Artist><Title>/<Album>/<Year>");
+        exLabel.setText("Example: <Artist><Title>/<Album>/<Year>.mp3");
 
         cancelButton.setText("Cancel");
         cancelButton.setName("cancelButton"); // NOI18N
@@ -63,34 +76,48 @@ public class SortFrame extends javax.swing.JFrame {
 
         saveLabel.setText("Where to save");
 
+        saveTextField.setEditable(false);
         saveTextField.setName("saveTextField"); // NOI18N
+
+        chooseFolderBtn.setText("...");
+        chooseFolderBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chooseFolderBtnActionPerformed(evt);
+            }
+        });
+
+        exLabel1.setText("    Must end with \".mp3\" for extension");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(layoutLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(layoutTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(exLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addGap(21, 21, 21)
-                            .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(sortFileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGap(12, 12, 12)
+                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(sortFileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(saveLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(saveTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(58, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(saveTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(chooseFolderBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(layoutTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(saveLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(layoutLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(exLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addComponent(exLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -101,12 +128,16 @@ public class SortFrame extends javax.swing.JFrame {
                 .addComponent(layoutTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(saveLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                .addComponent(saveTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(exLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(saveTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chooseFolderBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(exLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(exLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(sortFileButton)
                     .addComponent(cancelButton))
                 .addContainerGap())
@@ -116,30 +147,84 @@ public class SortFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void sortFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortFileButtonActionPerformed
-        // TODO connect to mp3 core and fix the bug:
         String layout = layoutTextField.getText();
-        if(layout.isEmpty())
-            JOptionPane.showMessageDialog(this, 
-                    "You didn't insert anything for the layout", "Error",
-                    JOptionPane.ERROR_MESSAGE);
-        else
-            System.out.print(JOptionPane.showConfirmDialog(this.sortFileButton, layout, 
-                    "Sort confirmation", JOptionPane.YES_NO_CANCEL_OPTION,
-                    JOptionPane.WARNING_MESSAGE));
-        
+        if (!layout.contains(".mp3")) {
+            JOptionPane.showMessageDialog(this,
+                                          "There is no extension please add .mp3 at the end", "Error",
+                                          JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            layout = layout.substring(0, layout.lastIndexOf(".mp3")) + ".EXT";
+
+        }
+        if (layout.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                                          "You didn't insert anything for the layout", "Error",
+                                          JOptionPane.ERROR_MESSAGE);
+            return;
+        } else if (!SortPattern.isValid(layout)) {
+            JOptionPane.showMessageDialog(this,
+                                          "your layout is not valid", "non-valid layout",
+                                          JOptionPane.ERROR_MESSAGE);
+            return;
+        } else if (!(new File(saveTextField.getText()).exists())) {
+            JOptionPane.showMessageDialog(this,
+                                          "directory is not used", "Error",
+                                          JOptionPane.ERROR_MESSAGE);
+            return;
+        } else if (JOptionPane.showConfirmDialog(this.sortFileButton, "Are you sure to sort ?",
+                                                 "Sort confirmation", JOptionPane.OK_CANCEL_OPTION,
+                                                 JOptionPane.WARNING_MESSAGE) != 0) {
+            return;
+        } else {
+            // everything is ok got forward
+            //
+            ArrayList<FailedFile> fails;
+            try { // 
+                fails = mediaFileList.sort(new SortPattern(layout), new File(saveTextField.getText()));
+                if (fails.isEmpty()) {
+                    JOptionPane.showMessageDialog(this,
+                                                  "Job is done.", "done",
+                                                  JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    StringBuilder errors = new StringBuilder();
+                    for (FailedFile fail : fails) {
+                        errors.append("\n").append(fail.getFilePath()).append("\n      ").append(fail.getMsg());
+                    }
+                    JOptionPane.showMessageDialog(this,
+                                                  "Job is done. files below has failed" + errors.toString(), "Error",
+                                                  JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (Exception ex) {
+                //  already checked above
+            }
+            goBack();
+        }
     }//GEN-LAST:event_sortFileButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        // TODO add your handling code here:
+        goBack();
+    }//GEN-LAST:event_cancelButtonActionPerformed
+    private void goBack() {
         FileFrame fileFrame = new FileFrame();
         fileFrame.setVisible(true);
         this.setVisible(false);
         this.dispose();
-    }//GEN-LAST:event_cancelButtonActionPerformed
-
+    }
+    private void chooseFolderBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseFolderBtnActionPerformed
+        JFileChooser folderChooser = new JFileChooser();
+        folderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        folderChooser.setAcceptAllFileFilterUsed(false);
+        if (folderChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            saveTextField.setText(folderChooser.getSelectedFile().getAbsolutePath());
+        }
+    }//GEN-LAST:event_chooseFolderBtnActionPerformed
+    private final MediaFileList mediaFileList;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
+    private javax.swing.JButton chooseFolderBtn;
     private javax.swing.JLabel exLabel;
+    private javax.swing.JLabel exLabel1;
     private javax.swing.JLabel layoutLabel;
     private javax.swing.JTextField layoutTextField;
     private javax.swing.JLabel saveLabel;

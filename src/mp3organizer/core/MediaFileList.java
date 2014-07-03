@@ -28,7 +28,6 @@ public class MediaFileList {
      * @param file mediafile object to add
      */
     public void addFile(MediaFile file){
-        //TODO if writeable and readable.
         files.add(file);
     }
         /**
@@ -36,12 +35,10 @@ public class MediaFileList {
      * 
      * @param pattern sort pattern
      * @param rootDir directory to save to
-     * @param removeEmptyDirs 
      * @return list of failed files
      */
-    public ArrayList<FailedFile> sort(SortPattern pattern, File rootDir, boolean removeEmptyDirs) {
+    public ArrayList<FailedFile> sort(SortPattern pattern, File rootDir) {
         ArrayList<FailedFile> failedFiles = new ArrayList<>();
-        // TODO
         for (MediaFile mf : files) {
             try {
                 mf.moveFile(pattern.proccessFilePath(mf, rootDir));
@@ -57,13 +54,13 @@ public class MediaFileList {
      * @return value of field
      * @throws NotEqualKeyException
      */
-    public String getField(FieldKey field) throws NotEqualKeyException {
+    public String getField(FieldKey field) {
         String str = null;
         for (MediaFile f : files) {
             if (str == null) {
                 str = f.getField(field);
             } else if (!str.equals(f.getField(field))) {
-                throw new NotEqualKeyException();
+                return "";
             }
         }
         return str;

@@ -1,10 +1,10 @@
 package mp3organizer.gui;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import mp3organizer.core.FailedFile;
+import mp3organizer.core.MediaFileList;
+import org.jaudiotagger.tag.FieldKey;
 
 /**
  *
@@ -14,9 +14,16 @@ public class TagsFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form TagesFrame
+     * @param mediaFileList
      */
-    public TagsFrame() {
+    public TagsFrame(MediaFileList mediaFileList) {
         initComponents();
+        this.mediaFileList = mediaFileList;
+        songTextField.setText(mediaFileList.getField(FieldKey.TITLE));
+        albumTextField.setText(mediaFileList.getField(FieldKey.ALBUM));
+        yearTextField.setText(mediaFileList.getField(FieldKey.YEAR));
+        artistTextField.setText(mediaFileList.getField(FieldKey.ARTIST));
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -43,7 +50,6 @@ public class TagsFrame extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(380, 260));
 
         yearTextField.setForeground(java.awt.SystemColor.controlShadow);
-        yearTextField.setText("Year");
         yearTextField.setName("yearTextField"); // NOI18N
         yearTextField.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -54,7 +60,6 @@ public class TagsFrame extends javax.swing.JFrame {
         yearLabel.setText("Year:");
 
         albumTextField.setForeground(java.awt.SystemColor.controlShadow);
-        albumTextField.setText("Album");
         albumTextField.setName("albumTextField"); // NOI18N
         albumTextField.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -81,7 +86,6 @@ public class TagsFrame extends javax.swing.JFrame {
         songTitleLabel.setText("Song Title:");
 
         artistTextField.setForeground(java.awt.SystemColor.controlShadow);
-        artistTextField.setText("Artist");
         artistTextField.setName("artistTextField"); // NOI18N
         artistTextField.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -92,7 +96,6 @@ public class TagsFrame extends javax.swing.JFrame {
         albumLabel.setText("Album:");
 
         songTextField.setForeground(java.awt.SystemColor.controlShadow);
-        songTextField.setText("Song Title");
         songTextField.setName("songTextField"); // NOI18N
         songTextField.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -111,46 +114,39 @@ public class TagsFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(62, 62, 62)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(changeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(songTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(artistLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(albumLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(yearLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(yearLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(yearTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(songTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(songTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(artistLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(artistTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(albumLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(albumTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(202, 202, 202)))
-                .addContainerGap())
+                            .addComponent(yearTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(albumTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(artistTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(songTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(31, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(25, 25, 25)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(songTitleLabel)
                     .addComponent(songTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(artistLabel)
                     .addComponent(artistTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(albumLabel)
                     .addComponent(albumTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(yearTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(yearLabel))
@@ -158,23 +154,24 @@ public class TagsFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(changeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cancelButton))
-                .addGap(32, 32, 32))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        // TODO add your handling code here:
+        goBack();
+    }//GEN-LAST:event_cancelButtonActionPerformed
+    private void goBack(){
         FileFrame fileFrame = new FileFrame();
         fileFrame.setVisible(true);
         this.setVisible(false);
         this.dispose();
-    }//GEN-LAST:event_cancelButtonActionPerformed
-
+        
+    }
     private void songTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_songTextFieldMouseClicked
-        // TODO add your handling code here:
-        songTextField.setText("");
+
     }//GEN-LAST:event_songTextFieldMouseClicked
 
     private void changeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeButtonActionPerformed
@@ -183,25 +180,45 @@ public class TagsFrame extends javax.swing.JFrame {
         String album = albumTextField.getText();
         String year = yearTextField.getText();
         
-        System.out.println(title);
-        System.out.println(artist);
-        System.out.println(album);
-        System.out.println(year);
+        try {
+            if(!title.isEmpty()) mediaFileList.setField(FieldKey.TITLE, title);
+            if(!artist.isEmpty())mediaFileList.setField(FieldKey.ARTIST, artist);
+            if(!album.isEmpty())mediaFileList.setField(FieldKey.ALBUM, album);
+            if(!year.isEmpty()) mediaFileList.setField(FieldKey.YEAR, year);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
         
+        ArrayList<FailedFile> fails=mediaFileList.commit();
+        if(!fails.isEmpty()){
+            StringBuilder errors = new StringBuilder ();
+                        for (FailedFile fail : fails) {
+                            errors.append("\n").append(fail.getFilePath()).append("\n      ").append(fail.getMsg());
+                        }
+                        JOptionPane.showMessageDialog(this,
+                                              "Job is done. files below has failed" + errors.toString(), "Error",
+                                              JOptionPane.INFORMATION_MESSAGE);
+        } else {
+             JOptionPane.showMessageDialog(this,
+                                              "Job is done.", "Error",
+                                              JOptionPane.INFORMATION_MESSAGE);
+        }
+        goBack();
     }//GEN-LAST:event_changeButtonActionPerformed
 
     private void artistTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_artistTextFieldMouseClicked
-        artistTextField.setText("");
+       // artistTextField.setText("");
     }//GEN-LAST:event_artistTextFieldMouseClicked
 
     private void albumTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_albumTextFieldMouseClicked
-        albumTextField.setText("");
+        //albumTextField.setText("");
     }//GEN-LAST:event_albumTextFieldMouseClicked
 
     private void yearTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_yearTextFieldMouseClicked
-       yearTextField.setText("");
+      // yearTextField.setText("");
     }//GEN-LAST:event_yearTextFieldMouseClicked
 
+    private final MediaFileList mediaFileList;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel albumLabel;
     private javax.swing.JTextField albumTextField;

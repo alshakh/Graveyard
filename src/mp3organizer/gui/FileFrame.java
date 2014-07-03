@@ -1,10 +1,16 @@
 package mp3organizer.gui;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import mp3organizer.core.MediaFile;
 import mp3organizer.core.MediaFileList;
+import mp3organizer.core.ProblemWithAudioFileException;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -42,6 +48,7 @@ public class FileFrame extends javax.swing.JFrame {
         removeButtton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Mp3Organizer");
 
         addButtton.setText("+ file ...");
         addButtton.setToolTipText("");
@@ -95,12 +102,14 @@ public class FileFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(addButtton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(removeButtton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(removeButtton, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
+                                .addContainerGap())))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(changeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(38, 38, 38)
-                        .addComponent(sortButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(sortButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -114,39 +123,73 @@ public class FileFrame extends javax.swing.JFrame {
                         .addComponent(addButtton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(removeButtton)))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(changeButton)
                     .addComponent(sortButton))
-                .addGap(0, 17, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void addButttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButttonActionPerformed
+        StringBuilder errors = new StringBuilder();
         JFileChooser fc = new JFileChooser();
+        
+  fc.setFileFilter(new FileNameExtensionFilter(   
+                    "Mp3 Files","mp3"));
+  
+  
         fc.setMultiSelectionEnabled(true);
         int ret = fc.showOpenDialog(this);
         if (ret == JFileChooser.APPROVE_OPTION) {
             DefaultListModel listModel = getNewListModel();
             File[] files = fc.getSelectedFiles();
             for (File f : files) {
+                try {
+                    new MediaFile(f);
+                } catch (Exception ex) {
+                    errors.append("\n").append(f.getAbsolutePath());
+                    continue;
+                }
+                // avoid duplication
+                if(listModel.contains(f.getAbsolutePath())) continue;
+                //
                 listModel.addElement(f.getAbsolutePath());
             }
             songList.setModel(listModel);
         }
+        if(errors.length()!=0) {
+            errors.insert(0, "\nThese files could not be opened");
+            JOptionPane.showMessageDialog(this,
+                                              "Some/All file/s couldn't be opened"+errors.toString(), "",
+                                              JOptionPane.WARNING_MESSAGE);
+        }
+        
     }//GEN-LAST:event_addButttonActionPerformed
 
     private void changeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeButtonActionPerformed
-        TagsFrame tagesFrame = new TagsFrame();
+        if(songList.getModel().getSize() == 0){
+            JOptionPane.showMessageDialog(this,
+                                              "No Files", "Error",
+                                              JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        TagsFrame tagesFrame = new TagsFrame(getMediaFileList());
         tagesFrame.setVisible(true);
         this.setVisible(false);
         this.dispose();
     }//GEN-LAST:event_changeButtonActionPerformed
 
     private void sortButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortButtonActionPerformed
-        SortFrame sortFrame = new SortFrame();
+        if(songList.getModel().getSize() == 0){
+            JOptionPane.showMessageDialog(this,
+                                              "No Files", "Error",
+                                              JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        SortFrame sortFrame = new SortFrame(getMediaFileList());
         sortFrame.setVisible(true);
         this.setVisible(false);
         this.dispose();
@@ -171,7 +214,7 @@ public class FileFrame extends javax.swing.JFrame {
                 mediaFileList.addFile(new MediaFile((String)songList.getModel().getElementAt(i)));
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
-                //TODO do something to tell the user
+                // already checked with the add function
             }
         }
         return mediaFileList;

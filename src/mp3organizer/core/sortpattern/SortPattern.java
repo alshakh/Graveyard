@@ -89,7 +89,6 @@ public class SortPattern {
      * @return 
      */
     public static boolean isValid(String patternStr) {
-        //TODO: check if <word> is valid.
         return patternStr.matches(PATTERN_REGEX);
     }
 }
