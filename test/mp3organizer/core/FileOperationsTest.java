@@ -40,10 +40,7 @@ public class FileOperationsTest {
         Constants.emptyTmpDir();
     }
 
-    // The methods must be annotated with annotation @Test. For example:
     //
-    // @Test
-    // public void hello() {}
     @Test
     public void straightForwardCopy() {
         try {
@@ -54,7 +51,6 @@ public class FileOperationsTest {
             assertTrue(f.getAbsolutePath().equals(t.getAbsolutePath()) && f.exists());
         } catch (IOException ex) {
             fail("ERROR :Cannot copy test file");
-            
         }
     }
     @Test
@@ -108,12 +104,8 @@ public class FileOperationsTest {
             fail("Creation of files failed");
         }
     }
-
-    /**
-     *
-     * @param f
-     * @return
-     */
+    //
+    
     private File createRandomTreeOfDir(File f) {
         if (!f.exists()) {
             FileOperations.createDir(f);

@@ -1,7 +1,10 @@
 package mp3organizer.core;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static mp3organizer.core.Constants.TestTmpFolder;
 import org.jaudiotagger.tag.FieldKey;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -40,9 +43,16 @@ public class MediaFileTest {
     }
     
     
-    /**
-     * Test of getField with ARTIST
-     */
+    @Test
+    public void testMoveFile(){
+        try {
+            new MediaFile(Constants.tmpTestFile).moveFile(new File(TestTmpFolder.getAbsolutePath()+"/aaa/bbb/ccc/d.mp3"));
+        } catch (Exception ex) {
+            fail("exception");
+        }
+        assertTrue(new File(TestTmpFolder.getAbsoluteFile()+"/aaa/bbb/ccc/d.mp3").exists());
+    }
+    //
     @Test
     public void testGetField_ARTIST() {
         assertEquals(Constants.defaultFields.get(FieldKey.ARTIST)
@@ -108,7 +118,7 @@ public class MediaFileTest {
 
 
     /**
-     *
+     * 
      * @param field
      * @return
      */
