@@ -96,7 +96,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="layoutLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Chose Sorting Layout"/>
+        <Property name="text" type="java.lang.String" value="Choose Sorting Layout"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="exLabel">
