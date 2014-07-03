@@ -38,26 +38,10 @@ public class TagsFrameTest {
     {
         
     }
-
+    
     @Test
     public void testCancelClick()
     { 
-      window.button(new GenericTypeMatcher<JButton>() 
-      {
-         @Override protected boolean isMatching(JButton button) 
-         {
-                return "Cancel".equals(button.getText());
-         } 
-       });
-    }
-    public void testChangeClick()
-    { 
-      window.button(new GenericTypeMatcher<JButton>() 
-      {
-         @Override protected boolean isMatching(JButton button) 
-         {
-                return "Change".equals(button.getText());
-         } 
-       });
+      window.button("cancelButton").click();
     }
 }

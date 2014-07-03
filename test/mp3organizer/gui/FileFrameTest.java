@@ -10,11 +10,7 @@ import java.awt.Robot;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import org.fest.swing.fixture.FrameFixture;
-import org.fest.swing.core.GenericTypeMatcher;
 /**
  *
  * @author yousef-alsber
@@ -25,16 +21,17 @@ public class FileFrameTest
     public FileFrameTest() {
     }
     
-    private FrameFixture window;  
+    private FrameFixture window;
+   // private FrameFixture windowTag;
     private Robot robot;
-    final JFileChooser fileChooser = new JFileChooser();
        
     @Before
     public void setUp() 
     {
-        window = new FrameFixture(new FileFrame());
+        FileFrame frame = new FileFrame();
+        frame.addDummyFiles();
+        window = new FrameFixture(frame);
         window.show();
-        
     }
     
     @After
@@ -46,38 +43,18 @@ public class FileFrameTest
     @Test
     public void testChangeClick()
     { 
-      window.button(new GenericTypeMatcher<JButton>() 
-      {
-         @Override protected boolean isMatching(JButton button) 
-         {
-                return "Change Tag".equals(button.getText());
-         } 
-       });
+      window.button("changeButton").click();
     }
     
     @Test
-    public void testCancelClick()
+    public void testSortClick()
     { 
-      window.button(new GenericTypeMatcher<JButton>() 
-      {
-         @Override protected boolean isMatching(JButton button) 
-         {
-                return "Sort Files".equals(button.getText());
-         } 
-       });
+      window.button("sortButton").click();
     }
-        
-//    @Test
-//    public void shouldFindFileChooser() 
-//    {
-//      asserNotNull(window);  
-//      window.button("Browes").click();
-//      JFileChooserFixture found = JFileChooserFinder.findFileChooser().using(robot);
-//      assertThat(found.target).isSameAs(window.fileChooser);
-//  }
-//    public void shouldFailIfFileChooserNotFound() 
-//    {
-//        JFileChooserFinder.findFileChooser().using(robot);
-//    }
+    @Test
+    public void testDeleteClick()
+    { 
+      window.button("removeButtton").click();
+    }
 
 }

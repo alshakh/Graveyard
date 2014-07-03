@@ -258,6 +258,16 @@ public class FileFrame extends javax.swing.JFrame {
         }
         return listModel;
     }
+    
+    /**
+     * This function is for test purposes
+     */
+    public void addDummyFiles(){
+        DefaultListModel listModel = getNewListModel();
+        listModel.addElement("element 1");
+        listModel.addElement("element 2");
+        songList.setModel(listModel);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButtton;
     private javax.swing.JButton changeButton;

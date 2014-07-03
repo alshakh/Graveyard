@@ -9,24 +9,7 @@ package mp3organizer.gui;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher; 
-import junit.framework.Assert;
-
-import javax.swing.JLabel;
-import org.fest.swing.finder.WindowFinder;
 import org.fest.swing.fixture.FrameFixture;
-import org.fest.swing.fixture.JComboBoxFixture;
-import org.fest.swing.fixture.JLabelFixture;
-import org.fest.swing.fixture.JTextComponentFixture;
-import org.fest.swing.exception.ComponentLookupException;
-import org.fest.swing.format.IntrospectionComponentFormatter;
-import org.fest.swing.format.Formatting;
-import org.fest.swing.core.GenericTypeMatcher;
-import javax.swing.JButton;
-import mp3organizer.core.sortpattern.SortPattern;
-import org.fest.swing.fixture.ContainerFixture;
 
 /**
  *
@@ -54,25 +37,13 @@ public class SortFrameTest {
     @Test
     public void testCancelClick()
     { 
-      window.button(new GenericTypeMatcher<JButton>() 
-      {
-         @Override protected boolean isMatching(JButton button) 
-         {
-                return "Cancel".equals(button.getText());
-         } 
-       });
+      window.button("cancelButton").click();
     }
     
     @Test
     public void testSortClick()
     { 
-      window.button(new GenericTypeMatcher<JButton>() 
-      {
-         @Override protected boolean isMatching(JButton button) 
-         {
-                return "Sort Files".equals(button.getText());
-         } 
-       });
+      window.button("sortFileButton").click();
     }
     
     @Test
