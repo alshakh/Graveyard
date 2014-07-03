@@ -2,6 +2,7 @@ package mp3organizer.gui;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -135,17 +136,24 @@ public class FileFrame extends javax.swing.JFrame {
 
     private void addButttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButttonActionPerformed
         StringBuilder errors = new StringBuilder();
-        JFileChooser fc = new JFileChooser();
-        
-  fc.setFileFilter(new FileNameExtensionFilter(   
-                    "Mp3 Files","mp3"));
-  
-  
-        fc.setMultiSelectionEnabled(true);
-        int ret = fc.showOpenDialog(this);
-        if (ret == JFileChooser.APPROVE_OPTION) {
+        //
+        java.awt.FileDialog fd = new java.awt.FileDialog((java.awt.Frame) null);
+        fd.setFilenameFilter(new FilenameFilter() {
+
+            @Override
+            public boolean accept(File dir, String name) {
+                if (name.endsWith(".mp3")) {
+                    return true;
+                }
+                return false;
+            }
+        });
+        fd.setMultipleMode(true);
+
+        fd.setVisible(true);
+        if(fd!=null){
             DefaultListModel listModel = getNewListModel();
-            File[] files = fc.getSelectedFiles();
+            File[] files = fd.getFiles();
             for (File f : files) {
                 try {
                     new MediaFile(f);
@@ -166,7 +174,6 @@ public class FileFrame extends javax.swing.JFrame {
                                               "Some/All file/s couldn't be opened"+errors.toString(), "",
                                               JOptionPane.WARNING_MESSAGE);
         }
-        
     }//GEN-LAST:event_addButttonActionPerformed
 
     private void changeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeButtonActionPerformed

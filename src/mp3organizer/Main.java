@@ -1,6 +1,7 @@
 package mp3organizer;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
@@ -19,15 +20,16 @@ public class Main {
      */
     public static void main(String[] args) {
 
-        // new java.awt.FileDialog((java.awt.Frame) null).setVisible(true);
+        
         try {
             // Set native look and feel
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
-            
+
         }
         FileFrame fileFrame = new FileFrame();
         fileFrame.setVisible(true);
+
     }
-    
+
 }
