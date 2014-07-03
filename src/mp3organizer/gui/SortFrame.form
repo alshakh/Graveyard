@@ -91,7 +91,7 @@
   <SubComponents>
     <Component class="javax.swing.JTextField" name="layoutTextField">
       <Properties>
-        <Property name="name" type="java.lang.String" value="layoutTextField" noResource="true"/>
+        <Property name="name" type="java.lang.String" value="layoutText" noResource="true"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="layoutLabel">
@@ -101,7 +101,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="exLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Example: &lt;Artist&gt;&lt;Title&gt;/&lt;Album&gt;/&lt;Year&gt;.mp3"/>
+        <Property name="text" type="java.lang.String" value="Example: &lt;artist&gt;/&lt;album&gt;-&lt;year&gt;/&lt;title&gt;.mp3"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="cancelButton">

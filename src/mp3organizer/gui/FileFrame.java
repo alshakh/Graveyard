@@ -138,8 +138,8 @@ public class FileFrame extends javax.swing.JFrame {
         StringBuilder errors = new StringBuilder();
         //
         java.awt.FileDialog fd = new java.awt.FileDialog((java.awt.Frame) null);
+        fd.setLocationRelativeTo(null);
         fd.setFilenameFilter(new FilenameFilter() {
-
             @Override
             public boolean accept(File dir, String name) {
                 if (name.endsWith(".mp3")) {

@@ -18,12 +18,16 @@ public class TagsFrame extends javax.swing.JFrame {
      */
     public TagsFrame(MediaFileList mediaFileList) {
         initComponents();
+         setLocationRelativeTo(null);
+        if(mediaFileList != null) {
         this.mediaFileList = mediaFileList;
         songTextField.setText(mediaFileList.getField(FieldKey.TITLE));
         albumTextField.setText(mediaFileList.getField(FieldKey.ALBUM));
         yearTextField.setText(mediaFileList.getField(FieldKey.YEAR));
         artistTextField.setText(mediaFileList.getField(FieldKey.ARTIST));
-        setLocationRelativeTo(null);
+        }  else {
+            this.mediaFileList = null;
+        }
     }
 
     /**

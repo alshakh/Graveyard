@@ -52,11 +52,11 @@ public class SortFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        layoutTextField.setName("layoutTextField"); // NOI18N
+        layoutTextField.setName("layoutText"); // NOI18N
 
         layoutLabel.setText("Chose Sorting Layout");
 
-        exLabel.setText("Example: <Artist><Title>/<Album>/<Year>.mp3");
+        exLabel.setText("Example: <artist>/<album>-<year>/<title>.mp3");
 
         cancelButton.setText("Cancel");
         cancelButton.setName("cancelButton"); // NOI18N
