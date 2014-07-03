@@ -27,6 +27,15 @@ public class FileOperations {
         Files.copy(from.toPath(),to.toPath());
         return to;
     }
+    /**
+     * copy file from location to another.
+     * @param from initial location
+     * @param to file new location
+     * @param ifExistsIncrement if file already exists add suffix (number) and increment if neccerly.
+     * @return instance of File of new file (mostly same param 2)
+     * @throws FileAlreadyExistsException
+     * @throws IOException 
+     */
     public static File moveFile(File from, File to, boolean ifExistsIncrement) throws FileAlreadyExistsException,
                                                            IOException{
         
@@ -55,6 +64,11 @@ public class FileOperations {
         }
         return retFile;
     }
+    /**
+     * create the specified directory path.
+     * @param f directory as a File instance
+     * @return true if successful, false otherwise.
+     */
     public static boolean createDir(File f){
         File dir = f.getAbsoluteFile();
         if(!dir.exists()){
@@ -62,9 +76,13 @@ public class FileOperations {
         }
         return true;
     }
-
-    public static boolean fileExists(File f){
-        return f.exists();
+    /**
+     * check if file exists.
+     * @param file
+     * @return ture of file exists, false otherwise.
+     */
+    public static boolean fileExists(File file){
+        return file.exists();
     }
     /**
      * Remove every file and folder in file.

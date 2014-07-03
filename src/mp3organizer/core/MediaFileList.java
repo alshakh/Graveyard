@@ -52,7 +52,6 @@ public class MediaFileList {
      * get the value of field if it's exactly the same.
      * @param field fieldkey to get value of 
      * @return value of field
-     * @throws NotEqualKeyException
      */
     public String getField(FieldKey field) {
         String str = null;
@@ -69,13 +68,15 @@ public class MediaFileList {
      * setField for all files in the list.
      * @param field Fieldkey of desired field
      * @param value value to be in the field
-     * @throws KeyNotFoundException
-     * @throws FieldDataInvalidException 
+     * @throws KeyNotFoundException 
      */
-    public void setField(FieldKey field, String value) throws KeyNotFoundException,
-                                                              FieldDataInvalidException {
+    public void setField(FieldKey field, String value) throws ProblemWithAudioFileException {
         for (MediaFile f : files) {
-            f.setField(field, value);
+            try {
+                f.setField(field, value);
+            } catch (Exception ex) {
+                throw new ProblemWithAudioFileException(ex.getMessage());
+            }
         }
     }
     /**

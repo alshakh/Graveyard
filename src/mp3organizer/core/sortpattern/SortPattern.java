@@ -15,17 +15,19 @@ import org.jaudiotagger.tag.FieldKey;
 public class SortPattern {
 
     /**
-     * handles the pattern in a String object
+     * handles the pattern in a String object.
      */
     private String patternStr;
 
     /**
-     * Aliases for fields
+     * Aliases for fields.
      */
     public static final HashMap< String,FieldKey> ALIASES
             = new HashMap< >();
     public static final String EXTALIAS = ".EXT";
-
+    /**
+     * initialize other things.
+     */
     static {
         // XXX : must be lowercase
         ALIASES.put("<artist>",FieldKey.ARTIST);
@@ -59,6 +61,11 @@ public class SortPattern {
         return new File(rootDir.getAbsolutePath()+"/"+getSortPatternPart(mediaFile));
     }
     
+    /**
+     * replace the part that comes after the rootDir.
+     * @param mf mediaFile
+     * @return new path after root directory of files
+     */
     private String getSortPatternPart(MediaFile mf){
         String newPath = patternStr;
         for(String key : ALIASES.keySet()){
@@ -67,18 +74,9 @@ public class SortPattern {
         newPath = newPath.replace(EXTALIAS, FileOperations.getExt(mf.getFile()));
         return newPath;
     }
-    /**
-     * cleans trailing spaces and double slashes.
-     */
-    public void clean() {
-        throw new UnsupportedOperationException("Not supported yet.");
-//        if (!isValid(patternStr)) {
-//            return;
-//        }
-    }
 
     /**
-     * 
+     * regular expression for testing the validity of pattern.
      * ^((<\w+>)|([\w\d\_\-]))+(\/((<\w+>)|([\w\d\_\-]))+)*(\.EXT)$
      */
     public static String PATTERN_REGEX="^((<\\w+>)|([\\w\\d\\_\\-]))+(\\/((<\\w+>)|([\\w\\d\\_\\-]))+)*(\\.EXT)$";

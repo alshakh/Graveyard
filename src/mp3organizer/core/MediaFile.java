@@ -18,12 +18,20 @@ public class MediaFile {
     private AudioFile audioFile;
 
     /**
-     *
+     * constructor.
      * @param file File instance of media file
      * @throws mp3organizer.core.FileNotChangeableException
      * @throws java.io.FileNotFoundException
      * @throws mp3organizer.core.ProblemWithAudioFileException
-     */
+            try {
+                audioFile= org.jaudiotagger.audio.AudioFileIO.read(file);
+            } catch (Exception e) {
+                throw new ProblemWithAudioFileException(e.getMessage());
+            }
+        } else {
+            throw new FileNotChangeableException("File is not readable/wriatable");
+        }
+    }*/
     public MediaFile(File file) throws FileNotChangeableException,
                                        FileNotFoundException,
                                        ProblemWithAudioFileException {
@@ -42,7 +50,7 @@ public class MediaFile {
     }
 
     /**
-     *
+     * Constructor.
      * @param path String path of file
      * @throws mp3organizer.core.FileNotChangeableException
      * @throws java.io.FileNotFoundException
