@@ -133,7 +133,11 @@ public class FileFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    /**
+     * This method reads mp3 files and add them to a list and update the Jlist
+     * with all the new read files.
+     * @param evt 
+     */
     private void addButttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButttonActionPerformed
         StringBuilder errors = new StringBuilder();
         //
@@ -175,7 +179,11 @@ public class FileFrame extends javax.swing.JFrame {
                                               JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_addButttonActionPerformed
-
+    /**
+     * When the change button is pressed it will close the FileFrame and open 
+     * the TagsFrame.
+     * @param evt 
+     */
     private void changeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeButtonActionPerformed
         if(songList.getModel().getSize() == 0){
             JOptionPane.showMessageDialog(this,
@@ -188,7 +196,11 @@ public class FileFrame extends javax.swing.JFrame {
         this.setVisible(false);
         this.dispose();
     }//GEN-LAST:event_changeButtonActionPerformed
-
+    /**
+     * When the sort file button is pressed it will close the FileFrame and 
+     * open SortFrame.
+     * @param evt 
+     */
     private void sortButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortButtonActionPerformed
         if(songList.getModel().getSize() == 0){
             JOptionPane.showMessageDialog(this,
@@ -201,7 +213,11 @@ public class FileFrame extends javax.swing.JFrame {
         this.setVisible(false);
         this.dispose();
     }//GEN-LAST:event_sortButtonActionPerformed
-
+    /**
+     * This method removes a selected file from the list and update the Jlist
+     * with the new list.
+     * @param evt 
+     */
     private void removeButttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButttonActionPerformed
         int[] selectedIndices = songList.getSelectedIndices();
         DefaultListModel modelList = getNewListModel();
@@ -213,7 +229,10 @@ public class FileFrame extends javax.swing.JFrame {
         }
         songList.setModel(modelList);
     }//GEN-LAST:event_removeButttonActionPerformed
-
+    /**
+     * When you select files it saves the in a mediaFileList and return it.
+     * @return MediaFileList
+     */
     private MediaFileList getMediaFileList() {
         MediaFileList mediaFileList = new MediaFileList();
         for (int i = 0 ;i< songList.getModel().getSize() ; i++) {
@@ -226,8 +245,13 @@ public class FileFrame extends javax.swing.JFrame {
         }
         return mediaFileList;
     }
-    //
+    /**
+     * This method will create a new model with the previous model and return
+     * the new model.
+     * @return DefaultListModel
+     */
     private DefaultListModel getNewListModel() {
+        //FIXME
         DefaultListModel listModel = new DefaultListModel();
         for (int i = 0; i < songList.getModel().getSize(); i++) {
             listModel.addElement(songList.getModel().getElementAt(i));

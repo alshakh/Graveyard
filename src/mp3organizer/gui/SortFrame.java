@@ -20,7 +20,7 @@ import mp3organizer.core.sortpattern.SortPattern;
 public class SortFrame extends javax.swing.JFrame {
 
     /**
-     * Creates new form SortFrame
+     * Creates new form SortFrame.
      *
      * @param mediaFileList
      */
@@ -54,7 +54,7 @@ public class SortFrame extends javax.swing.JFrame {
 
         layoutTextField.setName("layoutText"); // NOI18N
 
-        layoutLabel.setText("Chose Sorting Layout");
+        layoutLabel.setText("Choose Sorting Layout");
 
         exLabel.setText("Example: <artist>/<album>-<year>/<title>.mp3");
 
@@ -145,7 +145,11 @@ public class SortFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    /**
+     * When the sort file button is pressed it will initiate a process of sorting
+     * the files and ordering them in the layout entered by the user.
+     * @param evt 
+     */
     private void sortFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortFileButtonActionPerformed
         String layout = layoutTextField.getText();
         if (!layout.contains(".mp3")) {
@@ -201,16 +205,28 @@ public class SortFrame extends javax.swing.JFrame {
             goBack();
         }
     }//GEN-LAST:event_sortFileButtonActionPerformed
-
+    /**
+     * If the cancel button is pressed this method will send you back to the main
+     * frame which is the FileFrame.
+     * @param evt 
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         goBack();
     }//GEN-LAST:event_cancelButtonActionPerformed
+    /**
+     * This method will close this frame and go back to the main frame.
+     */
     private void goBack() {
         FileFrame fileFrame = new FileFrame();
         fileFrame.setVisible(true);
         this.setVisible(false);
         this.dispose();
     }
+    /**
+     * Open a new window allowing you to visually choose which directory to save
+     * the new layout in.
+     * @param evt 
+     */
     private void chooseFolderBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseFolderBtnActionPerformed
         JFileChooser folderChooser = new JFileChooser();
         folderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);

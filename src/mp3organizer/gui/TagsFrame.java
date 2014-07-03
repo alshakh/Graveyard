@@ -55,21 +55,11 @@ public class TagsFrame extends javax.swing.JFrame {
 
         yearTextField.setForeground(java.awt.SystemColor.controlShadow);
         yearTextField.setName("yearTextField"); // NOI18N
-        yearTextField.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                yearTextFieldMouseClicked(evt);
-            }
-        });
 
         yearLabel.setText("Year:");
 
         albumTextField.setForeground(java.awt.SystemColor.controlShadow);
         albumTextField.setName("albumTextField"); // NOI18N
-        albumTextField.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                albumTextFieldMouseClicked(evt);
-            }
-        });
 
         cancelButton.setText("Cancel");
         cancelButton.setName("cancelButton"); // NOI18N
@@ -91,21 +81,11 @@ public class TagsFrame extends javax.swing.JFrame {
 
         artistTextField.setForeground(java.awt.SystemColor.controlShadow);
         artistTextField.setName("artistTextField"); // NOI18N
-        artistTextField.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                artistTextFieldMouseClicked(evt);
-            }
-        });
 
         albumLabel.setText("Album:");
 
         songTextField.setForeground(java.awt.SystemColor.controlShadow);
         songTextField.setName("songTextField"); // NOI18N
-        songTextField.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                songTextFieldMouseClicked(evt);
-            }
-        });
 
         artistLabel.setText("Artist:");
 
@@ -163,10 +143,17 @@ public class TagsFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    /**
+     * If the cancel button is pressed this method will send you back to the main
+     * frame which is the FileFrame.
+     * @param evt 
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         goBack();
     }//GEN-LAST:event_cancelButtonActionPerformed
+    /**
+     * This method will close this frame and go back to the main frame.
+     */
     private void goBack(){
         FileFrame fileFrame = new FileFrame();
         fileFrame.setVisible(true);
@@ -174,10 +161,12 @@ public class TagsFrame extends javax.swing.JFrame {
         this.dispose();
         
     }
-    private void songTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_songTextFieldMouseClicked
-
-    }//GEN-LAST:event_songTextFieldMouseClicked
-
+    /**
+     * This method will take what the user input in the title, artist, album and
+     * year text fields and apply it to the appropriate tag field in the chosen  
+     * mp3 file, if nothing is entered in the field it will not change the tag. 
+     * @param evt 
+     */
     private void changeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeButtonActionPerformed
         String title = songTextField.getText();
         String artist = artistTextField.getText();
@@ -209,18 +198,6 @@ public class TagsFrame extends javax.swing.JFrame {
         }
         goBack();
     }//GEN-LAST:event_changeButtonActionPerformed
-
-    private void artistTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_artistTextFieldMouseClicked
-       // artistTextField.setText("");
-    }//GEN-LAST:event_artistTextFieldMouseClicked
-
-    private void albumTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_albumTextFieldMouseClicked
-        //albumTextField.setText("");
-    }//GEN-LAST:event_albumTextFieldMouseClicked
-
-    private void yearTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_yearTextFieldMouseClicked
-      // yearTextField.setText("");
-    }//GEN-LAST:event_yearTextFieldMouseClicked
 
     private final MediaFileList mediaFileList;
     // Variables declaration - do not modify//GEN-BEGIN:variables
