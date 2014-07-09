@@ -1,0 +1,50 @@
+#include "gof.h"
+void organismAddToLife(int p) {
+    if(p==1) {
+        //glider-gun
+        LifeLiveCell(8,26);
+        LifeLiveCell(9,26);
+        LifeLiveCell(9,25);
+        LifeLiveCell(8,25);
+        LifeLiveCell(18,26);
+        LifeLiveCell(18,25);
+        LifeLiveCell(18,24);
+        LifeLiveCell(19,23);
+        LifeLiveCell(20,22);
+        LifeLiveCell(21,22);
+        LifeLiveCell(19,27);
+        LifeLiveCell(20,28);
+        LifeLiveCell(21,28);
+        LifeLiveCell(23,27);
+        LifeLiveCell(24,26);
+        LifeLiveCell(24,25);
+        LifeLiveCell(24,24);
+        LifeLiveCell(23,23);
+        LifeLiveCell(25,25);
+        LifeLiveCell(22,25);
+        LifeLiveCell(28,26);
+        LifeLiveCell(28,27);
+        LifeLiveCell(28,28);
+        LifeLiveCell(29,28);
+        LifeLiveCell(29,27);
+        LifeLiveCell(29,26);
+        LifeLiveCell(30,29);
+        LifeLiveCell(30,25);
+        LifeLiveCell(32,29);
+        LifeLiveCell(32,30);
+        LifeLiveCell(32,25);
+        LifeLiveCell(32,24);
+        LifeLiveCell(42,27);
+        LifeLiveCell(42,28);
+        LifeLiveCell(43,28);
+        LifeLiveCell(43,27);
+        // fish-hook
+        LifeLiveCell(12,39);
+        LifeLiveCell(12,40);
+        LifeLiveCell(13,40);
+        LifeLiveCell(14,39);
+        LifeLiveCell(14,38);
+        LifeLiveCell(14,37);
+        LifeLiveCell(15,37);
+    }
+}

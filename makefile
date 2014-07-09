@@ -1,11 +1,11 @@
 CC = gcc
 LIB = -lglut -lGLU -lGL -lm
 CFLAGS = -Wall -O3
-DEP = readRLE.o
+DEP = src/rle.o src/life.o src/grid.o src/organism.o src/main.o
 .PHONY: clean all c
 all: gof.out
 
-gof.out:2d-game-of-life.c $(DEP)
+gof.out:$(DEP)
 	$(CC) $(CFLAGS) -o $@ $^ $(LIB)
 
 %.o:%.c
@@ -15,6 +15,6 @@ run:gof.out
 	./gof.out
 
 clean:
-	rm -rf *.o *.out *.tmp
+	rm -rf *.o src/*.o *.out src/*.out *.tmp src/*.tmp
 
 c:clean

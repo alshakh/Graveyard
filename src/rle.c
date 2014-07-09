@@ -14,7 +14,7 @@
 //
 static void traverseCells(const int x,const int y,const char* organism_disc);
 //
-void readRLE(int limit,rle_info_t file) {
+void rleAddToLife(int limit,rle_info_t file) {
     if(DEBUG) printf("Adding organism : %s \n x=%d , y=%d",file.name,file.x,file.y);
     //
     if(limit<file.x || limit<file.y) {
@@ -66,7 +66,7 @@ static void traverseCells(const int x,const int y,const char* organism_disc) {
             //
             int q;
             for(q=0; q <repeatNum ; q++) {
-                liveCell(x+tmpX, y+tmpY);
+                LifeLiveCell(x+tmpX, y+tmpY);
                 tmpX++;
             }
             //
