@@ -1,0 +1,19 @@
+:--------------------------
+    Ahmed Alshakh
+    HW3: simple table with objects
+    Time : 16 hrs.
+:--------------------------
+
+: -- Compile & Run --------
+    make
+    ./books
+: -- Controls
+    1,2,3,4 : see different objects and scenes
+    esc : exit
+    0   : reset view angle
+    up/down/right/light : change view angle
+    page up/down : zoom in/out
+    a   : Toggle axes
+    l   : Toggle lighting
+    m   : Stop light source
+    []  : move light source

@@ -1,0 +1,11 @@
+HW1: Lorenz
+Ahmed Alshakh
+//
+Uses parametric equatino to draw lorenz attractor. Color depends on the distance from the origin and positin in quadrants
+// Controls
+Change view angle 	: UP,DOWN,LEFT and RIGHT
+Next Item in info list 	: SPACE Bar
+Increase item value	: D or d 
+Decrease item value	: A or a
+Reset everything	: 0
+Exit 			: Esc

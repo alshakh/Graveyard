@@ -1,0 +1,16 @@
+***************************
+  Name : Alshakh
+  HW 2 : ISS 2011
+    It draws roughly the ISS as it's in 2011. It offers two draw options and two
+    projection options. 
+  Time : About 14 hrs.
+***************************
+
+Build and Run:
+    make clean;make run
+Usage :
+    Arrows  to see the scene from different angles
+    w/s     to traverse in param menu
+    a/d     to change value of params
+    h       to hide/show axes and params
+    1,2,3,4 to rotate solar panels

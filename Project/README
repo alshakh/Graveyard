@@ -1,0 +1,65 @@
+***************************
+  Name : Ahmed Alshakh
+  Final Project 
+      Room with different objects some of them moves.
+  Time : almost all the waking time in 4 days
+***************************
+
+#Build and Run:
+    make clean
+    make
+    ./project
+#Usage :
+    // Room mode
+    0          : reset everything
+    Arrows     : change angle of view
+    pg up/down : move relative to view angle (forward/backward)
+    x,y,z      : move absolutely on the axis (increment) (mostly not needed)
+    X,Y,Z      : move absolutely on the axis (decrement) (mostly not needed)
+    
+    l          : toggle moving light or light from the lamp
+    ], [       : moving light up/down
+    }, {       : moving light larger/smaller circle
+    
+    t          : Things will move/stop in the room
+        When things are moving
+              1 : moves only the rubik's cube on the desk.
+              2 : moves only the rubik's cube on the book shelf
+              3 : moves only the solar system model
+              4 : moves only the open book on the desk.
+              5 : moves only the open book on the reading table.
+              6 : moves only the ISS model in the corner.
+              7 : moves only the clock on the bookshelf
+              8 : moves everything again
+
+   // Object Mode : see some interesting objects closely
+   o,O      : go in/out of object mode
+   m        : go to next object
+   a/d      : some objects will move if you press a/d
+   Arrow    : change view angle
+   page up/down : zoom in/out
+   
+
+#Interesting things:
+* I spend many many hours figuring out how to draw revolution solids with correct normals.
+    The trumpet and vases are examples for this. I even was able to draw two surfaces,
+    inside surface and outside surface to get the normals correct from inside and outside.
+* The thing that took me the most time was the book which can open and close.
+
+#Things I thought about but I didn't have the time for:
+* Change the angle of view automatically to look at the object that is moving in this moment.
+    I figured out how to do it but didn't have time
+* Floating numbers above things that can move to indicate the button to press
+* Openable drawers in the desk.
+* Loading different books, but I only had the time for four covers and two pages.
+* And some other objects
+
+
+Files:
+main.c        : main function and glut functions
+furniture.c   : responsible for chairs and tables and the book shelf
+room.c        : uses most other files to draw the actual room
+geometry.h/.c : generic code for different basic objects
+solidOfRevolution.c : draws solid of revolution
+iss, rubikCube, solarSystemModel, book and clock : draw different objects.
+
