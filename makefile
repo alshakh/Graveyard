@@ -1,17 +1,20 @@
 CC = gcc
 LIB = -lglut -lGLU -lGL -lm
-FLAGS = -Wall -Wextra -O3
-
+CFLAGS = -Wall -O3
+DEP = readRLE.o
 .PHONY: clean all c
 all: gof.out
 
-gof.out:2d-game-of-life.c gof.h
-	$(CC) $(FLAGS) -o $@ $^ $(LIB)
+gof.out:2d-game-of-life.c $(DEP)
+	$(CC) $(CFLAGS) -o $@ $^ $(LIB)
+
+%.o:%.c
+	$(CC) $(CFLAGS) -c -o $@ $^ $(LIB)
 
 run:gof.out
 	./gof.out
 
 clean:
-	rm -rf *.o *.out
+	rm -rf *.o *.out *.tmp
 
 c:clean

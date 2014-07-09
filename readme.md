@@ -1,6 +1,6 @@
 # Conway's Game of Life
 
-My attempt to make a 2D game of life with OpenGL and C.
+My attempt to make a 2D game of life with OpenGL and C/C++. A really basic (and not tested) functions to read the format of [RLE files](http://www.conwaylife.com/wiki/Run_Length_Encoded).
 
 When there are cells at the edge, they wrap around the grid.
 
@@ -16,7 +16,7 @@ When there are cells at the edge, they wrap around the grid.
 			1 : glider gun and fish hook eating the gliders
 ```
 
-**To change size of the grid, change `#define LIMIT 50` to whatever number you like** 
+**To change size of the grid, change** `#define LIMIT 50` **to whatever number you like** 
 
 # License
 
