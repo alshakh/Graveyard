@@ -12,11 +12,11 @@ When there are cells at the edge, they wrap around the grid.
 - 'g'   -----------> hide/show grid
 - 'j'   -----------> jump 100 generations
 - 'p'   -----------> populate the grid randomly (about 1/10 of the grid will be live)
-- '1'-'5' ---------> draw well know patterns (currently only 1 works)
+- '1'-'5' ---------> draw well known patterns (currently only 1 works)
 			1 : glider gun and fish hook eating the gliders
 ```
 
-** To change size of the grid, change `#define LIMIT 50` to whatever number you like ** 
+**To change size of the grid, change `#define LIMIT 50` to whatever number you like** 
 
 # License
 
