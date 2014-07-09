@@ -17,8 +17,8 @@ extern unsigned int numGens;
 typedef struct {
     char* name;
     char* disc;
-    int x;
-    int y;
+    int width;
+    int height;
 } rle_info_t;
 //////
 // Functions 

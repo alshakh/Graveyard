@@ -15,20 +15,20 @@
 static void traverseCells(const int x,const int y,const char* organism_disc);
 //
 void rleAddToLife(int limit,rle_info_t file) {
-    if(DEBUG) printf("Adding organism : %s \n x=%d , y=%d",file.name,file.x,file.y);
+    if(DEBUG) printf("Adding organism : %s \n width=%d , height=%d",file.name,file.width,file.height);
     //
-    if(limit<file.x || limit<file.y) {
+    if(limit<file.width || limit<file.height) {
         printf("	organism is out of bounds > LIMIT");
         //
         return;
     }
     //
-    traverseCells(file.x,file.y,file.disc);
+    traverseCells(file.width,file.height,file.disc);
 }
 //
-static void traverseCells(const int x,const int y,const char* organism_disc) {
+static void traverseCells(const int width,const int height,const char* organism_disc) {
     int tmpX = 0;
-    int tmpY = 0;
+    int tmpY = height;
     //
     int repeatNum = 1;
     //
@@ -66,7 +66,7 @@ static void traverseCells(const int x,const int y,const char* organism_disc) {
             //
             int q;
             for(q=0; q <repeatNum ; q++) {
-                LifeLiveCell(x+tmpX, y+tmpY);
+                LifeLiveCell(tmpX, tmpY);
                 tmpX++;
             }
             //
