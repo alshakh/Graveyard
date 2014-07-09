@@ -22,10 +22,7 @@ License: GPLv3
 #include <string.h> /* memset */
 
 
-// rgb of color of cell
-#define CELL_R 1
-#define CELL_G 1
-#define CELL_B 1
+#define CELL_COLOR 1,1,1
 //
 #define LIMIT 50
 
@@ -116,7 +113,7 @@ glColor3f(0.3,0.3,0.3);
     glVertex2i(i,LIMIT);
   }
   glEnd();
-  glColor3f(CELL_R,CELL_G,CELL_B);
+  glColor3f(CELL_COLOR);
 }
 //
 void drawCell(int x,int y){
@@ -200,7 +197,7 @@ void display()
  	glColor3f(1,0,0);
   glWindowPos2i(5,5);
   print("# of Gen. : %d , # of live Cells = %d " , generation, liveCells);
- 	glColor3f(CELL_R,CELL_G,CELL_B);
+ 	glColor3f(CELL_COLOR);
   //
   //
   glFlush();
