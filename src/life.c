@@ -50,11 +50,11 @@ void lifeNext() {
                              lifeGetCell(prevCells,i-1,j+1) +
                              lifeGetCell(prevCells,i-1,j-1);
 
-            if ( neighbors == 3) { // any cell with exactly 3 neigbors comes to lives
+            if ( ( neighbors == 3 ) && !lifeGetCell(prevCells,i,j)){ // any cell with exactly 3 neigbors comes to lives
                 nextCells[i][j] = true;
                 gridDrawCell(i,j);
                 numLiveCells++;
-            } else if (neighbors ==2 &&  lifeGetCell(prevCells,i,j)) { // any cell with exactly 2 or 3 stays alive
+            } else if ( ( neighbors ==2 || neighbors == 3) && lifeGetCell(prevCells,i,j)) { // any cell with exactly 2 or 3 stays alive
                 nextCells[i][j] = true;
                 gridDrawCell(i,j);
                 numLiveCells++;
