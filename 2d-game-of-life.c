@@ -264,12 +264,12 @@ GLdouble ox=0.0,oy=0.0,oz=0.0;
   //
   prevCells[(int)ox][(int)oy] = 1 - prevCells[(int)ox][(int)oy];
   //
-  /*if(prevCells[(int)ox][(int)oy]){
+  if(prevCells[(int)ox][(int)oy]){
   	printf("XYX(%d, %d)\n",(int)ox,(int)oy);
  	} else {
  		printf("!!!(%d, %d)\n",(int)ox,(int)oy);
  	}
- 	fflush(stdout);*/
+ 	fflush(stdout);
 }
 //
 #define LEN 8192  // Maximum length of text string
@@ -289,6 +289,7 @@ void print(const char* format , ...)
 //
 void drawPattern(int p){
 	if(p==1){
+		//glider-gun
     prevCells[8][26]=true;
     prevCells[9][26]=true;
     prevCells[9][25]=true;
@@ -325,5 +326,13 @@ void drawPattern(int p){
     prevCells[42][28]=true;
     prevCells[43][28]=true;
     prevCells[43][27]=true;
+    // fish-hook
+    prevCells[12][39] = true;
+    prevCells[12][40] = true;
+    prevCells[13][40] = true;
+    prevCells[14][39] = true;
+    prevCells[14][38] = true;
+    prevCells[14][37] = true;
+    prevCells[15][37] = true;
 	}
 }
