@@ -16,7 +16,9 @@ When there are cells at the edge, they wrap around the grid.
 			1 : glider gun and fish hook eating the gliders
 ```
 
-**To change size of the grid, change** `#define LIMIT 50` **to whatever number you like** 
+To change size of life change ```Life life (Number)```
+
+To zoom click with the right button and the m up and down keys.
 
 # License
 
