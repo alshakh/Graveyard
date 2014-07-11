@@ -2,7 +2,6 @@
 #define GOF
 //
 #define DEBUG 1
-#define LIMIT 300
 //
 #define CELL_COLOR 1,1,1
 #define GRID_COLOR 0.3,0.3,0.3
@@ -10,6 +9,8 @@
 #include<string>
 #include<iostream>
 #include<cstdio>
+#include <vector>
+
 //
 using namespace std;
 //
@@ -18,7 +19,7 @@ extern bool doNextGeneration;
 
 class Life {
 public:
-    Life();
+    Life(unsigned int limit);
     void next(bool, bool a = true);
     void jumpNGens(unsigned int gens);
     void makeLive(int x, int y);
@@ -29,28 +30,21 @@ public:
     unsigned int getNumGens();
     unsigned int getNumLiveCells();
     unsigned int getLimit();
-    //
+    // Grid
     void drawGrid();
-    //
 private:
     unsigned int numLiveCells;
     unsigned int numGens;
-    bool prevCells[LIMIT][LIMIT];
-    bool nextCells[LIMIT][LIMIT];
+    vector<vector<bool>> prevCells;
+    vector<vector<bool>> nextCells;
     unsigned int limit;
     //
-    void resetCells(bool cells[LIMIT][LIMIT]);
     int getValidIndex(int n);
-    bool getCell(bool cells[LIMIT][LIMIT], int i, int j); // TO REMOVE
-
-    //
-
-    class Grid {
-    public:
-        static void drawCells(bool cells[LIMIT][LIMIT]);
-        static void drawGrid();
-        static void drawCell(unsigned int x, unsigned int y);
-    };
+    bool getCell(vector<vector<bool>> &cells, unsigned int i, unsigned int j);
+    void resetCells(vector<vector<bool>> & cells);
+    // Grid
+    void drawCells(vector<vector<bool>> &cells);
+    void drawCell(unsigned int x, unsigned int y);
 };
 /// GridClass
 

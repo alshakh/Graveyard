@@ -5,11 +5,17 @@
 #include "gof.h"
 //
 
-Life::Life(){
+Life::Life(unsigned int limit){
     numLiveCells=0;
     numGens=0;
-    limit=LIMIT; // TEMP
-    // TODO : change size
+    //limit=LIMIT; // TEMP
+    this->limit = limit;
+    prevCells.resize(limit);
+    nextCells.resize(limit);
+    for(unsigned int i = 0 ; i< limit ; i++){
+        prevCells.at(i).resize(limit);
+        nextCells.at(i).resize(limit);
+    }
 }
 unsigned int Life::getNumGens(){
     return numGens;
@@ -20,15 +26,16 @@ unsigned int Life::getNumLiveCells(){
 unsigned int Life::getLimit(){
     return limit;
 }
-void Life::resetCells(bool cells[LIMIT][LIMIT]) {
-    //std::fill(cells, myarray+N, 0);
-    memset(cells, 0, sizeof(cells[0][0]) * limit * limit);
+void Life::resetCells(vector<vector<bool>> &cells) {
+    for (unsigned int i = 0 ; i<limit ; i++){
+        fill(cells.at(i).begin(),cells.at(i).end(),false);
+    }
 }
 //
 int Life::getValidIndex(int n) {
     return (n>=0?n%limit:limit+n);
 }
-bool Life::getCell(bool cells[LIMIT][LIMIT],int i,int j) {
+bool Life::getCell(vector<vector<bool>> &cells,unsigned int i, unsigned int j) {
     return cells[getValidIndex(i)][getValidIndex(j)];
 }
 //
@@ -37,7 +44,7 @@ bool Life::getCell(bool cells[LIMIT][LIMIT],int i,int j) {
  */
 void Life::next(bool nextGen, bool drawNewCellsInGrid) {
     if(!nextGen) {
-        Grid::drawCells(prevCells);
+        drawCells(prevCells);
         //
         return;
     }
@@ -59,16 +66,16 @@ void Life::next(bool nextGen, bool drawNewCellsInGrid) {
 
             if ( ( neighbors == 3 ) && !getCell(prevCells,i,j)){ // any cell with exactly 3 neigbors comes to lives
                 nextCells[i][j] = true;
-                if(drawNewCellsInGrid) Grid::drawCell(i,j);
+                if(drawNewCellsInGrid) drawCell(i,j);
                 numLiveCells++;
             } else if ( ( neighbors ==2 || neighbors == 3) && getCell(prevCells,i,j)) { // any cell with exactly 2 or 3 stays alive
                 nextCells[i][j] = true;
-                 if(drawNewCellsInGrid) Grid::drawCell(i,j);
+                 if(drawNewCellsInGrid) drawCell(i,j);
                 numLiveCells++;
             }
         }
     }
-    memcpy(prevCells, nextCells, sizeof (bool) * limit * limit);
+    nextCells.swap(prevCells);//memcpy(prevCells, nextCells, sizeof (bool) * limit * limit);
 }
 //
 void Life::jumpNGens(unsigned int n) {
@@ -92,7 +99,7 @@ void Life::populateRandomly() {
         int x = rand()%limit;
         int y = rand()%limit;
         makeLive(x,y);
-        Grid::drawCell(x,y); // don't know if neccery when the whole scene will be drawn from scratch
+        drawCell(x,y); // don't know if neccery when the whole scene will be drawn from scratch
     }
 }
 void Life::toggleCell(int x, int y){
@@ -102,7 +109,50 @@ bool Life::isCellLive(int x, int y){
     return prevCells[x][y];
 }
 
+///////////////////////////
+/// Grid
+///////////////////////////
 
-void Life::drawGrid(){
-    Grid::drawGrid();
+
+//
+// Grid is a subclass of Life
+//
+#define GL_GLEXT_PROTOTYPES
+#ifdef __APPLE__
+#include <OpenGL/OpenGL.h>
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
+//
+ void Life::drawCells(vector<vector<bool>> &cells){
+    for(unsigned int i=0 ; i<limit ; i++) {
+        for(unsigned int j=0 ; j<limit ; j++) {
+            if(cells[i][j]) drawCell(i,j);
+        }
+    }
+}
+//
+void Life::drawGrid() {
+    glColor3f(GRID_COLOR);
+    glBegin(GL_LINES);
+    ;
+    for(unsigned int i=0; i <=limit ; i++) {
+        glVertex2i(0,i);
+        glVertex2i(limit,i);
+        //
+        glVertex2i(i,0);
+        glVertex2i(i,limit);
+    }
+    glEnd();
+    glColor3f(CELL_COLOR);
+}
+//
+void Life::drawCell(unsigned int x,unsigned int y) {
+    glBegin(GL_QUADS);
+    glVertex2i(x,y);
+    glVertex2i(x,y+1);
+    glVertex2i(x+1,y+1);
+    glVertex2i(x+1,y);
+    glEnd();
 }

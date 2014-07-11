@@ -58,9 +58,7 @@ void RLE::addToLife(Life & life) {
     if (isFile) {
         stream = new ifstream(fileOrContent);
     } else {
-
         stream = new istringstream(fileOrContent);
-
     }
     string line;
     // bypass header

@@ -19,7 +19,7 @@ License: GPLv3
 
 //
 int dim;
-Life life;
+Life life(1000);
 bool hasGrid = true;
 bool doNextGeneration = false;
 //
@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
 void initLife() {
     dim = life.getLimit()/2;
     Organism::addToLife(1, life); // TEMP
-    //doNextGeneration= true ; //TEMP
+ 
 }
 //
 
