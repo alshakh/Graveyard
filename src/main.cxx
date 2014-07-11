@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
 }
 void initLife() {
     dim = life.getLimit()/2;
-    Organism::addToLife(1, &life); // TEMP
+    Organism::addToLife(1, life); // TEMP
     //doNextGeneration= true ; //TEMP
 }
 //
@@ -97,12 +97,13 @@ void key(unsigned char ch,int x,int y)
     } else if (ch=='p') {
         life.populateRandomly();
     } else if (ch=='e') {
-        RLE rle_file("x = 36, y = 9, rule = B3/S23\n\
-24bo$22bobo$12b2o6b2o12b2o$11bo3bo4b2o12b2o$2o8bo5bo3b2o$2o8bo3bob2o4b\
-obo$10bo5bo7bo$11bo3bo$12b2o! ");
-        rle_file.addToLife(&life);
-        //("glider gun","24bo$22bobo$12b2o6b2o12b2o$11bo3bo4b2o12b2o$2o8bo5bo3b2o$2o8bo3bob2o4bobo$10bo5bo7bo$11bo3bo$12b2o!",36,9};
-        //rleAddToLife(LIMIT,file);
+        RLE rle_file("#C glider gun\nx = 36, y = 9, rule = B3/S23\n\
+24bo$22bobo$12b2o6b2o12b2o$11bo3bo4b2o12b2o$2o8bo5bo3b2o$2o8bo3bob2o4b\n\
+obo$10bo5bo7bo$11bo3bo$12b2o!",false);
+        rle_file.addToLife(life);
+        
+        /*RLE rle_file("/home/shakh/projects/2dGOF/a.rle",true);
+        rle_file.addToLife(&life);*/
     } else if (ch == 'r'){
         glutPostRedisplay();
     }
