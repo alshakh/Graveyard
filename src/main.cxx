@@ -59,7 +59,6 @@ int main(int argc, char **argv) {
 void initLife() {
     dim = life.getLimit() / 2;
     Organism::addToLife(1, life); // TEMP
-
 }
 //
 
@@ -93,7 +92,6 @@ void key(unsigned char ch, int x, int y) {
     } else if (ch == 'n') {
         doNextGeneration = true;
     } else if (ch == '1' || ch == '2' || ch == '3' || ch == '4' || ch == '5') {
-        //organismAddToLife(ch-'0');
     } else if (ch == 'c') {
         life.clear();
     } else if (ch == 'j') {

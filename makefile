@@ -1,7 +1,7 @@
 CC = g++
 LIB = -lglut -lGLU -lGL -lm
 CFLAGS = -std=c++11 -Wall -O3
-DEP = src/rle.o src/life.o src/grid.o src/organism.o src/main.o
+DEP = src/rle.o src/life.o src/organism.o src/main.o
 .PHONY: clean all c
 all: gof.out
 

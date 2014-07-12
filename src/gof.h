@@ -30,6 +30,7 @@ public:
     unsigned int getNumGens();
     unsigned int getNumLiveCells();
     unsigned int getLimit();
+    //
     // Grid
     void drawGrid();
 private:
@@ -46,8 +47,6 @@ private:
     void drawCells(vector<vector<bool>> &cells);
     void drawCell(unsigned int x, unsigned int y);
 };
-/// GridClass
-
 // RLE
 
 class RLE {
