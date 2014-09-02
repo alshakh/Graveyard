@@ -1,0 +1,61 @@
+
+
+
+Molecule(root){
+    Const{
+        aX=20
+        aY=30
+    }
+    Bond{
+        x=0
+        y=0
+        w=radix.x+radix.w
+        h=radical.y+radical.h
+    }
+    Content{
+        Itom(power){
+            Bond{
+                x=0
+                y=0
+                w=__.w
+                h=__.h
+            }
+            Content{
+                __.svg
+            }
+        }
+        Atom(radical){
+            Bond{
+                x=power.x+power.w-aX
+                y=power.y+power.h-aY
+                w=35
+                h=radix.h+base.h+5
+            }
+            Content{
+                // SOME SVG STUFF
+            }
+        }
+        Atom(radix){
+            Bond{
+                x=radical.x+radical.w
+                y=radical.y
+                w=base.w + 5
+                h= 23
+            }
+            Content{
+                // SOME SVG STUFF WITH relation to base width
+            }
+        }
+        Itom(base){
+            Bond{
+                x=radical.x+radical.w
+                y=radix.y+radix.h
+                w=__.w
+                h=__.h
+            }
+            Content{
+                __.svg
+            }
+        }
+    }
+}
