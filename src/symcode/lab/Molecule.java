@@ -1,27 +1,39 @@
-
 package symcode.lab;
+
+import symcode.expr.Expression;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * All classes in lab should fallow this abstract class.
+ *
  * @author Ahmed Alshakh <ahmed.s.alshakh@gmail.com>
  */
-public abstract class Molecule {
-	public static int UNDEFINED = -5;
-	//
-	private final Const myConst;
-	//
-	private final float xBond;
-	private final float yBond;
-	private final float wBond;
-	private final float hBond;
-	//
-	public Molecule(){
-		myConst = null;
-		xBond = UNDEFINED;
-		yBond = UNDEFINED;
-		wBond = UNDEFINED;
-		hBond = UNDEFINED;
-	}
-	abstract boolean hasConst();
-	abstract boolean hasThisConst();
+public abstract class Molecule extends Matter {
+    /*
+     This class extends matter, will have bonds and evaluation functions 
+     */
+    //
+
+    private final EnumMap<Bond, Expression> _bond;
+
+    //
+
+    public Molecule(String _name, String version, HashMap _const, HashSet _members, EnumMap _bond) {
+        super(_name, version, _const, _members);
+        throw new UnsupportedOperationException();
+    }
+    //
+    public boolean hasBond() {
+        throw new UnsupportedOperationException();
+    }
+
+    public Expression getBond(Bond bond) {
+        throw new UnsupportedOperationException();
+    }
+    //
+    //abstract OutputClass eval(HashMap<String,OutputClass> itomContents);
+    //
+
 }
