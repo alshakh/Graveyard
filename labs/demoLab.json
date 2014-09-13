@@ -1,66 +1,72 @@
 {
-  "type": "compound",
-  "id": "root",
-  "const": {
-    "aX": 20,
-    "aY": 30
-  },
-  "bond": {
-    "x": "0",
-    "y": "0",
-    "w": "radix.x+radix.w",
-    "h": "radical.y+radical.h"
-  },
-  "content": [
+  "id":"mathLab",
+  "version": "1.2.3",
+  "const": {},
+  "members": [
     {
-      "type": "itom",
-      "id": "power",
+      "type": "compound",
+      "id": "root",
+      "version": "1.2.3",
+      "const": {
+        "aX": 20,
+        "aY": 30
+      },
       "bond": {
         "x": "0",
         "y": "0",
-        "w": "__.w",
-        "h": "__.h"
+        "w": "radix.x+radix.w",
+        "h": "radical.y+radical.h"
       },
-      "content": [
-        "__.outputClass"
-        ]
-    },
-    {
-      "type": "atom",
-      "id": "radical",
-      "bond": {
-        "x": "power.x+power.w-aX",
-        "y": "power.y+power.h-aY",
-        "w": "35",
-        "h": "radix.h+base.h+5"
-      },
-      "content": [
-        ]
-    },
-    {
-      "type": "atom",
-      "id": "radix",
-      "bond": {
-        "x": "radical.x+radical.w",
-        "y": "radical.y",
-        "w": "base.w + 5",
-        "h": "23"
-      },
-      "content": [
-        ]
-    },
-    {
-      "type": "itom",
-      "id": "base",
-      "bond": {
-        "x": "radical.x+radical.w",
-        "y": "radix.y+radix.h",
-        "w": "__.w",
-        "h": "__.h"
-      },
-      "content": [
-        "__.outputClass"
-        ]
+      "members": [
+        {
+          "type": "itom",
+          "id": "power",
+          "bond": {
+            "x": "0",
+            "y": "0",
+            "w": "__.w",
+            "h": "__.h"
+          },
+          "content": [
+            "__.outputClass"
+          ]
+        },
+        {
+          "type": "atom",
+          "id": "radical",
+          "bond": {
+            "x": "power.x+power.w-aX",
+            "y": "power.y+power.h-aY",
+            "w": "35",
+            "h": "radix.h+base.h+5"
+          },
+          "content": []
+        },
+        {
+          "type": "atom",
+          "id": "radix",
+          "bond": {
+            "x": "radical.x+radical.w",
+            "y": "radical.y",
+            "w": "base.w + 5",
+            "h": "23"
+          },
+          "content": []
+        },
+        {
+          "type": "itom",
+          "id": "base",
+          "bond": {
+            "x": "radical.x+radical.w",
+            "y": "radix.y+radix.h",
+            "w": "__.w",
+            "h": "__.h"
+          },
+          "content": [
+            "__.outputClass"
+          ]
+        }
+      ]
     }
   ]
 }
