@@ -10,9 +10,9 @@ import java.util.HashSet;
  * @author Ahmed Alshakh <ahmed.s.alshakh@gmail.com>
  */
 public class Lab extends Matter {
-	public Lab(String _name,String _version, HashMap _const, HashSet _members)
+	public Lab(String _name,String _version, HashMap _const, HashSet _elements)
 	{
-             super( _name, _version,  _const,  _members);
+             super( _name, _version,  _const,  _elements);
              throw new UnsupportedOperationException();
 	}
 }

@@ -2,7 +2,7 @@
   "id":"mathLab",
   "version": "1.2.3",
   "const": {},
-  "members": [
+  "elements": [
     {
       "type": "compound",
       "id": "root",
@@ -17,7 +17,7 @@
         "w": "radix.x+radix.w",
         "h": "radical.y+radical.h"
       },
-      "members": [
+      "elements": [
         {
           "type": "itom",
           "id": "power",
@@ -27,7 +27,7 @@
             "w": "__.w",
             "h": "__.h"
           },
-          "content": [
+          "elements": [
             "__.outputClass"
           ]
         },
@@ -40,7 +40,7 @@
             "w": "35",
             "h": "radix.h+base.h+5"
           },
-          "content": []
+          "elements": []
         },
         {
           "type": "atom",
@@ -51,7 +51,7 @@
             "w": "base.w + 5",
             "h": "23"
           },
-          "content": []
+          "elements": []
         },
         {
           "type": "itom",
@@ -62,7 +62,7 @@
             "w": "__.w",
             "h": "__.h"
           },
-          "content": [
+          "elements": [
             "__.outputClass"
           ]
         }

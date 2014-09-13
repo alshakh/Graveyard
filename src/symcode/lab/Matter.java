@@ -16,7 +16,7 @@ import symcode.expr.Expression;
  */
 public abstract class Matter {
     /*
-     This will include id,version, const and members
+     This will include id,version, const and elements
      */
 
     private final String _name;
@@ -26,12 +26,12 @@ public abstract class Matter {
     private final HashMap<String, Expression> _const;
     //
     // map from id to molecule
-    private final HashMap<String, Molecule> _members;
+    private final HashMap<String, Molecule> _elements;
     //
     //
     //
     
-    public Matter(String _name,String _version, HashMap _const, HashSet _members) {
+    public Matter(String _name,String _version, HashMap _const, HashSet _elements) {
         throw new UnsupportedOperationException();
     }
 

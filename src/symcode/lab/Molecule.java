@@ -20,8 +20,8 @@ public abstract class Molecule extends Matter {
 
     //
 
-    public Molecule(String _name, String version, HashMap _const, HashSet _members, EnumMap _bond) {
-        super(_name, version, _const, _members);
+    public Molecule(String _name, String version, HashMap _const, HashSet _elements, EnumMap _bond) {
+        super(_name, version, _const, _elements);
         throw new UnsupportedOperationException();
     }
     //

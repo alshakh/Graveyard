@@ -11,8 +11,8 @@ import java.util.HashSet;
  */
  class Atom extends Molecule {
 
-    public Atom(String _name, String version, HashMap _const, HashSet _members, EnumMap _bond) {
-        super(_name, version, _const, _members, _bond);
+    public Atom(String _name, String version, HashMap _const, HashSet _elements, EnumMap _bond) {
+        super(_name, version, _const, _elements, _bond);
         throw new UnsupportedOperationException();
     }
 	
