@@ -13,6 +13,5 @@ public class Lab extends Matter {
 	public Lab(String _name,String _version, HashMap _const, HashSet _elements)
 	{
              super( _name, _version,  _const,  _elements);
-             throw new UnsupportedOperationException();
 	}
 }

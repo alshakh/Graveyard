@@ -11,5 +11,13 @@ package symcode.expr;
  * @author Ahmed Alshakh www.alshakh.net
  */
 public class Expression {
-    
+	private final String exprStr;
+	public Expression(String expr){
+		exprStr = expr;
+	} 
+
+	@Override
+	public String toString(){
+		return exprStr;
+	}
 }
