@@ -10,8 +10,8 @@ import java.util.HashSet;
  * @author Ahmed Alshakh <ahmed.s.alshakh@gmail.com>
  */
 public class Lab extends Matter {
-	public Lab(String _name,String _version, HashMap _const, HashSet _elements)
+	public Lab(String id,String version, HashMap constMap, HashSet elementsSet)
 	{
-             super( _name, _version,  _const,  _elements);
+             super( id, version,  constMap,  elementsSet);
 	}
 }

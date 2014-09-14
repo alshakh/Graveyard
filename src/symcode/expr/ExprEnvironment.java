@@ -14,22 +14,22 @@ import javax.script.ScriptException;
  * @author Ahmed Alshakh www.alshakh.net
  */
 public class ExprEnvironment {
-	private final String environmentStr;
+	private final String _environmentStr;
 	//
 	public ExprEnvironment(String environmentStr){
-		this.environmentStr = environmentStr;
+		this._environmentStr = environmentStr;
 	}
 	//
 	public void apply(ScriptEngine engine){
 		try {
-			engine.eval(environmentStr);
+			engine.eval(_environmentStr);
 		} catch (ScriptException ex) {
 			ex.printStackTrace();
 		}
 	}
 	//
 	private String getEnvStr(){
-		return environmentStr;
+		return _environmentStr;
 	}
 	//
 	public static ExprEnvironment combine(ExprEnvironment envA,ExprEnvironment envB){

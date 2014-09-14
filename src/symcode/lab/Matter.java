@@ -29,11 +29,11 @@ public abstract class Matter {
     //
     //
     
-    public Matter(String _id,String _version, HashMap _const, HashSet _elements) {
-	    this._const = _const;
-	    this._elements = _elements;
-	    this._id = _id;
-	    this._version = _version;
+    public Matter(String id,String version, HashMap constMap, HashSet elementsSet) {
+	    this._const = constMap;
+	    this._elements = elementsSet;
+	    this._id = id;
+	    this._version = version;
     }
 
     //

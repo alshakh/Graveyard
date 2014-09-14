@@ -11,8 +11,8 @@ import java.util.HashSet;
  */
 class Compound extends Molecule {
 
-    public Compound(String _name, String version, HashMap _const, HashSet _elements, EnumMap _bond) {
-        super(_name, version, _const, _elements, _bond);
+    public Compound(String id, String version, HashMap constMap, HashSet elementsSet, EnumMap bondMap) {
+        super(id, version, constMap, elementsSet, bondMap);
     }
 	
 }

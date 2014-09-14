@@ -14,14 +14,14 @@ public class Expression {
 	// factory just creates new engines. no need to make many of them.
 	private static final ScriptEngineManager factory = new ScriptEngineManager();
 	//
-	private final String exprStr;
+	private final String _exprStr;
 	//
 	public Expression(String expr){
-		exprStr = expr;
+		_exprStr = expr;
 	} 
 	//
 	public Expression(){
-		exprStr = "";
+		_exprStr = "";
 	}
 	//
 	public double eval(ExprEnvironment environment){
@@ -33,7 +33,7 @@ public class Expression {
 			if (environment != null)
 				environment.apply(engine);
 			// evaluate JavaScript code from String
-			result = engine.eval(exprStr);
+			result = engine.eval(_exprStr);
 		} catch (ScriptException ex) {
 			ex.printStackTrace();
 		}
@@ -48,6 +48,6 @@ public class Expression {
 	//
 	@Override
 	public String toString(){
-		return exprStr;
+		return _exprStr;
 	}
 }

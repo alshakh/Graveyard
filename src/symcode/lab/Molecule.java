@@ -20,9 +20,9 @@ public abstract class Molecule extends Matter {
 
     //
 
-    public Molecule(String name, String version, HashMap _const, HashSet _elements, EnumMap _bond) {
-        super(name, version, _const, _elements);
-	this._bond = _bond;
+    public Molecule(String id, String version, HashMap constMap, HashSet elementsSet, EnumMap bondMap) {
+        super(id, version, constMap, elementsSet);
+	this._bond = bondMap;
     }
     //
     public boolean hasBond() {
