@@ -1,5 +1,6 @@
 {
   "id":"mathLab",
+  "type":"lab",
   "version": "1.2.3",
   "const": {},
   "elements": [
@@ -19,7 +20,7 @@
       },
       "elements": [
         {
-          "type": "itom",
+          "type": "atom",
           "id": "power",
           "bond": {
             "x": "0",
@@ -54,7 +55,7 @@
           "elements": []
         },
         {
-          "type": "itom",
+          "type": "atom",
           "id": "base",
           "bond": {
             "x": "radical.x+radical.w",
