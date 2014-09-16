@@ -6,12 +6,12 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+//
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+//
 import symcode.expr.Expression;
 
 /**
@@ -29,9 +29,9 @@ public class LabLoader {
 		//validate lab
 		//
 		try {
-			return (Lab) loadTemplate(jsonObj);
+			return (Lab) loadLoadable(jsonObj);
 		} catch (InvalidLabException ex) {
-			Logger.getLogger(LabLoader.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		}
 		return null;
 	}
@@ -42,13 +42,13 @@ public class LabLoader {
 	 * @param jsonObj
 	 * @return
 	 */
-	private static Loadable loadTemplate(JSONObject jsonObj)
+	private static Loadable loadLoadable(JSONObject jsonObj)
 		throws InvalidLabException {
 		//
-		String id,version,type;// exception if no id,version or type
+		String id,version,type;
 		//
 		type = readSimpleProperty(jsonObj,"type").toLowerCase();
-		
+
 		//
 		id = readSimpleProperty(jsonObj,"id");
 		version = readSimpleProperty(jsonObj,"version").toLowerCase();
@@ -72,7 +72,7 @@ public class LabLoader {
 			elementsSet= new HashSet<Loadable>();
 			JSONArray elementsJSONArray = (JSONArray)jsonObj.get("elements");
 			for (Object elementJsonObj : elementsJSONArray) {
-				elementsSet.add((Loadable) loadTemplate((JSONObject) elementJsonObj));
+				elementsSet.add((Loadable) loadLoadable((JSONObject) elementJsonObj));
 			}
 			
 		}

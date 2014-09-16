@@ -33,11 +33,6 @@ public class Product implements Loadable, Evaluable {
 	}
 
 	@Override
-	public String toString(){
-		return "product: " + _content;
-	}
-	
-	@Override
 	public Product eval(HashMap<String, Product> input) {
 		return eval();
 	}
@@ -49,5 +44,10 @@ public class Product implements Loadable, Evaluable {
 	
 	public static Product combine(Product p1, Product p2){
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public String toString(){
+		return "product: " + _content;
 	}
 }
