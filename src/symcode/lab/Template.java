@@ -13,7 +13,7 @@ import symcode.expr.Expression;
  *
  * @author Ahmed Alshakh www.alshakh.net
  */
-public abstract class Matter {
+public abstract class Template implements Loadable {
     /*
      This will include id,version, const and elements
      */
@@ -29,7 +29,7 @@ public abstract class Matter {
     //
     //
     
-    public Matter(String id,String version, HashMap constMap, HashSet elementsSet) {
+    public Template(String id,String version, HashMap constMap, HashSet elementsSet) {
 	    this._const = constMap;
 	    this._elements = elementsSet;
 	    this._id = id;
@@ -64,7 +64,7 @@ public abstract class Matter {
 	    //
 	    String elementsRetStr = "";
 	    boolean firstA = true;
-	    for(Molecule m : _elements){
+	    for(Loadable m : _elements){
 		    if(m==null) continue;
 		    if(firstA){
 			    firstA = false;
@@ -77,7 +77,7 @@ public abstract class Matter {
 		    for(String l : lines){
 			    if(firstB){
 				    firstB = false;
-			    }else {
+			    } else {
 				    elementsRetStr += "\n";
 			    }
 			    elementsRetStr += SPACE + l;

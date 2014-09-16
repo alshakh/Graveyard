@@ -1,80 +1,100 @@
 {
-    "id":"mathLab",
-    "type":"lab",
+    "id": "mathLab",
+    "type": "lab",
     "version": "1.2.3",
-    "const": {
-    },
+    "const": {},
     "elements": [
         {
-        "type": "compound",
-        "id": "root",
-        "version": "1.2.3",
-        "const": {
-            "aX": "20",
-            "aY": "30"
-        },
-        "bond": {
-            "x": "0",
-            "y": "0",
-            "w": "radix.x+radix.w",
-            "h": "radical.y+radical.h"
-        },
-        "elements": [
-            {
-            "type": "atom",
-            "id": "power",
+            "type": "molecule",
+            "id": "simpleAtom",
+            "version": "1.2.2",
             "bond": {
                 "x": "0",
                 "y": "0",
-                "w": "__.w",
-                "h": "__.h"
+                "w": "100",
+                "h": "100"
             },
             "elements": [
                 {
-                "type":"outputclass",
-                "content":"__.outputclass"
-            }
+                    "type": "product",
+                    "bond": {
+                        "w": "100",
+                        "h": "100"
+                    },
+                    "content": "<circle cx=\"50\" cy=\"50\" r=\"40\" stroke=\"black\" stroke-width=\"3\" fill=\"red\" />"
+                }
             ]
         },
         {
-            "type": "atom",
-            "id": "radical",
-            "bond": {
-                "x": "power.x+power.w-aX",
-                "y": "power.y+power.h-aY",
-                "w": "35",
-                "h": "radix.h+base.h+5"
+            "type": "molecule",
+            "id": "root",
+            "version": "1.2.3",
+            "const": {
+                "aX": "20",
+                "aY": "30"
             },
-            "elements": []
-        },
-        {
-            "type": "atom",
-            "id": "radix",
             "bond": {
-                "x": "radical.x+radical.w",
-                "y": "radical.y",
-                "w": "base.w + 5",
-                "h": "23"
-            },
-            "elements": []
-        },
-        {
-            "type": "atom",
-            "id": "base",
-            "bond": {
-                "x": "radical.x+radical.w",
-                "y": "radix.y+radix.h",
-                "w": "__.w",
-                "h": "__.h"
+                "x": "0",
+                "y": "0",
+                "w": "radix.x+radix.w",
+                "h": "radical.y+radical.h"
             },
             "elements": [
                 {
-                "type":"outputclass",
-                "content":"__.outputclass"
-            }
+                    "type": "molecule",
+                    "id": "power",
+                    "bond": {
+                        "x": "0",
+                        "y": "0",
+                        "w": "__.w",
+                        "h": "__.h"
+                    },
+                    "elements": [
+                        {
+                            "type": "product",
+                            "content": "__.svg"
+                        }
+                    ]
+                },
+                {
+                    "type": "molecule",
+                    "id": "radical",
+                    "bond": {
+                        "x": "power.x+power.w-aX",
+                        "y": "power.y+power.h-aY",
+                        "w": "35",
+                        "h": "radix.h+base.h+5"
+                    },
+                    "elements": []
+                },
+                {
+                    "type": "molecule",
+                    "id": "radix",
+                    "bond": {
+                        "x": "radical.x+radical.w",
+                        "y": "radical.y",
+                        "w": "base.w + 5",
+                        "h": "23"
+                    },
+                    "elements": []
+                },
+                {
+                    "type": "molecule",
+                    "id": "base",
+                    "bond": {
+                        "x": "radical.x+radical.w",
+                        "y": "radix.y+radix.h",
+                        "w": "__.w",
+                        "h": "__.h"
+                    },
+                    "elements": [
+                        {
+                            "type": "product",
+                            "content": "__.outputclass"
+                        }
+                    ]
+                }
             ]
         }
-        ]
-    }
     ]
 }

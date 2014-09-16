@@ -19,94 +19,100 @@ import symcode.expr.Expression;
  * @author Ahmed Alshakh <ahmed.s.alshakh@gmail.com>
  */
 public class LabLoader {
-
+	
 	public static Lab loadLab(File labFile) {
 		JSONObject jsonObj = readLabFile(labFile);
 		if (jsonObj == null) {
 			return null;
 		}
 		//
-		//validate if lab
+		//validate lab
 		//
 		try {
-			return (Lab) loadMatter(jsonObj);
+			return (Lab) loadTemplate(jsonObj);
 		} catch (InvalidLabException ex) {
 			Logger.getLogger(LabLoader.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		return null;
 	}
-
+	
 	/**
 	 * recursively load matter. usually called only once on a lab.
 	 *
-	 * @param matterJSONObj
+	 * @param jsonObj
 	 * @return
 	 */
-	private static Matter loadMatter(JSONObject matterJSONObj)
+	private static Loadable loadTemplate(JSONObject jsonObj)
 		throws InvalidLabException {
 		//
 		String id,version,type;// exception if no id,version or type
-		HashMap<String,Expression> constMap;
-		HashSet<Molecule> elementsSet;
-		EnumMap<Bond,Expression> bondMap;
 		//
-		type = readSimpleProperty(matterJSONObj,"type").toLowerCase();
-		if(type.equals("outputclass"))
-			return null;//TODO
+		type = readSimpleProperty(jsonObj,"type").toLowerCase();
+		
 		//
-		id = readSimpleProperty(matterJSONObj,"id").toLowerCase();
-		version = readSimpleProperty(matterJSONObj,"version").toLowerCase();
+		id = readSimpleProperty(jsonObj,"id");
+		version = readSimpleProperty(jsonObj,"version").toLowerCase();
 		//
-		constMap = null;
-		if(matterJSONObj.containsKey("const")){
-			constMap = new HashMap<String,Expression>();
-			HashMap constJSONHashMap = (HashMap)matterJSONObj.get("const");//
-			//
-			Iterator it = constJSONHashMap.keySet().iterator();
-			while(it.hasNext()){
-				String k = (String)it.next();
-				constMap.put(k, new Expression((String)constJSONHashMap.get(k)));
-			}
-		}
-		//
-		elementsSet = null;
-		if( matterJSONObj.containsKey("elements")){
-			elementsSet= new HashSet<Molecule>();
-			JSONArray elementsJSONArray = (JSONArray)matterJSONObj.get("elements");
-			for (Object elementJSONObj : elementsJSONArray) {
-				elementsSet.add((Molecule) loadMatter((JSONObject) elementJSONObj));
-			}
-		}
-		//
-		bondMap = null;
-		if(matterJSONObj.containsKey("bond")){
-			bondMap = new EnumMap<Bond, Expression>(Bond.class);
-			JSONObject bondJSONObj = (JSONObject)matterJSONObj.get("bond");
-			String jsonKey = "";
-			for(Bond b : Bond.values()){
-				if(b==Bond.X) jsonKey = "x";
-				else if (b==Bond.Y) jsonKey = "y";
-				else if (b==Bond.H) jsonKey = "h";
-				else if (b==Bond.W) jsonKey = "w";
-				//
-				bondMap.put(b,new Expression((String) bondJSONObj.get(jsonKey)));
-			}
-		}
 		//
 		switch (type) {
 			case "lab":
-				return new Lab(id,version,constMap,elementsSet);
-			case "atom":
-				return new Atom(id,version,constMap,elementsSet,bondMap);
-			case "compound":
-				return new Compound(id,version,constMap,elementsSet,bondMap);
-			case "outputclass":
-				break;
+				return new Lab(id,version,loadConst(jsonObj),loadElements(jsonObj));
+			case "molecule":
+				return new Molecule(id,version,loadConst(jsonObj),loadElements(jsonObj),loadBond(jsonObj));
+			case "product":
+				return new Product(loadBond(jsonObj),readSimpleProperty(jsonObj,"content"));
 			default:
 				throw new InvalidLabException();
 		}
-		return null;
 	}
+	//
+	private static HashSet<Loadable> loadElements(JSONObject jsonObj) throws InvalidLabException{
+		HashSet<Loadable> elementsSet = null;
+		if( jsonObj.containsKey("elements")){
+			elementsSet= new HashSet<Loadable>();
+			JSONArray elementsJSONArray = (JSONArray)jsonObj.get("elements");
+			for (Object elementJsonObj : elementsJSONArray) {
+				elementsSet.add((Loadable) loadTemplate((JSONObject) elementJsonObj));
+			}
+			
+		}
+		return elementsSet;
+	}
+	//
+	private static HashMap<String,Expression> loadConst(JSONObject jsonObj){
+	
+			HashMap<String,Expression> constMap = null;
+			if(jsonObj.containsKey("const")){
+				constMap = new HashMap<String,Expression>();
+				HashMap constJSONHashMap = (HashMap)jsonObj.get("const");//
+				//
+				Iterator it = constJSONHashMap.keySet().iterator();
+				while(it.hasNext()){
+					String k = (String)it.next();
+					constMap.put(k, new Expression((String)constJSONHashMap.get(k)));
+				}
+			}
+			return constMap;
+	}
+	private static EnumMap<Bond,Expression> loadBond(JSONObject jsonObj){
+
+			EnumMap<Bond,Expression> bondMap = null;
+			if(jsonObj.containsKey("bond")){
+				bondMap = new EnumMap<Bond, Expression>(Bond.class);
+				JSONObject bondJSONObj = (JSONObject)jsonObj.get("bond");
+				String jsonKey = "";
+				for(Bond b : Bond.values()){
+					if(b==Bond.X) jsonKey = "x";
+					else if (b==Bond.Y) jsonKey = "y";
+					else if (b==Bond.H) jsonKey = "h";
+					else if (b==Bond.W) jsonKey = "w";
+					//
+					bondMap.put(b,new Expression((String) bondJSONObj.get(jsonKey)));
+				}
+			}
+			return bondMap;
+	}
+	//
 	//
 	private static String readSimpleProperty(JSONObject matterObj, String property){
 		if (!matterObj.containsKey(property)) {
@@ -114,17 +120,17 @@ public class LabLoader {
 		}
 		return (String) matterObj.get(property);
 	}
-
+	
 	private static JSONObject readLabFile(File labFile) {
-
+		
 		JSONParser parser = new JSONParser();
-
+		
 		try {
-
+			
 			Object obj = parser.parse(new FileReader(labFile));
 			JSONObject jsonObject = (JSONObject) obj;
 			return jsonObject;
-
+			
 		} catch (java.io.FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (java.io.IOException e) {
@@ -133,6 +139,6 @@ public class LabLoader {
 			e.printStackTrace();
 		}
 		return null;
-
+		
 	}
 }

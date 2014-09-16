@@ -10,7 +10,7 @@ import java.util.HashSet;
  *
  * @author Ahmed Alshakh <ahmed.s.alshakh@gmail.com>
  */
-public abstract class Molecule extends Matter {
+public class Molecule extends Template implements Loadable, Evaluable {
     /*
      This class extends matter, will have bonds and evaluation functions 
      */
@@ -25,15 +25,22 @@ public abstract class Molecule extends Matter {
 	this._bond = bondMap;
     }
     //
-    public boolean hasBond() {
-        throw new UnsupportedOperationException();
-    }
 
+    @Override
     public Expression getBond(Bond bond) {
         throw new UnsupportedOperationException();
     }
+
+
+    @Override
+    public Product eval(HashMap<String,Product> input){
+	throw new UnsupportedOperationException();
+    }
     //
-    //abstract OutputClass eval(HashMap<String,OutputClass> itomContents);
-    //
+    
+    @Override
+    public Product eval() {
+	return eval(new HashMap<String,Product>());
+    }
 
 }
