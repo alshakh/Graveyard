@@ -1,46 +1,43 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 package symcode.lab;
 
-import symcode.expr.Expression;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * All classes in lab should fallow this abstract class.
  *
- * @author Ahmed Alshakh <ahmed.s.alshakh@gmail.com>
+ * @author Ahmed Alshakh www.alshakh.net
  */
-public class Molecule extends Template implements Loadable, Evaluable {
-    /*
-     This class extends matter, will have bonds and evaluation functions 
-     */
-    //
-
-    private final EnumMap<Bond, Expression> _bond;
-
-    //
-
-    public Molecule(String id, String version, HashMap constMap, HashSet elementsSet, EnumMap bondMap) {
-        super(id, version, constMap, elementsSet);
-	this._bond = bondMap;
-    }
-    //
-
-    @Override
-    public Expression getBond(Bond bond) {
-        throw new UnsupportedOperationException();
-    }
-
-
-    @Override
-    public Product eval(HashMap<String,Product> input){
-	throw new UnsupportedOperationException();
-    }
-    //
-    
-    @Override
-    public Product eval() {
-	return eval(new HashMap<String,Product>());
-    }
-
+public abstract class Molecule extends Template implements Loadable  {
+	//
+	public static final HashSet<String> EMPTY_REFERENCES = new HashSet<String>();
+	//
+	private final BondExpr _bond;
+	private final HashSet<String> _references;
+	//
+	/**
+	 *
+	 * @param id
+	 * @param version
+	 * @param constMap
+	 * @param elementsSet
+	 * @param bond
+	 * @param references
+	 */
+	public Molecule(String id,String version, HashMap constMap, HashSet elementsSet, BondExpr bond, HashSet<String> references){
+		super(id, version, constMap, elementsSet);
+		_bond = bond;
+		_references = references;
+	}
+	//
+	public HashSet<String> getReferences(){
+		return _references;
+	}
+	//
+		
 }

@@ -11,6 +11,7 @@ import javax.script.*;
  * @author Ahmed Alshakh www.alshakh.net
  */
 public class Expression {
+	public static final Expression EMPTY_EXPRESSION = new Expression("0");
 	// factory just creates new engines. no need to make many of them.
 	private static final ScriptEngineManager factory = new ScriptEngineManager();
 	//

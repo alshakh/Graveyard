@@ -14,10 +14,10 @@ import javax.script.ScriptException;
  * @author Ahmed Alshakh www.alshakh.net
  */
 public class ExprEnvironment {
-	private final String _environmentStr;
+	private String _environmentStr;
 	//
-	public ExprEnvironment(String environmentStr){
-		this._environmentStr = environmentStr;
+	public ExprEnvironment(){
+		_environmentStr="";
 	}
 	//
 	public void apply(ScriptEngine engine){
@@ -32,7 +32,12 @@ public class ExprEnvironment {
 		return _environmentStr;
 	}
 	//
-	public static ExprEnvironment combine(ExprEnvironment envA,ExprEnvironment envB){
-		return new ExprEnvironment(envA.getEnvStr() + "\n" + envB.getEnvStr());
+	/**
+	 * combine the two environments. otherEnv has priority over this.
+	 * otherEnv will be untouched
+	 * @param otherEnv
+	 */
+	public void combine(ExprEnvironment otherEnv){
+		_environmentStr += "\n" + otherEnv.getEnvStr();
 	}
 }

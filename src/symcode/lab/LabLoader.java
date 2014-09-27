@@ -2,16 +2,13 @@ package symcode.lab;
 
 import java.io.File;
 import java.io.FileReader;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-//
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-//
 import symcode.expr.Expression;
 
 /**
@@ -20,6 +17,11 @@ import symcode.expr.Expression;
  */
 public class LabLoader {
 	
+	/**
+	 *
+	 * @param labFile
+	 * @return
+	 */
 	public static Lab loadLab(File labFile) {
 		JSONObject jsonObj = readLabFile(labFile);
 		if (jsonObj == null) {
@@ -56,32 +58,31 @@ public class LabLoader {
 		//
 		switch (type) {
 			case "lab":
-				return new Lab(id,version,loadConst(jsonObj),loadElements(jsonObj));
-			case "molecule":
-				return new Molecule(id,version,loadConst(jsonObj),loadElements(jsonObj),loadBond(jsonObj));
-			case "product":
-				return new Product(loadBond(jsonObj),readSimpleProperty(jsonObj,"content"));
+				return new Lab(id,version,loadConst(jsonObj),loadMolecule(jsonObj));
+			case "compound":
+				return new Compound(id,version,loadConst(jsonObj),loadMolecule(jsonObj),loadBond(jsonObj), loadReferences(jsonObj));
+			case "atom":
+				return new Atom(id,version,loadConst(jsonObj),loadBond(jsonObj),loadReferences(jsonObj), new SvgString(readSimpleProperty(jsonObj,"svg")));
 			default:
 				throw new InvalidLabException();
 		}
 	}
 	//
-	private static HashSet<Loadable> loadElements(JSONObject jsonObj) throws InvalidLabException{
-		HashSet<Loadable> elementsSet = null;
+	private static HashSet<Molecule> loadMolecule(JSONObject jsonObj) throws InvalidLabException{
+		HashSet<Molecule> elementsSet = Template.EMPTY_ELEMENTS;
 		if( jsonObj.containsKey("elements")){
-			elementsSet= new HashSet<Loadable>();
+			elementsSet= new HashSet<Molecule>();
 			JSONArray elementsJSONArray = (JSONArray)jsonObj.get("elements");
 			for (Object elementJsonObj : elementsJSONArray) {
-				elementsSet.add((Loadable) loadLoadable((JSONObject) elementJsonObj));
+				elementsSet.add((Molecule) loadLoadable((JSONObject) elementJsonObj));
 			}
-			
 		}
 		return elementsSet;
 	}
 	//
 	private static HashMap<String,Expression> loadConst(JSONObject jsonObj){
 	
-			HashMap<String,Expression> constMap = null;
+			HashMap<String,Expression> constMap = Template.EMPTY_CONST;
 			if(jsonObj.containsKey("const")){
 				constMap = new HashMap<String,Expression>();
 				HashMap constJSONHashMap = (HashMap)jsonObj.get("const");//
@@ -94,33 +95,43 @@ public class LabLoader {
 			}
 			return constMap;
 	}
-	private static EnumMap<Bond,Expression> loadBond(JSONObject jsonObj){
-
-			EnumMap<Bond,Expression> bondMap = null;
-			if(jsonObj.containsKey("bond")){
-				bondMap = new EnumMap<Bond, Expression>(Bond.class);
-				JSONObject bondJSONObj = (JSONObject)jsonObj.get("bond");
-				String jsonKey = "";
-				for(Bond b : Bond.values()){
-					if(b==Bond.X) jsonKey = "x";
-					else if (b==Bond.Y) jsonKey = "y";
-					else if (b==Bond.H) jsonKey = "h";
-					else if (b==Bond.W) jsonKey = "w";
-					//
-					bondMap.put(b,new Expression((String) bondJSONObj.get(jsonKey)));
-				}
+	//
+	private static HashSet<String> loadReferences(JSONObject jsonObj){
+		HashSet<String> refSet = Molecule.EMPTY_REFERENCES;
+		if(jsonObj.containsKey("references")){
+			refSet = new HashSet<String>();	
+			String[] refStrArr = ((String)jsonObj.get("references")).split(",");
+			for(String s : refStrArr){
+				refSet.add(s.trim());
 			}
-			return bondMap;
+		}
+		return refSet;
+	}
+	//
+	private static BondExpr loadBond(JSONObject jsonObj){
+
+			BondExpr bond = BondExpr.EMPTY;
+			if(jsonObj.containsKey("bond")){
+				JSONObject jsonBondObj = (JSONObject)jsonObj.get("bond");
+				// 
+				bond = new BondExpr(
+				new Expression(readSimpleProperty(jsonBondObj,"x")),
+				new Expression(readSimpleProperty(jsonBondObj,"y")),
+				new Expression(readSimpleProperty(jsonBondObj,"h")),
+				new Expression(readSimpleProperty(jsonBondObj,"w"))
+				);
+			}
+			return bond;
 	}
 	//
 	//
-	private static String readSimpleProperty(JSONObject matterObj, String property){
-		if (!matterObj.containsKey(property)) {
+	private static String readSimpleProperty(JSONObject jsonObj, String property){
+		if (!jsonObj.containsKey(property)) {
 			return "";
 		}
-		return (String) matterObj.get(property);
+		return (String) jsonObj.get(property);
 	}
-	
+	//	
 	private static JSONObject readLabFile(File labFile) {
 		
 		JSONParser parser = new JSONParser();
