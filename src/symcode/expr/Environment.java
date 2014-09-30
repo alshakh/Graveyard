@@ -13,13 +13,20 @@ import javax.script.ScriptException;
  *
  * @author Ahmed Alshakh www.alshakh.net
  */
-public class ExprEnvironment {
+public class Environment {
 	private String _environmentStr;
-	//
-	public ExprEnvironment(){
+
+	/**
+	 *
+	 */
+	public Environment(){
 		_environmentStr="";
 	}
-	//
+
+	/**
+	 *
+	 * @param engine
+	 */
 	public void apply(ScriptEngine engine){
 		try {
 			engine.eval(_environmentStr);
@@ -27,17 +34,34 @@ public class ExprEnvironment {
 			ex.printStackTrace();
 		}
 	}
-	//
+	/**
+	 * return environment str. For use with combine
+	 * @return 
+	 */
 	private String getEnvStr(){
 		return _environmentStr;
 	}
-	//
+
+	/**
+	 *
+	 * @param expr
+	 */
+	public void append(String expr){
+		if(expr.trim().isEmpty()) return;
+		if(!_environmentStr.isEmpty()) _environmentStr+="\n";
+		_environmentStr += expr;
+	}
 	/**
 	 * combine the two environments. otherEnv has priority over this.
 	 * otherEnv will be untouched
 	 * @param otherEnv
 	 */
-	public void combine(ExprEnvironment otherEnv){
+	public void combine(Environment otherEnv){
 		_environmentStr += "\n" + otherEnv.getEnvStr();
+	}
+
+	@Override
+	public String toString(){
+		return _environmentStr;
 	}
 }

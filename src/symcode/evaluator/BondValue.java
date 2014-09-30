@@ -12,10 +12,18 @@ package symcode.evaluator;
  */
 public class BondValue {
 	
-	private final double _x;
-	private final double _y;
-	private final double _h;
-	private final double _w;
+	public final double _x;
+	public final double _y;
+	public final double _h;
+	public final double _w;
+
+	/**
+	 *
+	 * @param x
+	 * @param y
+	 * @param h
+	 * @param w
+	 */
 	public BondValue(double x, double y, double h, double w){
 		_x = x;
 		_y = y;

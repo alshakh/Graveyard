@@ -3,75 +3,83 @@
     "type": "lab",
     "version": "1.2.3",
     "const": {},
-    "elements": [{
-        "type": "atom",
-        "id": "simpleAtom",
-        "version": "1.2.2",
-        "bond": {
-            "x": "0",
-            "y": "0",
-            "h": "100",
-            "w": "100"
-        },
-        "svg": "<circle cx=\"50\" cy=\"50\" r=\"40\" stroke=\"black\" stroke-width=\"3\" fill=\"red\" />"
-    }, {
-        "type": "compound",
-        "id": "root",
-        "version": "1.2.3",
-        "const": {
-            "aX": "20",
-            "aY": "30"
-        },
-        "bond": {
-            "x": "0",
-            "y": "0",
-            "h": "radical.y+radical.h",
-            "w": "radix.x+radix.w"
-        },
-        "elements": [{
+    "elements": [
+        {
             "type": "atom",
-            "id": "power",
-            "references": "$1",
+            "id": "simpleAtom",
+            "version": "1.2.2",
             "bond": {
                 "x": "0",
                 "y": "0",
-                "h": "$1.h",
-                "w": "$1.w"
+                "h": "100",
+                "w": "100"
             },
-            "svg": "$1.svg"
-        }, {
-            "type": "atom",
-            "id": "radical",
-            "references": "power, radix, base",
+            "svg": "\"<circle cx=\"50\" cy=\"50\" r=\"40\" stroke=\"black\" stroke-width=\"3\" fill=\"red\" />\""
+        },
+        {
+            "type": "compound",
+            "id": "root",
+            "version": "1.2.3",
+            "const": {
+                "aX": "20",
+                "aY": "30"
+            },
             "bond": {
-                "x": "power.x+power.w-aX",
-                "y": "power.y+power.h-aY",
-                "h": "radix.h+base.h+5",
-                "w": "35"
+                "x": "0",
+                "y": "0",
+                "h": "radical.y+radical.h",
+                "w": "radix.x+radix.w"
             },
-            "svg": "RADICAL RADICAL RADICAL"
-        }, {
-            "type": "atom",
-            "id": "radix",
-            "references": "radical, base",
-            "bond": {
-                "x": "radical.x+radical.w",
-                "y": "radical.y",
-                "h": "23",
-                "w": "base.w + 5"
-            },
-            "svg": "RADIX RADIX RADIX"
-        }, {
-            "type": "atom",
-            "id": "base",
-            "references": "radical, radix, $2",
-            "bond": {
-                "x": "radical.x+radical.w",
-                "y": "radix.y+radix.h",
-                "h": "$2.h",
-                "w": "$2.w"
-            },
-            "svg": "$2.svg"
-        }]
-    }]
+            "elements": [
+                {
+                    "type": "atom",
+                    "id": "power",
+                    "references": "$1",
+                    "bond": {
+                        "x": "0",
+                        "y": "0",
+                        "h": "$1.h",
+                        "w": "$1.w"
+                    },
+                    "svg": "$1.svg"
+                },
+                {
+                    "type": "atom",
+                    "id": "radical",
+                    "references": "power, radix, base, aX, aY",
+                    "bond": {
+                        "x": "power.x+power.w-aX",
+                        "y": "power.y+power.h-aY",
+                        "h": "radix.h+base.h+5",
+                        "w": "35"
+                    },
+                    "svg": "\"RADICAL RADICAL RADICAL\""
+                },
+                {
+                    "type": "atom",
+                    "id": "radix",
+                    "references": "radical, base",
+                    "bond": {
+                        "x": "radical.x+radical.w",
+                        "y": "radical.y",
+                        "h": "23",
+                        "w": "base.w + 5"
+                    },
+                    "svg": "\"RADIX RADIX RADIX\""
+                },
+                {
+                    "type": "atom",
+                    "id": "base",
+                    "references": "radical, radix, $2",
+                    "bond": {
+                        "x": "radical.x+radical.w",
+                        "y": "radix.y+radix.h",
+                        "h": "$2.h",
+                        "w": "$2.w"
+                    },
+                    "svg": "$2.svg"
+                }
+            ]
+        }
+    ]
 }

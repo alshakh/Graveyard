@@ -3,13 +3,24 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/shakh/projects/symcode/src/symcode/lab/Atom.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/lab/Molecule.java</file>
+            <file>file:/home/shakh/projects/symcode/src/symcode/expr/Property.java</file>
+            <file>file:/home/shakh/projects/symcode/src/symcode/evaluator/Evaluator.java</file>
+            <file>file:/home/shakh/projects/symcode/src/symcode/expr/Expression.java</file>
             <file>file:/home/shakh/projects/symcode/src/symcode/evaluator/BondValue.java</file>
+            <file>file:/home/shakh/projects/symcode/src/symcode/lab/Molecule.java</file>
+            <file>file:/home/shakh/projects/symcode/src/symcode/lab/Lab.java</file>
+            <file>file:/home/shakh/projects/symcode/src/symcode/lab/Loadable.java</file>
+            <file>file:/home/shakh/projects/symcode/src/symcode/lab/Template.java</file>
+            <file>file:/home/shakh/projects/symcode/src/symcode/lab/LabLoader.java</file>
+            <file>file:/home/shakh/projects/symcode/src/symcode/evaluator/Product.java</file>
+            <file>file:/home/shakh/projects/symcode/src/symcode/expr/Environment.java</file>
+            <file>file:/home/shakh/projects/symcode/src/symcode/lab/Atom.java</file>
+            <file>file:/home/shakh/projects/symcode/src/symcode/expr/EnvironmentPropertyList.java</file>
             <file>file:/home/shakh/projects/symcode/src/symcode/Main.java</file>
             <file>file:/home/shakh/projects/symcode/src/symcode/lab/Compound.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/evaluator/Product.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/lab/LabLoader.java</file>
+            <file>file:/home/shakh/projects/symcode/src/symcode/lab/SvgString.java</file>
+            <file>file:/home/shakh/projects/symcode/src/symcode/evaluator/EvalNode.java</file>
+            <file>file:/home/shakh/projects/symcode/src/symcode/lab/InvalidLabException.java</file>
             <file>file:/home/shakh/projects/symcode/src/symcode/lab/BondExpr.java</file>
         </group>
     </open-files>

@@ -3,6 +3,7 @@ package symcode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import symcode.expr.EnvironmentPropertyList;
 import symcode.lab.*;
 
 /**
@@ -15,8 +16,21 @@ public class Main {
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) {
+		//
+		EnvironmentPropertyList epl = new EnvironmentPropertyList();
+		Lab demoLab = symcode.lab.LabLoader.loadLab(new java.io.File("labs/demoLab.json"));
+		Molecule a = demoLab.getMolecule("root");
+		a.addToPropertyList(epl);
+		System.out.println(epl.toEnvironment().toString());
 
-	Lab demoLab = symcode.lab.LabLoader.loadLab(new java.io.File("labs/demoLab.json"));
+
+
+		
+		/*
+		//
+		//
+		//
+		Lab demoLab = symcode.lab.LabLoader.loadLab(new java.io.File("labs/demoLab.json"));
 		Atom a = (Atom)demoLab.getMolecule("simpleAtom");
 		
 		//EvalNode en = new EvalNode(a);
@@ -27,9 +41,13 @@ public class Main {
 		ArrayList exprList = getRandomList();
 		printArray(exprList);
 		System.out.println("\n\n\n");
-		printArray(sortExprs(exprList));
+		printArray(sortExprs(exprList));*/
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public static ArrayList<ExprPair> getRandomList() {
 		ArrayList<ExprPair> exprList = new ArrayList<ExprPair>();
 		exprList.add(new ExprPair("aX", "20"));
@@ -78,6 +96,11 @@ public class Main {
 		return exprList;
 	}
 
+	/**
+	 *
+	 * @param exprList
+	 * @return
+	 */
 	public static HashSet<String> getAllRefs(ArrayList<ExprPair> exprList) {
 		HashSet<String> allRefs = new HashSet<String>();
 		for (ExprPair a : exprList) {
@@ -86,6 +109,12 @@ public class Main {
 		return allRefs;
 	}
 
+	/**
+	 *
+	 * @param exprList
+	 * @param key
+	 * @return
+	 */
 	public static int indexOfExprPair(ArrayList<ExprPair> exprList, String key) {
 		for (int i = 0; i < exprList.size(); i++) {
 			if (exprList.get(i).key.equals(key)) {
@@ -95,6 +124,11 @@ public class Main {
 		return -1;
 	}
 
+	/**
+	 *
+	 * @param exprList
+	 * @return
+	 */
 	public static ArrayList<ExprPair> sortExprs(ArrayList<ExprPair> exprList) {
 		exprList = (ArrayList<ExprPair>) exprList.clone();
 		HashSet<String> allRefs = getAllRefs(exprList);
@@ -134,6 +168,10 @@ public class Main {
 		return exprList;
 	}
 
+	/**
+	 *
+	 * @param exprList
+	 */
 	public static void printArray(ArrayList<ExprPair> exprList) {
 		for (ExprPair ap : exprList) {
 			System.out.println(ap.toString());

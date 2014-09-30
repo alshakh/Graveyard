@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -67,9 +68,8 @@ public class LabLoader {
 				throw new InvalidLabException();
 		}
 	}
-	//
-	private static HashSet<Molecule> loadMolecule(JSONObject jsonObj) throws InvalidLabException{
-		HashSet<Molecule> elementsSet = Template.EMPTY_ELEMENTS;
+	private static Set<Molecule> loadMolecule(JSONObject jsonObj) throws InvalidLabException{
+		Set<Molecule> elementsSet = Template.EMPTY_ELEMENTS;
 		if( jsonObj.containsKey("elements")){
 			elementsSet= new HashSet<Molecule>();
 			JSONArray elementsJSONArray = (JSONArray)jsonObj.get("elements");
@@ -79,25 +79,24 @@ public class LabLoader {
 		}
 		return elementsSet;
 	}
-	//
-	private static HashMap<String,Expression> loadConst(JSONObject jsonObj){
+	private static Set<Const> loadConst(JSONObject jsonObj){
 	
-			HashMap<String,Expression> constMap = Template.EMPTY_CONST;
+			Set<Const> constSet = Template.EMPTY_CONSTSET;
 			if(jsonObj.containsKey("const")){
-				constMap = new HashMap<String,Expression>();
+				constSet = new HashSet<Const>();
 				HashMap constJSONHashMap = (HashMap)jsonObj.get("const");//
 				//
 				Iterator it = constJSONHashMap.keySet().iterator();
 				while(it.hasNext()){
 					String k = (String)it.next();
-					constMap.put(k, new Expression((String)constJSONHashMap.get(k)));
+
+					constSet.add(new Const(k, new Expression((String)constJSONHashMap.get(k))));
 				}
 			}
-			return constMap;
+			return constSet;
 	}
-	//
-	private static HashSet<String> loadReferences(JSONObject jsonObj){
-		HashSet<String> refSet = Molecule.EMPTY_REFERENCES;
+	private static Set<String> loadReferences(JSONObject jsonObj){
+		Set<String> refSet = Molecule.EMPTY_REFERENCES;
 		if(jsonObj.containsKey("references")){
 			refSet = new HashSet<String>();	
 			String[] refStrArr = ((String)jsonObj.get("references")).split(",");
@@ -107,7 +106,6 @@ public class LabLoader {
 		}
 		return refSet;
 	}
-	//
 	private static BondExpr loadBond(JSONObject jsonObj){
 
 			BondExpr bond = BondExpr.EMPTY;
@@ -123,15 +121,12 @@ public class LabLoader {
 			}
 			return bond;
 	}
-	//
-	//
 	private static String readSimpleProperty(JSONObject jsonObj, String property){
 		if (!jsonObj.containsKey(property)) {
 			return "";
 		}
 		return (String) jsonObj.get(property);
 	}
-	//	
 	private static JSONObject readLabFile(File labFile) {
 		
 		JSONParser parser = new JSONParser();

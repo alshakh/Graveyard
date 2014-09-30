@@ -8,7 +8,8 @@ package symcode.evaluator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import symcode.expr.ExprEnvironment;
+import symcode.expr.Environment;
+import symcode.expr.EnvironmentPropertyList;
 import symcode.lab.Molecule;
 
 /**
@@ -19,27 +20,50 @@ public class EvalNode {
 	private final Molecule _sym;// either atom or compound 
 	private final ArrayList<EvalNode> _inputNodes;
 
-	//
+	/**
+	 *
+	 * @param sym
+	 * @param inputList
+	 */
 	public EvalNode(Molecule sym, ArrayList<EvalNode> inputList){
 		_sym = sym;
 		_inputNodes = inputList;
 	}
 	
-	//
+	/**
+	 *
+	 * @param sym
+	 */
 	public EvalNode(Molecule sym){
-		this(sym,new ArrayList<EvalNode>());
+		this(sym,null);
 	}
 
-	//
-	public Product eval(){
-		if(_sym.isAtom()){
-			// Prepare ExprEnvironment
-			ExprEnvironment expEnv;
-
-			//
-
-		}
+	/**
+	 *
+	 * @return
+	 */
+	public Product eval() throws EvaluationError{
+		//+ constructing environment
+		EnvironmentPropertyList epl = new EnvironmentPropertyList();
+		_sym.addToPropertyList(epl);
 		//
-		throw new UnsupportedOperationException();
+		if(_inputNodes != null){
+			for(int i = 0 ; i < _inputNodes.size() ; i++){
+				_inputNodes.get(i).eval().addEnvironmentPropertyList("$"+i, epl);
+			}
+		}
+		//+ checking validity before executing
+		if(!epl.isValid()){
+			if(epl.isCircularDepedency()){
+				throw new EvaluationError("CircularDependancy: The problem is most likely in the Lab");
+			} else {
+				throw new EvaluationError("Some of references are missing: probably the error is less input arguments for "+_sym.getId());
+			}
+		}
+		//-
+		Environment env = epl.toEnvironment();
+		//- environment is ready
+		//
+		return null;	
 	}
 }
