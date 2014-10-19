@@ -3,6 +3,9 @@ package symcode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import symcode.evaluator.EvalNode;
+import symcode.evaluator.EvaluationError;
+import symcode.evaluator.Evaluator;
 import symcode.expr.EnvironmentPropertyList;
 import symcode.lab.*;
 
@@ -15,33 +18,30 @@ public class Main {
 	/**
 	 * @param args the command line arguments
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws EvaluationError {
 		//
 		EnvironmentPropertyList epl = new EnvironmentPropertyList();
 		Lab demoLab = symcode.lab.LabLoader.loadLab(new java.io.File("labs/demoLab.json"));
-		Molecule a = demoLab.getMolecule("root");
-		a.addToPropertyList(epl);
+		Molecule molecule = demoLab.getMolecule("root");
+		epl.addPropertySet(molecule.evalPropertySet());
 		System.out.println(epl.toEnvironment().toString());
+		System.exit(0);
 
 
-
-		
-		/*
+	/*	
 		//
 		//
 		//
 		Lab demoLab = symcode.lab.LabLoader.loadLab(new java.io.File("labs/demoLab.json"));
-		Atom a = (Atom)demoLab.getMolecule("simpleAtom");
+		Molecule molecule = demoLab.getMolecule("simpleAtom");
 		
-		//EvalNode en = new EvalNode(a);
+		EvalNode en = new EvalNode(molecule);
+		System.out.print(en.eval().toSvgString());
 		//Evaluator evaluator = new Evaluator(demoLab);
+		//evaluator.eval(en);
 		//
 		//
-		//
-		ArrayList exprList = getRandomList();
-		printArray(exprList);
-		System.out.println("\n\n\n");
-		printArray(sortExprs(exprList));*/
+		//*/
 	}
 
 	/**

@@ -33,12 +33,6 @@ public class Const {
 		return _expression;
 	}
 
-	public void addToEnvironmentPropertyList(EnvironmentPropertyList epl){
-		if(epl.hasReference(_name)) return;
-		epl.addReference(_name);
-		//////////////////
-		epl.addProperty(_property);
-	}
 
 	@Override
 	public int hashCode() {
@@ -61,7 +55,10 @@ public class Const {
 		}
 		return true;
 	}
+	protected Property getProperty(){
+		return _property;
 
+	}
 
 	
 }

@@ -46,6 +46,12 @@ public class EnvironmentPropertyList {
 		// TODO : better way
 		sort();
 	}
+
+	public void addPropertySet(Set<Property> properties){
+		_propertyList.addAll(properties);
+		//
+		sort();
+	}
 	/**
 	 *
 	 * @return
@@ -103,8 +109,8 @@ public class EnvironmentPropertyList {
 		for (int i = 0; i < _propertyList.size(); i++) {
 			{ // fix element i 
 				Property pty = _propertyList.get(i);
-				HashSet<String> dependsOnSet = pty.getDependencies();
-				HashSet<String> depsCache = new HashSet<String>();// new cache for every element
+				Set<String> dependsOnSet = pty.getDependencies();
+				Set<String> depsCache = new HashSet<String>();// new cache for every element
 				while (!dependsOnSet.isEmpty()) {
 					int depIdx = -1;
 					boolean noDepFixing = true;
@@ -161,7 +167,7 @@ public class EnvironmentPropertyList {
 			}
 		}
 		for (String objRef : objRefSet) {
-			env.append(objRef + " = {};");
+			env.append("var "+ objRef + " = {};");
 		}
 		for (Property p : _propertyList) {
 			env.append(p.toEnvironmentInput());

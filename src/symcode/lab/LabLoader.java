@@ -40,7 +40,7 @@ public class LabLoader {
 	}
 	
 	/**
-	 * recursively load matter. usually called only once on a lab.
+	 * recursively load loadables. usually called only once on a lab.
 	 *
 	 * @param jsonObj
 	 * @return
@@ -63,7 +63,7 @@ public class LabLoader {
 			case "compound":
 				return new Compound(id,version,loadConst(jsonObj),loadMolecule(jsonObj),loadBond(jsonObj), loadReferences(jsonObj));
 			case "atom":
-				return new Atom(id,version,loadConst(jsonObj),loadBond(jsonObj),loadReferences(jsonObj), new SvgString(readSimpleProperty(jsonObj,"svg")));
+				return new Atom(id,version,loadConst(jsonObj),loadBond(jsonObj),loadReferences(jsonObj));
 			default:
 				throw new InvalidLabException();
 		}
@@ -113,6 +113,9 @@ public class LabLoader {
 				JSONObject jsonBondObj = (JSONObject)jsonObj.get("bond");
 				// 
 				bond = new BondExpr(
+					// SVG is read from "jsonObj" no the jsonBond which is just temperary until moving svg option insinde json bond.
+				new Expression(readSimpleProperty(jsonObj,"svg")),
+//
 				new Expression(readSimpleProperty(jsonBondObj,"x")),
 				new Expression(readSimpleProperty(jsonBondObj,"y")),
 				new Expression(readSimpleProperty(jsonBondObj,"h")),
@@ -127,6 +130,7 @@ public class LabLoader {
 		}
 		return (String) jsonObj.get(property);
 	}
+	
 	private static JSONObject readLabFile(File labFile) {
 		
 		JSONParser parser = new JSONParser();

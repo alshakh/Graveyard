@@ -16,19 +16,22 @@ public class BondValue {
 	public final double _y;
 	public final double _h;
 	public final double _w;
+	public final String _svg;
 
 	/**
 	 *
+	 * @param svg
 	 * @param x
 	 * @param y
 	 * @param h
 	 * @param w
 	 */
-	public BondValue(double x, double y, double h, double w){
+	public BondValue(String svg, double x, double y, double h, double w){
 		_x = x;
 		_y = y;
 		_h = h;
 		_w = w;
+		_svg = svg;
 	}
 
 }

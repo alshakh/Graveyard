@@ -1,10 +1,6 @@
 package symcode.lab;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
-import symcode.expr.EnvironmentPropertyList;
 
 /**
  * All classes in lab should fallow this abstract class.
@@ -20,7 +16,6 @@ public class Compound extends Molecule implements Loadable {
 	 *
 	 * @param id
 	 * @param version
-	 * @param constMap
 	 * @param elementsSet
 	 * @param bond
 	 * @param references
@@ -35,12 +30,4 @@ public class Compound extends Molecule implements Loadable {
 	    return "compound "+super.toString();
     }
 
-    /**
-     * Does nothing. all things are taken care of by molecule
-     * @param epl 
-     */
-	@Override
-	public void addExtraToEnvironmentPropertyList(EnvironmentPropertyList epl) {
-		return;
-	}
 }

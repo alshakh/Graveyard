@@ -7,6 +7,7 @@ package symcode.expr;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.script.*;
@@ -21,8 +22,8 @@ public class Expression {
 	 *
 	 */
 	public static final Expression EMPTY_EXPRESSION = new Expression("0");
-	// factory just creates new engines. no need to make many of them.
-	private static final ScriptEngineManager factory = new ScriptEngineManager();
+	// FACTORY just creates new engines. no need to make many of them.
+	public static final ScriptEngineManager FACTORY = new ScriptEngineManager();
 	private final String _exprStr;
 
 	/**
@@ -47,7 +48,7 @@ public class Expression {
 	 */
 	public double eval(Environment environment) {
 		// 
-		ScriptEngine engine = factory.getEngineByName("JavaScript");
+		ScriptEngine engine = FACTORY.getEngineByName("JavaScript");
 		//
 		Object result = null;
 		try {
@@ -86,7 +87,7 @@ public class Expression {
 	 *
 	 * @return
 	 */
-	public HashSet<String> extractReferences() {
+	public Set<String> extractReferences() {
 		// clean comments, quotes and keywords
 		String toCheckExprStr = cleanForExtracting(_exprStr);
 
@@ -130,5 +131,9 @@ public class Expression {
 			return
 		*/
 		return newText.toString();
+	}
+
+	public boolean isEmpty(){
+		return ((_exprStr==null)||(_exprStr.isEmpty()));
 	}
 }

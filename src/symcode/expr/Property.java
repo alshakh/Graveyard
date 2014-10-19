@@ -6,8 +6,7 @@
 
 package symcode.expr;
 
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.Set;
 
 /**
  *
@@ -16,7 +15,7 @@ import java.util.Objects;
 public class Property {
 	private final String _reference;
 	private final Expression _expression;
-	private final HashSet<String> _allDependencies;
+	private final Set<String> _allDependencies;
 
 	/**
 	 *
@@ -54,13 +53,13 @@ public class Property {
 	 *
 	 * @return
 	 */
-	public HashSet<String> getDependencies(){
+	public Set<String> getDependencies(){
 		return _allDependencies;
 	}
 	@Override
 	public int hashCode() {
 		int hash = 7;
-		hash = 41 * hash + Objects.hashCode(this._reference);
+		hash = 41 * hash + this._reference.hashCode();
 		return hash;
 	}
 	/**

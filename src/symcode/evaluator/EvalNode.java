@@ -45,7 +45,7 @@ public class EvalNode {
 	public Product eval() throws EvaluationError{
 		//+ constructing environment
 		EnvironmentPropertyList epl = new EnvironmentPropertyList();
-		_sym.addToPropertyList(epl);
+		epl.addPropertySet(_sym.evalPropertySet());
 		//
 		if(_inputNodes != null){
 			for(int i = 0 ; i < _inputNodes.size() ; i++){
@@ -63,7 +63,13 @@ public class EvalNode {
 		//-
 		Environment env = epl.toEnvironment();
 		//- environment is ready
-		//
-		return null;	
+		
+		// if Atom
+		double x = Double.valueOf(env.resolveRef(_sym.getId()+".x"));
+		double y = Double.valueOf(env.resolveRef(_sym.getId()+".y"));
+		double w = Double.valueOf(env.resolveRef(_sym.getId()+".w"));
+		double h = Double.valueOf(env.resolveRef(_sym.getId()+".h"));
+		String svg = env.resolveRef(_sym.getId()+".svg");
+		return new Product(new BondValue(svg,Double.valueOf(x),y,h,w));
 	}
 }

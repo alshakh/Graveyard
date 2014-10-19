@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import symcode.expr.EnvironmentPropertyList;
+import symcode.expr.Expression;
 import symcode.expr.Property;
 
 /**
@@ -37,12 +38,16 @@ public abstract class Molecule extends Template implements Loadable  {
 	public Molecule(String id,String version, Set<Const> constSet, Set elementsSet, BondExpr bond, Set<String> references){
 		super(id, version, constSet, elementsSet);
 		//+ Adding BondProperties
-		Set<Property> tmpProperties = new HashSet<Property>();
-		tmpProperties.add(new Property(getId() + ".x" , bond.getX()));
-		tmpProperties.add(new Property(getId() + ".y" , bond.getY()));
-		tmpProperties.add(new Property(getId() + ".h" , bond.getH()));
-		tmpProperties.add(new Property(getId() + ".w" , bond.getW()));
-		 _properties = Collections.unmodifiableSet(tmpProperties);
+		Set<Property> tmp_properties =  new HashSet<Property>();
+		tmp_properties.add(new Property(getId() + ".x" , bond.getX()));
+		tmp_properties.add(new Property(getId() + ".y" , bond.getY()));
+		tmp_properties.add(new Property(getId() + ".h" , bond.getH()));
+		tmp_properties.add(new Property(getId() + ".w" , bond.getW()));
+		if(bond.hasSvg()){
+			tmp_properties.add(new Property(getId() + ".svg" , bond.getSvg()));
+		}
+		_properties = Collections.unmodifiableSet(tmp_properties);
+		
 		//-
 		_references = Collections.unmodifiableSet(references);
 	}
@@ -55,42 +60,44 @@ public abstract class Molecule extends Template implements Loadable  {
 		return _references;
 	}
 
-	public void addToPropertyList(EnvironmentPropertyList epl){
+	public Set<Property> evalPropertySet(){
+		Set<Property> p = new HashSet<Property>();
+		evalPropertySetHelper(p);
+		return p;
+	}
+	private void evalPropertySetHelper(Set<Property> properties){
+		if(_properties.isEmpty()) return;
 		//+ to avoid infinite adding
-		if(epl.hasReference(getId())) 
+		if(properties.contains(_properties.iterator().next()))
 			return;
-		epl.addReference(getId());
 		//-
 		//+ adding this.properties
 		for(Property p : _properties){
-			epl.addProperty(p);
+			properties.add(p);
 		}
 		//-
 		//+ add dependencies
 		for(String ref : getReferences()){
 			Const c = getConst(ref);
 			if(c!=null){
-				c.addToEnvironmentPropertyList(epl);
+				properties.add(c.getProperty());
 				continue;
 			}
 			//
 			Molecule m = getMolecule(ref);
 			if(m==null) continue; // if molecule don't exist, do nothing.
-			m.addToPropertyList(epl);
+			m.evalPropertySetHelper(properties);
 		}
 		//-
 		//+ Add all childrenelements and consts to list
 		for(Molecule m : this.getElements()){
-			m.addToPropertyList(epl);
+			m.evalPropertySetHelper(properties);
 		}
 		for(Const c : this.getConstSet()){
-			c.addToEnvironmentPropertyList(epl);
+				properties.add(c.getProperty());
 		}
 		//-
-		//+ adding extra stuff (Atom may be different than compound)
-		addExtraToEnvironmentPropertyList(epl);
-		//-
 	}
+	
 
-	public abstract void addExtraToEnvironmentPropertyList(EnvironmentPropertyList epl);
 }

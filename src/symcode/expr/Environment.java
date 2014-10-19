@@ -42,6 +42,23 @@ public class Environment {
 		return _environmentStr;
 	}
 
+
+	public String resolveRef(String ref){
+		ScriptEngine engine = Expression.FACTORY.getEngineByName("JavaScript");
+		//
+		Object result = null;
+		try {
+				apply(engine);
+			result = engine.eval(ref);
+		} catch (ScriptException ex) {
+			ex.printStackTrace();
+		}
+		if (result == null) {
+			return "";
+		}
+
+		return String.valueOf(result);
+	}
 	/**
 	 *
 	 * @param expr
