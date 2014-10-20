@@ -10,7 +10,7 @@
             "type": "atom",
             "id": "notSoSimpleAtom",
             "version": "1.2.2",
-            "dependsOn": "defHeight"
+            "dependsOn": "defHeight",
             "x": "defHeight",
             "y": "defHeight*2",
             "h": "100",
@@ -28,14 +28,44 @@
             "svg": "SIMPLE\" ATOM"
         },
         {
+        	"type": "compound",
+            "id": "simpleCompound",
+            "version": "1.2.3",
+            "x": "1",
+            "y": "2",
+            "h": "300",
+            "w": "400",
+            "elements": [
+            	{
+            		"type": "atom",
+            		"id": "subAtom1",
+            		"version": "1.2.2",
+            		"x": "1",
+            		"y": "1",
+            		"h": "100",
+            		"w": "100",
+            		"svg": "content Atom 1"
+        		},
+        		{
+            		"type": "atom",
+            		"id": "subAtom2",
+            		"version": "1.2.2",
+            		"x": "2",
+            		"y": "2",
+            		"h": "200",
+            		"w": "200",
+            		"svg": "content Atom 2"
+        		}
+            ]
+        },
+        {
             "type": "compound",
             "id": "root",
             "version": "1.2.3",
-            "x": "0",
+            "x": "$1.x+2",
             "y": "0",
             "h": "radical.y+radical.h",
             "w": "radix.x+radix.w",
-            "svg": "\"|\" + power.svg + \"|\" + radical.svg + \"|\" + radix.svg + \"|\" + base.svg + \"|\""
             "const": {
                 "aX": "20",
                 "aY": "30"

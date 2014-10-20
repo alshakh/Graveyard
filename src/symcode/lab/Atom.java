@@ -8,9 +8,6 @@ package symcode.lab;
 import java.util.Set;
 
 /**
- * this class is the product of all the classes. products cannot be nested, only
- * combined.
- *
  * @author Ahmed Alshakh www.alshakh.net
  */
 public class Atom extends Molecule {
@@ -19,6 +16,9 @@ public class Atom extends Molecule {
 	 *
 	 * @param id
 	 * @param version
+	 * @param propertySet
+	 * @param constsProperties
+	 * @param deps
 	 */
 	public Atom(String id, String version, Set<Property> propertySet , Set<Property> constsProperties, Set<String> deps) {
 		super(id, version, propertySet, constsProperties, Template.EMPTY_ELEMENTS, deps);

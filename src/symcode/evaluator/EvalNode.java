@@ -8,6 +8,7 @@ package symcode.evaluator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 import symcode.lab.Molecule;
 import symcode.value.*;
 
@@ -48,9 +49,11 @@ public class EvalNode {
 		//
 		if(_inputNodes != null){
 			for(int i = 0 ; i < _inputNodes.size() ; i++){
-				_inputNodes.get(i).eval().getEvaluablePropertySet("$"+i);
+				evaluationEvironment.addPropertyCollection(_inputNodes.get(i).eval().getEvaluablePropertySet("$"+(i+1)));
 			}
 		}
+
+		System.out.println(evaluationEvironment.toString());
 		//+ checking validity before executing
 		if(evaluationEvironment.inspect() == Environment.CIRCULAR_DEPENDENCY)
 				throw new EvaluationError("CircularDependancy: The problem is most likely in the Lab");
@@ -60,14 +63,35 @@ public class EvalNode {
 		
 		// if Atom
 		if(_sym.isAtom()){
-			Doub x = (Doub)evaluationEvironment.resolveReference(_sym._id+".x");
-			Doub y = (Doub)evaluationEvironment.resolveReference(_sym._id+".y");
-			Doub h = (Doub)evaluationEvironment.resolveReference(_sym._id+".h");
-			Doub w = (Doub)evaluationEvironment.resolveReference(_sym._id+".w");
-			Svg svg = new Svg(evaluationEvironment.resolveReference(_sym._id+".svg").toString());
-			return new Product(svg,x,y,h,w);
+			return processAtom(evaluationEvironment, _sym._id);
 		} else { // Compound
-			return null;
+			Set<Product> atomProductSet = new HashSet<Product>();
+			for(Molecule m : _sym._elements){
+				atomProductSet.add(processAtom(evaluationEvironment, m._id));
+			}
+			return processCompound(evaluationEvironment, _sym._id, atomProductSet);
 		}
+	}
+	private Product processAtom(Environment env, String id){
+			Doub x = (Doub)env.resolveReference(id+".x");
+			Doub y = (Doub)env.resolveReference(id+".y");
+			Doub h = (Doub)env.resolveReference(id+".h");
+			Doub w = (Doub)env.resolveReference(id+".w");
+			Svg svg = new Svg(env.resolveReference(id+".svg").toString());
+			return new Product(id, svg,x,y,h,w);
+	}
+	private Product processCompound(Environment env, String id, Set<Product> atomProductSet){
+			Doub x = (Doub)env.resolveReference(id+".x");
+			Doub y = (Doub)env.resolveReference(id+".y");
+			Doub h = (Doub)env.resolveReference(id+".h");
+			Doub w = (Doub)env.resolveReference(id+".w");
+			//
+			StringBuilder svgBodySB = new StringBuilder();
+			for(Product p : atomProductSet){
+				svgBodySB.append(p.toSvgString()).append("\n");
+			}
+			Svg svg = new Svg(svgBodySB.substring(0, svgBodySB.length()-1));
+			//
+			return new Product(id, svg,x,y,h,w);
 	}
 }

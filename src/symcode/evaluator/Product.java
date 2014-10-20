@@ -7,6 +7,7 @@
 package symcode.evaluator;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import symcode.lab.Property;
 import symcode.lab.Util;
@@ -22,8 +23,7 @@ public class Product {
 	public final Doub _h;
 	public final Doub _w;
 	public final Svg _svg;
-	// 
-	private final String _id;
+	public final String _id;
 	/**
 	 *
 	 * @param svg
@@ -68,14 +68,47 @@ public class Product {
 		return "product "+super.toString();
 	}
 
-	/**
-	 *
-	 * @param p1
-	 * @param p2
-	 * @return
-	 */
-	public static Product combine(Product p1, Product p2){
-		throw new UnsupportedOperationException();
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 67 * hash + Objects.hashCode(this._x);
+		hash = 67 * hash + Objects.hashCode(this._y);
+		hash = 67 * hash + Objects.hashCode(this._h);
+		hash = 67 * hash + Objects.hashCode(this._w);
+		hash = 67 * hash + Objects.hashCode(this._svg);
+		hash = 67 * hash + Objects.hashCode(this._id);
+		return hash;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final Product other = (Product) obj;
+		if (!Objects.equals(this._x, other._x)) {
+			return false;
+		}
+		if (!Objects.equals(this._y, other._y)) {
+			return false;
+		}
+		if (!Objects.equals(this._h, other._h)) {
+			return false;
+		}
+		if (!Objects.equals(this._w, other._w)) {
+			return false;
+		}
+		if (!Objects.equals(this._svg, other._svg)) {
+			return false;
+		}
+		if (!Objects.equals(this._id, other._id)) {
+			return false;
+		}
+		return true;
+	}
+
 
 }

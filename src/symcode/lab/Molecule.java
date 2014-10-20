@@ -54,6 +54,7 @@ public abstract class Molecule extends Template {
 		return propertySet;
 	}
 	private void evaluablePropertySetHelper(Set<Property> propertySet){
+		// TODO : you can refer to consts as upper-deep they are but not molecules. molecules can only be referred to inside there compounds
 		//+ to avoid infinite adding in case of (valid or invalid) 
 		//	circular dependency
 		if(_properties.isEmpty() || propertySet.contains(_properties.iterator().next())){

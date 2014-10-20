@@ -22,26 +22,16 @@ public class Main {
 	public static void main(String[] args) throws EvaluationError {
 		//
 		Lab demoLab = symcode.lab.LabLoader.loadLab(new java.io.File("labs/demoLab.json"));
-		Molecule molecule = demoLab.getMolecule("notSoSimpleAtom");
-		EvalNode evlNode = new EvalNode(molecule, new ArrayList<EvalNode>());
+		Molecule molecule = demoLab.getMolecule("root");
+		ArrayList<EvalNode> input = new ArrayList<EvalNode>();
+		input.add(new EvalNode(demoLab.getMolecule("simpleAtom")));
+		input.add(new EvalNode(demoLab.getMolecule("notSoSimpleAtom")));
+		EvalNode evlNode = new EvalNode(molecule,input);
+		
 		System.out.println(evlNode.eval().toSvgString());
 
 
 
-	/*	
-		//
-		//
-		//
-		Lab demoLab = symcode.lab.LabLoader.loadLab(new java.io.File("labs/demoLab.json"));
-		Molecule molecule = demoLab.getMolecule("simpleAtom");
-		
-		EvalNode en = new EvalNode(molecule);
-		System.out.print(en.eval().toSvgString());
-		//Evaluator evaluator = new Evaluator(demoLab);
-		//evaluator.eval(en);
-		//
-		//
-		//*/
 	}
 
 	/**

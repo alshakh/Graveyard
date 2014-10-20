@@ -72,11 +72,13 @@ public class Environment {
 	public void addProperty(Property property){
 		_propertyOrderList.addProperty(property);
 	}
-
 	public int inspect(){
 		return _propertyOrderList.inspect();
 	}
-
+	
+	public String toString(){
+		return _propertyOrderList.toEvaluableScript();
+	}
 }
 /**
  * An instance of this class maintains the order of execution of properties in
