@@ -9,6 +9,7 @@ import symcode.evaluator.Evaluator;
 import symcode.evaluator.Product;
 import symcode.lab.*;
 import symcode.value.Expr;
+import symcode.value.Svg;
 
 /**
  *
@@ -20,6 +21,7 @@ public class Main {
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) throws EvaluationError {
+		System.out.println(new Svg("<<< $df.svg >>>").getNeededProperties());
 		//
 		Lab testLab = symcode.lab.LabLoader.loadLab(new java.io.File("labs/testLab.json"));
 		Molecule molecule = testLab.getMolecule("root");

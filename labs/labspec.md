@@ -10,5 +10,6 @@ const is Doub
 svg is Svg
 x,y,h,w are Expr
 
+In Svg if you sourrand expression with <<< EXPR >>> it will be evaluated.
 
 svg will be used in atom and ignored with compound

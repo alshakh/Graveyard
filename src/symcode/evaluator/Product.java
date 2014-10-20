@@ -51,7 +51,8 @@ public class Product {
 		ps.add(new Property(underObjectRef + "." + "y", _y ));
 		ps.add(new Property(underObjectRef + "." + "h", _h ));
 		ps.add(new Property(underObjectRef + "." + "w", _w ));
-		ps.add(new Property(underObjectRef + "." + "svg",_svg));
+		ps.add(new Property(underObjectRef + "." + "svg",new Svg(toSvgString())));
+		// TODO : better way to do svg
 		//
 		return ps;
 	}
@@ -59,7 +60,7 @@ public class Product {
 	public String toSvgString() {
 		// TODO : this code is not actual svg. do actural svg code
 		return "<g x="+_x+" y="+_y+" h="+_h+" w="+_w+">\n" +
-			_svg + "\n" +
+			_svg.toString() + "\n" +
 			"</g>";
 	}
 

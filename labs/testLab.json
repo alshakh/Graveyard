@@ -79,7 +79,7 @@
                     "y": "0",
                     "h": "$1.h",
                     "w": "$1.w",
-                    "svg": "$1.svg"
+                    "svg": "<<< $1.svg >>>"
                 },
                 {
                     "type": "atom",
@@ -89,7 +89,7 @@
                     "y": "power.y+power.h-aY",
                     "h": "radix.h+base.h+5",
                     "w": "35",
-                    "svg": "\"RADICAL RADICAL RADICAL\""
+                    "svg": "RADICAL RADICAL RADICAL"
                 },
                 {
                     "type": "atom",
@@ -99,7 +99,7 @@
                     "y": "radical.y",
                     "h": "23",
                     "w": "base.w + 5",
-                    "svg": "\"RADIX RADIX RADIX\""
+                    "svg": "RADIX RADIX RADIX"
                 },
                 {
                     "type": "atom",
@@ -109,7 +109,7 @@
                     "y": "radix.y+radix.h",
                     "h": "$2.h",
                     "w": "$2.w",
-                    "svg": "$2.svg"
+                    "svg": "AAA <<< $2.svg >>> BBB"
                 }
             ]
         }

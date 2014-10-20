@@ -106,7 +106,7 @@ class PropertyOrderList {
 		//-
 		//+ add objects to script
 		for(String ref : refs){
-			script.append("var ").append(ref).append(" ={}\n");
+			script.append("var ").append(ref).append(" = {}\n");
 		}
 		//-
 		//+ add properties to script

@@ -77,6 +77,7 @@ public class EvalNode {
 			Doub y = (Doub)env.resolveReference(id+".y");
 			Doub h = (Doub)env.resolveReference(id+".h");
 			Doub w = (Doub)env.resolveReference(id+".w");
+			System.err.print(env.resolveReference(id+".svg").toString());
 			Svg svg = new Svg(env.resolveReference(id+".svg").toString());
 			return new Product(id, svg,x,y,h,w);
 	}
