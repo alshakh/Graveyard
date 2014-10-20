@@ -21,11 +21,11 @@ public class Main {
 	 */
 	public static void main(String[] args) throws EvaluationError {
 		//
-		Lab demoLab = symcode.lab.LabLoader.loadLab(new java.io.File("labs/demoLab.json"));
-		Molecule molecule = demoLab.getMolecule("root");
+		Lab testLab = symcode.lab.LabLoader.loadLab(new java.io.File("labs/testLab.json"));
+		Molecule molecule = testLab.getMolecule("root");
 		ArrayList<EvalNode> input = new ArrayList<EvalNode>();
-		input.add(new EvalNode(demoLab.getMolecule("simpleAtom")));
-		input.add(new EvalNode(demoLab.getMolecule("notSoSimpleAtom")));
+		input.add(new EvalNode(testLab.getMolecule("simpleAtom")));
+		input.add(new EvalNode(testLab.getMolecule("notSoSimpleAtom")));
 		EvalNode evlNode = new EvalNode(molecule,input);
 		
 		System.out.println(evlNode.eval().toSvgString());
