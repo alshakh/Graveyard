@@ -2,81 +2,83 @@
     "id": "mathLab",
     "type": "lab",
     "version": "1.2.3",
-    "const": {},
+    "const": {
+    	"defHeight":"25"
+    },
     "elements": [
+        {
+            "type": "atom",
+            "id": "notSoSimpleAtom",
+            "version": "1.2.2",
+            "dependsOn": "defHeight"
+            "x": "defHeight",
+            "y": "defHeight*2",
+            "h": "100",
+            "w": "100",
+            "svg": "SIMPLE\" ATOM"
+        },
         {
             "type": "atom",
             "id": "simpleAtom",
             "version": "1.2.2",
-            "bond": {
-                "x": "0",
-                "y": "0",
-                "h": "100",
-                "w": "100"
-            },
-            "svg": "\"SIMPLE ATOM\""
+            "x": "0",
+            "y": "0",
+            "h": "100",
+            "w": "100",
+            "svg": "SIMPLE\" ATOM"
         },
         {
             "type": "compound",
             "id": "root",
             "version": "1.2.3",
+            "x": "0",
+            "y": "0",
+            "h": "radical.y+radical.h",
+            "w": "radix.x+radix.w",
+            "svg": "\"|\" + power.svg + \"|\" + radical.svg + \"|\" + radix.svg + \"|\" + base.svg + \"|\""
             "const": {
                 "aX": "20",
                 "aY": "30"
-            },
-            "bond": {
-                "x": "0",
-                "y": "0",
-                "h": "radical.y+radical.h",
-                "w": "radix.x+radix.w"
             },
             "elements": [
                 {
                     "type": "atom",
                     "id": "power",
-                    "references": "$1",
-                    "bond": {
-                        "x": "0",
-                        "y": "0",
-                        "h": "$1.h",
-                        "w": "$1.w"
-                    },
+                    "dependsOn": "$1",
+                    "x": "0",
+                    "y": "0",
+                    "h": "$1.h",
+                    "w": "$1.w",
                     "svg": "$1.svg"
                 },
                 {
                     "type": "atom",
                     "id": "radical",
-                    "references": "power, radix, base, aX, aY",
-                    "bond": {
-                        "x": "power.x+power.w-aX",
-                        "y": "power.y+power.h-aY",
-                        "h": "radix.h+base.h+5",
-                        "w": "35"
-                    },
+                    "dependsOn": "power, radix, base, aX, aY",
+                    "x": "power.x+power.w-aX",
+                    "y": "power.y+power.h-aY",
+                    "h": "radix.h+base.h+5",
+                    "w": "35",
                     "svg": "\"RADICAL RADICAL RADICAL\""
                 },
                 {
                     "type": "atom",
                     "id": "radix",
-                    "references": "radical, base",
-                    "bond": {
-                        "x": "radical.x+radical.w",
-                        "y": "radical.y",
-                        "h": "23",
-                        "w": "base.w + 5"
-                    },
+                    "dependsOn": "radical, base",
+                    "x": "radical.x+radical.w",
+                    "y": "radical.y",
+                    "h": "23",
+                    "w": "base.w + 5",
                     "svg": "\"RADIX RADIX RADIX\""
                 },
                 {
                     "type": "atom",
                     "id": "base",
-                    "references": "radical, radix, $2",
-                    "bond": {
-                        "x": "radical.x+radical.w",
-                        "y": "radix.y+radix.h",
-                        "h": "$2.h",
-                        "w": "$2.w"
-                    },
+                    "dependsOn": "radical, radix, $2",
+                    "x": "radical.x+radical.w",
+                    "y": "radix.y+radix.h",
+                    "h": "$2.h",
+                    "w": "$2.w",
                     "svg": "$2.svg"
                 }
             ]

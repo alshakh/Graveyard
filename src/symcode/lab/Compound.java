@@ -7,7 +7,7 @@ import java.util.Set;
  *
  * @author Ahmed Alshakh <ahmed.s.alshakh@gmail.com>
  */
-public class Compound extends Molecule implements Loadable {
+public class Compound extends Molecule {
     /*
      This class extends matter, will have bonds and evaluation functions 
      */
@@ -16,14 +16,14 @@ public class Compound extends Molecule implements Loadable {
 	 *
 	 * @param id
 	 * @param version
+	 * @param propertySet
 	 * @param elementsSet
-	 * @param bond
-	 * @param references
+	 * @param deps
 	 */
 	
 
-    public Compound(String id, String version, Set<Const> constSet, Set<Molecule> elementsSet, BondExpr bond, Set<String> references) {
-        super(id, version, constSet, elementsSet,bond, references);
+    public Compound(String id, String version, Set<Property> propertySet, Set<Property> constsProperties, Set<Molecule> elementsSet, Set<String> deps) {
+		super(id, version, propertySet,constsProperties, elementsSet, deps);
     }
 
     public String toString(){

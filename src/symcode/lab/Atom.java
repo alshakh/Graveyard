@@ -6,7 +6,6 @@
 package symcode.lab;
 
 import java.util.Set;
-import symcode.expr.Expression;
 
 /**
  * this class is the product of all the classes. products cannot be nested, only
@@ -14,34 +13,15 @@ import symcode.expr.Expression;
  *
  * @author Ahmed Alshakh www.alshakh.net
  */
-public class Atom extends Molecule implements Loadable {
-
-	/**
-	 *
-	 */
-	public static final Atom DEBUG_ATOM = new Atom(
-		"",
-		"",
-		Template.EMPTY_CONSTSET,
-		new BondExpr(
-			new Expression("0"),
-			new Expression("0"),
-			new Expression("10"),
-			new Expression("10")
-		),
-		Molecule.EMPTY_REFERENCES
-	);
+public class Atom extends Molecule {
 
 	/**
 	 *
 	 * @param id
 	 * @param version
-	 * @param constSet
-	 * @param bond
-	 * @param references
 	 */
-	public Atom(String id, String version, Set<Const> constSet, BondExpr bond, Set<String> references) {
-		super(id, version, constSet, Template.EMPTY_ELEMENTS, bond, references);
+	public Atom(String id, String version, Set<Property> propertySet , Set<Property> constsProperties, Set<String> deps) {
+		super(id, version, propertySet, constsProperties, Template.EMPTY_ELEMENTS, deps);
 	}
 
 	@Override

@@ -11,87 +11,83 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-import symcode.expr.Expression;
-import symcode.expr.Property;
 
 /**
  *
  * @author Ahmed Alshakh www.alshakh.net
  */
-public abstract class Template implements Loadable {
+public abstract class Template{
 	//
 	
 	/**
 	 *
 	 */
-	public static final Set<Molecule> EMPTY_ELEMENTS;
-	
-	/**
-	 *
-	 */
-	public static final Set<Const> EMPTY_CONSTSET;
-	static {
-		EMPTY_ELEMENTS = new HashSet<Molecule>();
-		EMPTY_CONSTSET = new HashSet<Const>();
-	}
-	private final String _id;
-	private final String _version;
-	private final Set<Const> _constSet;
-	// map from id to molecule
-	private final Set<Molecule> _elements;
-	private Template _parent = null;
+	public static final Set<Molecule> EMPTY_ELEMENTS = new HashSet<Molecule>();
+	public static final Set<Property> EMPTY_PROPERTY_SET = Collections.unmodifiableSet(new HashSet<Property>());
+	//
+	public final String _id;
+	public final String _version;
+	public final Set<Property> _properties; // properties
+	public final Set<Property> _constProperties;
+	public final Set<Molecule> _elements;
+	//
+	private Template _parent = null; // should be the only mutable thing
 	
 	/**
 	 *
 	 * @param id
 	 * @param version
-	 * @param constMap
 	 * @param elementsSet
 	 */
-	public Template(String id, String version, Set<Const> constSet, Set<Molecule> elementsSet) {
-		//+
-		this._constSet = Collections.unmodifiableSet(constSet);
-		//-
+	public Template(String id, String version, Set<Property> propertySet, Set<Property> constsProperties, Set<Molecule> elementsSet) {
 		//+ Set parent for elements before adding
 		for(Molecule e : elementsSet){
 			e.setParent(this);
 		}
 		this._elements = Collections.unmodifiableSet(elementsSet);
 		//-
+		//+ Set constsProperties
+		this._constProperties = Collections.unmodifiableSet(constsProperties);
+		//-
 		//+ Setting ID and Version
-		/*
-		If no id specified, a random one is assigned. ids need to be 
-		distinct in an environment because of environment execution and 
-		avoiding adding properties twice.
-		*/
-		this._id = (id.isEmpty()?Util.generateRandomId():id);
+		this._id = id;
 		this._version = version;
+		//-
+		//+ properties
+		this._properties =Collections.unmodifiableSet(propertySet); 
 		//-
 	}
 	
 	
+
 	/**
 	 *
-	 * @param constName
 	 * @return
 	 */
-	public Const getConst(String constName) {
-		// check _constSet
-		for(Const c : _constSet){
-			if(c.getName().equals(constName)){
-				return c;
+	public Set<Property> getPropertySetOf(String objectRef) {
+		Set<Property> ps = null;
+		// objectRef is a js objectRef.
+		for(Property p : _properties){
+			if(p.getObjectReference().equals(objectRef)){
+				//+ create the HashSet instance only if actually used,
+				// because if no refernce found it will be useless
+				if(ps == null ) {
+					ps= new HashSet<Property>();
+				}
+				//-
+				ps.add(p);
 			}
 		}
-		// check in parent
+		// check if any objectRef exists, if so return the set
+		//	it will always be null if no objectRef found because 
+		//	the instance is created in time
+		if(ps!=null) return ps;
+		// if no objectRef found check parent 
 		if (_parent!=null) {
-			return _parent.getConst(constName);
+			return _parent.getPropertySetOf(objectRef);
 		} else {
 			return null;
 		}
-	}
-
-	public Set<Const> getConstSet(){
-		return _constSet;
 	}
 	
 	
@@ -102,11 +98,21 @@ public abstract class Template implements Loadable {
 	 */
 	public Molecule getMolecule(String elementId){
 		for(Molecule m : _elements){
-			if (m.getId().equals(elementId))
+			if (m._id.equals(elementId))
 				return m;
 		}
 		if(_parent == null) return null;
 		return _parent.getMolecule(elementId);
+	}
+
+	public Property getConst(String constRef){
+		for(Property p: _constProperties){
+			if(p._id.equals(constRef)) return p;
+		}
+		if (_parent != null) {
+			return _parent.getConst(constRef);
+		}
+		return null;
 	}
 
 	/**
@@ -137,15 +143,6 @@ public abstract class Template implements Loadable {
 	 *
 	 * @return
 	 */
-	public String getId() {
-		return _id;
-	}
-	
-	
-	/**
-	 *
-	 * @return
-	 */
 	public String getVersion() {
 		return _version;
 	}
@@ -155,10 +152,13 @@ public abstract class Template implements Loadable {
 		String SPACE = "    ";
 		String myRetStr = "";
 		myRetStr += "id: " + this._id;
+		for(Property p : _properties){
+			myRetStr += "\n"+p.toString();
+		}
 		//
 		String elementsRetStr = "";
 		boolean firstA = true;
-		for (Loadable m : _elements) {
+		for (Template m : _elements) {
 			if (m == null) {
 				continue;
 			}

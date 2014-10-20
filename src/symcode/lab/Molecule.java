@@ -10,94 +10,89 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import symcode.expr.EnvironmentPropertyList;
-import symcode.expr.Expression;
-import symcode.expr.Property;
 
 /**
  *
  * @author Ahmed Alshakh www.alshakh.net
  */
-public abstract class Molecule extends Template implements Loadable  {
+public abstract class Molecule extends Template {
 
 	/**
 	 *
 	 */
-	public static final Set<String> EMPTY_REFERENCES = new HashSet<String>();
-	public static final Set<Property> EMPTY_PROPERTIES = new HashSet<Property>();
-	private final Set<Property> _properties;
-	private final Set<String> _references;
+	public static final Set<String> EMPTY_DEPENDENCIES = Collections.unmodifiableSet(new HashSet<String>());
+	private final Set<String> _dependencies;
 	/**
 	 *
 	 * @param id
 	 * @param version
+	 * @param propertySet
+	 * @param constsProperties
 	 * @param elementsSet
-	 * @param bond
-	 * @param references
+	 * @param deps
 	 */
-	public Molecule(String id,String version, Set<Const> constSet, Set elementsSet, BondExpr bond, Set<String> references){
-		super(id, version, constSet, elementsSet);
-		//+ Adding BondProperties
-		Set<Property> tmp_properties =  new HashSet<Property>();
-		tmp_properties.add(new Property(getId() + ".x" , bond.getX()));
-		tmp_properties.add(new Property(getId() + ".y" , bond.getY()));
-		tmp_properties.add(new Property(getId() + ".h" , bond.getH()));
-		tmp_properties.add(new Property(getId() + ".w" , bond.getW()));
-		if(bond.hasSvg()){
-			tmp_properties.add(new Property(getId() + ".svg" , bond.getSvg()));
-		}
-		_properties = Collections.unmodifiableSet(tmp_properties);
-		
-		//-
-		_references = Collections.unmodifiableSet(references);
+	public Molecule(String id,String version, Set<Property> propertySet, Set<Property> constsProperties, Set<Molecule> elementsSet, Set<String> deps){
+		super(id, version, propertySet, constsProperties, elementsSet);
+		_dependencies = Collections.unmodifiableSet(deps);
 	}
 
 	/**
 	 *
 	 * @return
 	 */
-	public Set<String> getReferences(){
-		return _references;
+	public Set<String> getDependencies(){
+		return _dependencies;
 	}
 
-	public Set<Property> evalPropertySet(){
-		Set<Property> p = new HashSet<Property>();
-		evalPropertySetHelper(p);
-		return p;
+	/**
+	 * get the set properties needed to evaluate the molecule.
+	 * @return 
+	 */
+	public Set<Property> getEvaluablePropertySet(){
+		Set<Property> propertySet = new HashSet<Property>();
+		evaluablePropertySetHelper(propertySet);
+		return propertySet;
 	}
-	private void evalPropertySetHelper(Set<Property> properties){
-		if(_properties.isEmpty()) return;
-		//+ to avoid infinite adding
-		if(properties.contains(_properties.iterator().next()))
+	private void evaluablePropertySetHelper(Set<Property> propertySet){
+		//+ to avoid infinite adding in case of (valid or invalid) 
+		//	circular dependency
+		if(_properties.isEmpty() || propertySet.contains(_properties.iterator().next())){
 			return;
+		}
+		
 		//-
-		//+ adding this.properties
+		//+ adding this.propertySet
 		for(Property p : _properties){
-			properties.add(p);
+			propertySet.add(p);
 		}
 		//-
 		//+ add dependencies
-		for(String ref : getReferences()){
-			Const c = getConst(ref);
-			if(c!=null){
-				properties.add(c.getProperty());
+		for(String ref : _dependencies){
+			// TODO : on the current implementation constants in 
+			//	distant scopes have priority over molecules with
+			//	the same name.
+			Property constProperty = getConst(ref);
+			if(constProperty !=null){
+				propertySet.add(constProperty);
 				continue;
 			}
-			//
+			// This ref is not a constant
 			Molecule m = getMolecule(ref);
-			if(m==null) continue; // if molecule don't exist, do nothing.
-			m.evalPropertySetHelper(properties);
+			if(m != null) {
+			m.evaluablePropertySetHelper(propertySet);
+			}
 		}
 		//-
 		//+ Add all childrenelements and consts to list
 		for(Molecule m : this.getElements()){
-			m.evalPropertySetHelper(properties);
+			m.evaluablePropertySetHelper(propertySet);
 		}
-		for(Const c : this.getConstSet()){
-				properties.add(c.getProperty());
+		for(Property p : this._constProperties){
+				propertySet.add(p);
 		}
 		//-
 	}
+
 	
 
 }

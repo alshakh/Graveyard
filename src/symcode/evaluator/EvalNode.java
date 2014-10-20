@@ -8,9 +8,8 @@ package symcode.evaluator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import symcode.expr.Environment;
-import symcode.expr.EnvironmentPropertyList;
 import symcode.lab.Molecule;
+import symcode.value.*;
 
 /**
  *
@@ -18,7 +17,7 @@ import symcode.lab.Molecule;
  */
 public class EvalNode {
 	private final Molecule _sym;// either atom or compound 
-	private final ArrayList<EvalNode> _inputNodes;
+	private final ArrayList<EvalNode> _inputNodes; // list because the order of input matters
 
 	/**
 	 *
@@ -43,33 +42,32 @@ public class EvalNode {
 	 * @return
 	 */
 	public Product eval() throws EvaluationError{
-		//+ constructing environment
-		EnvironmentPropertyList epl = new EnvironmentPropertyList();
-		epl.addPropertySet(_sym.evalPropertySet());
+		//
+		Environment evaluationEvironment = new Environment();
+		evaluationEvironment.addPropertyCollection(_sym.getEvaluablePropertySet());
 		//
 		if(_inputNodes != null){
 			for(int i = 0 ; i < _inputNodes.size() ; i++){
-				_inputNodes.get(i).eval().addEnvironmentPropertyList("$"+i, epl);
+				_inputNodes.get(i).eval().getEvaluablePropertySet("$"+i);
 			}
 		}
 		//+ checking validity before executing
-		if(!epl.isValid()){
-			if(epl.isCircularDepedency()){
+		if(evaluationEvironment.inspect() == Environment.CIRCULAR_DEPENDENCY)
 				throw new EvaluationError("CircularDependancy: The problem is most likely in the Lab");
-			} else {
-				throw new EvaluationError("Some of references are missing: probably the error is less input arguments for "+_sym.getId());
-			}
-		}
+		if(evaluationEvironment.inspect() == Environment.MISSING_DEPENDENCY)
+				throw new EvaluationError("Some of references are missing: probably the error is less input arguments for "+_sym._id);
 		//-
-		Environment env = epl.toEnvironment();
-		//- environment is ready
 		
 		// if Atom
-		double x = Double.valueOf(env.resolveRef(_sym.getId()+".x"));
-		double y = Double.valueOf(env.resolveRef(_sym.getId()+".y"));
-		double w = Double.valueOf(env.resolveRef(_sym.getId()+".w"));
-		double h = Double.valueOf(env.resolveRef(_sym.getId()+".h"));
-		String svg = env.resolveRef(_sym.getId()+".svg");
-		return new Product(new BondValue(svg,Double.valueOf(x),y,h,w));
+		if(_sym.isAtom()){
+			Doub x = (Doub)evaluationEvironment.resolveReference(_sym._id+".x");
+			Doub y = (Doub)evaluationEvironment.resolveReference(_sym._id+".y");
+			Doub h = (Doub)evaluationEvironment.resolveReference(_sym._id+".h");
+			Doub w = (Doub)evaluationEvironment.resolveReference(_sym._id+".w");
+			Svg svg = new Svg(evaluationEvironment.resolveReference(_sym._id+".svg").toString());
+			return new Product(svg,x,y,h,w);
+		} else { // Compound
+			return null;
+		}
 	}
 }

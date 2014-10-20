@@ -41,7 +41,12 @@ public class Evaluator {
 	 * @param input
 	 * @return
 	 */
-	public Product eval(EvalNode input){
+	public Product eval(String inputCode){
 		throw new UnsupportedOperationException();
 	}
+
+	private EvalNode constructEvalTree(){
+		throw new UnsupportedOperationException();
+	}
+
 }

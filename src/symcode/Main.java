@@ -6,8 +6,9 @@ import java.util.HashSet;
 import symcode.evaluator.EvalNode;
 import symcode.evaluator.EvaluationError;
 import symcode.evaluator.Evaluator;
-import symcode.expr.EnvironmentPropertyList;
+import symcode.evaluator.Product;
 import symcode.lab.*;
+import symcode.value.Expr;
 
 /**
  *
@@ -20,12 +21,11 @@ public class Main {
 	 */
 	public static void main(String[] args) throws EvaluationError {
 		//
-		EnvironmentPropertyList epl = new EnvironmentPropertyList();
 		Lab demoLab = symcode.lab.LabLoader.loadLab(new java.io.File("labs/demoLab.json"));
-		Molecule molecule = demoLab.getMolecule("root");
-		epl.addPropertySet(molecule.evalPropertySet());
-		System.out.println(epl.toEnvironment().toString());
-		System.exit(0);
+		Molecule molecule = demoLab.getMolecule("notSoSimpleAtom");
+		EvalNode evlNode = new EvalNode(molecule, new ArrayList<EvalNode>());
+		System.out.println(evlNode.eval().toSvgString());
+
 
 
 	/*	

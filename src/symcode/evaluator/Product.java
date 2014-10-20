@@ -8,55 +8,61 @@ package symcode.evaluator;
 
 import java.util.HashSet;
 import java.util.Set;
-import symcode.expr.EnvironmentPropertyList;
-import symcode.expr.Property;
+import symcode.lab.Property;
 import symcode.lab.Util;
+import symcode.value.*;
 
 /**
  *
  * @author Ahmed Alshakh www.alshakh.net
  */
 public class Product {
-	private final BondValue _bond;
-
+	public final Doub _x;
+	public final Doub _y;
+	public final Doub _h;
+	public final Doub _w;
+	public final Svg _svg;
 	// 
-	private final String _randId;
+	private final String _id;
 	/**
 	 *
-	 * @param bond
 	 * @param svg
 	 */
-	public Product(BondValue bond) {
-		this._bond = bond;
-		this._randId = Util.generateRandomId();
+	public Product(String id, Svg svg, Doub x, Doub y, Doub h, Doub w) {
+		_svg = svg;
+		_x = x;
+		_y = y;
+		_h = h;
+		_w = w;
+		this._id = id;
+	}
+	/**
+	 *
+	 * @param svg
+	 */
+	public Product(Svg svg, Doub x, Doub y, Doub h, Doub w) {
+		this(Util.generateRandomId(), svg, x, y, h, w);
 	}
 
-	
-	public void addEnvironmentPropertyList(String underReference, EnvironmentPropertyList epl){
-	}
-
-	public Set<Property> evalPropertySet(){
-		return evalPropertySet(_randId);
-	}
-
-	public Set<Property> evalPropertySet(String underReference){
+	public Set<Property> getEvaluablePropertySet(String underObjectRef) {
 		Set<Property> ps = new HashSet<Property>();
 		////////////////////
-		ps.add(new Property(underReference + "." + "x", _bond._x ));
-		ps.add(new Property(underReference + "." + "y", _bond._y ));
-		ps.add(new Property(underReference + "." + "h", _bond._h ));
-		ps.add(new Property(underReference + "." + "w", _bond._w ));
-		// TODO : add svg 
+		ps.add(new Property(underObjectRef + "." + "x", _x ));
+		ps.add(new Property(underObjectRef + "." + "y", _y ));
+		ps.add(new Property(underObjectRef + "." + "h", _h ));
+		ps.add(new Property(underObjectRef + "." + "w", _w ));
+		ps.add(new Property(underObjectRef + "." + "svg",_svg));
+		//
 		return ps;
 	}
 	//
-
 	public String toSvgString() {
 		// TODO : this code is not actual svg. do actural svg code
-		return "<g x="+_bond._x+" y="+_bond._y+" h="+_bond._h+" w="+_bond._w+">\n" +
-			_bond._svg + "\n" +
+		return "<g x="+_x+" y="+_y+" h="+_h+" w="+_w+">\n" +
+			_svg + "\n" +
 			"</g>";
 	}
+
 	@Override
 	public String toString(){
 		return "product "+super.toString();
@@ -71,4 +77,5 @@ public class Product {
 	public static Product combine(Product p1, Product p2){
 		throw new UnsupportedOperationException();
 	}
+
 }

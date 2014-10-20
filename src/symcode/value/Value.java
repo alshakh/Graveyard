@@ -4,12 +4,21 @@
  * and open the template in the editor.
  */
 
-package symcode.lab;
+package symcode.value;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
  *
  * @author Ahmed Alshakh www.alshakh.net
  */
-public interface Loadable {
+public interface Value {
 	
+	public Set<String> getNeededProperties();
+
+	@Override
+	public String toString();
+
+	public String toEvaluableScript();
 }

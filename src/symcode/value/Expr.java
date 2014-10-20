@@ -3,98 +3,62 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package symcode.expr;
 
-import java.util.ArrayList;
+package symcode.value;
+
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.script.*;
 
 /**
  *
  * @author Ahmed Alshakh www.alshakh.net
  */
-public class Expression {
+public class Expr implements Value{
+	private final String _expr;
+	private final Set<String> _neededProperties;
 
-	/**
-	 *
-	 */
-	public static final Expression EMPTY_EXPRESSION = new Expression("0");
-	// FACTORY just creates new engines. no need to make many of them.
-	public static final ScriptEngineManager FACTORY = new ScriptEngineManager();
-	private final String _exprStr;
-
-	/**
-	 *
-	 * @param expr
-	 */
-	public Expression(String expr) {
-		_exprStr = expr;
+	public Expr(String string) {
+		_expr = string;
+		_neededProperties = Collections.unmodifiableSet(ExtractVarsReferred.extractVarsReferred(_expr));
 	}
 
 	/**
-	 *
+	 * return a set of all variable that need values in the expression.
+	 * example "2*x+name" will return "x" and "name"
+	 * 
+	 * @return immutable Set<String> of variables 
 	 */
-	public Expression() {
-		_exprStr = "";
+	@Override
+	public Set<String> getNeededProperties() {
+		return _neededProperties;
 	}
-
-	/**
-	 *
-	 * @param environment
-	 * @return
-	 */
-	public double eval(Environment environment) {
-		// 
-		ScriptEngine engine = FACTORY.getEngineByName("JavaScript");
-		//
-		Object result = null;
-		try {
-			if (environment != null) {
-				environment.apply(engine);
-			}
-			// evaluate JavaScript code from String
-			result = engine.eval(_exprStr);
-		} catch (ScriptException ex) {
-			ex.printStackTrace();
-		}
-		if (result == null) {
-			return 0.0;
-		}
-		if (!result.getClass().equals(Double.class)) {
-			return 0.0;
-		}
-		return (Double) result;
+	
+	public String toString(){
+		return _expr;
 	}
-
-	/**
-	 *
-	 * @return
-	 */
-	public Double eval() {
-		return eval(null);
-	}
-
 
 	@Override
-	public String toString() {
-		return _exprStr;
+	public String toEvaluableScript() {
+		return _expr;
+		
 	}
 
+	private static class ExtractVarsReferred {
 	/**
 	 *
 	 * @return
 	 */
-	public Set<String> extractReferences() {
+	public static Set<String> extractVarsReferred(String exprStr) {
 		// clean comments, quotes and keywords
-		String toCheckExprStr = cleanForExtracting(_exprStr);
+		String toCheckExprStr = cleanForExtraction(exprStr);
 
 		Pattern p = Pattern.compile("(\\$\\d+|[a-zA-z][\\w\\d\\_]*|\\.)+");
 		Matcher m = p.matcher(toCheckExprStr);
 		//
-		HashSet<String> deps = new HashSet<String>();
+		Set<String> deps = new HashSet<String>();
 		while (m.find()) {
 			deps.add(toCheckExprStr.substring(m.start(), m.end()));
 		}
@@ -116,7 +80,7 @@ public class Expression {
 	 * @param text
 	 * @return 
 	 */
-	private static String cleanForExtracting(String text){
+	private static String cleanForExtraction(String text){
 		Matcher m = Pattern.compile(jsCleanPattern,Pattern.MULTILINE).matcher(text);
 		//
 		StringBuilder newText = new StringBuilder();
@@ -132,8 +96,5 @@ public class Expression {
 		*/
 		return newText.toString();
 	}
-
-	public boolean isEmpty(){
-		return ((_exprStr==null)||(_exprStr.isEmpty()));
 	}
 }
