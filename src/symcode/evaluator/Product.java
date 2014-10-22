@@ -22,26 +22,26 @@ public class Product {
 	public final Doub _y;
 	public final Doub _h;
 	public final Doub _w;
-	public final Svg _svg;
+	public final Str _svgStr;
 	public final String _id;
 	/**
 	 *
 	 * @param svg
 	 */
-	public Product(String id, Svg svg, Doub x, Doub y, Doub h, Doub w) {
-		_svg = svg;
+	public Product(String id, Str svgStr, Doub x, Doub y, Doub h, Doub w) {
+		_svgStr = svgStr;
 		_x = x;
 		_y = y;
 		_h = h;
 		_w = w;
-		this._id = id;
+		_id = id;
 	}
 	/**
 	 *
 	 * @param svg
 	 */
-	public Product(Svg svg, Doub x, Doub y, Doub h, Doub w) {
-		this(Util.generateRandomId(), svg, x, y, h, w);
+	public Product(Str svgStr, Doub x, Doub y, Doub h, Doub w) {
+		this(Util.generateRandomId(), svgStr, x, y, h, w);
 	}
 
 	public Set<Property> getEvaluablePropertySet(String underObjectRef) {
@@ -57,10 +57,11 @@ public class Product {
 		return ps;
 	}
 	//
+	// TODO : #SVG evaluating actual svg must be separated
 	public String toSvgString() {
 		// TODO : this code is not actual svg. do actural svg code
-		return "<g x="+_x+" y="+_y+" h="+_h+" w="+_w+">\n" +
-			_svg.toString() + "\n" +
+		return "<g x=\""+_x+"\" y=\""+_y+"\" h=\""+_h+"\" w=\""+_w+"\">\n" +
+			_svgStr.toString() + "\n" +
 			"</g>";
 	}
 
@@ -76,7 +77,7 @@ public class Product {
 		hash = 67 * hash + Objects.hashCode(this._y);
 		hash = 67 * hash + Objects.hashCode(this._h);
 		hash = 67 * hash + Objects.hashCode(this._w);
-		hash = 67 * hash + Objects.hashCode(this._svg);
+		hash = 67 * hash + Objects.hashCode(this._svgStr);
 		hash = 67 * hash + Objects.hashCode(this._id);
 		return hash;
 	}
@@ -102,7 +103,7 @@ public class Product {
 		if (!Objects.equals(this._w, other._w)) {
 			return false;
 		}
-		if (!Objects.equals(this._svg, other._svg)) {
+		if (!Objects.equals(this._svgStr, other._svgStr)) {
 			return false;
 		}
 		if (!Objects.equals(this._id, other._id)) {

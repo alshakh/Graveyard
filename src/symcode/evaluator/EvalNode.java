@@ -6,8 +6,8 @@
 
 package symcode.evaluator;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import symcode.lab.Molecule;
 import symcode.value.*;
@@ -18,14 +18,14 @@ import symcode.value.*;
  */
 public class EvalNode {
 	private final Molecule _sym;// either atom or compound 
-	private final ArrayList<EvalNode> _inputNodes; // list because the order of input matters
+	private final List<EvalNode> _inputNodes; // list because the order of input matters
 
 	/**
 	 *
 	 * @param sym
 	 * @param inputList
 	 */
-	public EvalNode(Molecule sym, ArrayList<EvalNode> inputList){
+	public EvalNode(Molecule sym, List<EvalNode> inputList){
 		_sym = sym;
 		_inputNodes = inputList;
 	}
@@ -53,7 +53,6 @@ public class EvalNode {
 			}
 		}
 
-		System.out.println(evaluationEvironment.toString());
 		//+ checking validity before executing
 		if(evaluationEvironment.inspect() == Environment.CIRCULAR_DEPENDENCY)
 				throw new EvaluationError("CircularDependancy: The problem is most likely in the Lab");
@@ -77,8 +76,7 @@ public class EvalNode {
 			Doub y = (Doub)env.resolveReference(id+".y");
 			Doub h = (Doub)env.resolveReference(id+".h");
 			Doub w = (Doub)env.resolveReference(id+".w");
-			System.err.print(env.resolveReference(id+".svg").toString());
-			Svg svg = new Svg(env.resolveReference(id+".svg").toString());
+			Str svg = new Str(env.resolveReference(id+".svg").toString());
 			return new Product(id, svg,x,y,h,w);
 	}
 	private Product processCompound(Environment env, String id, Set<Product> atomProductSet){
@@ -87,11 +85,12 @@ public class EvalNode {
 			Doub h = (Doub)env.resolveReference(id+".h");
 			Doub w = (Doub)env.resolveReference(id+".w");
 			//
+			// TODO : #SVG evaluating actual svg must be separated
 			StringBuilder svgBodySB = new StringBuilder();
 			for(Product p : atomProductSet){
 				svgBodySB.append(p.toSvgString()).append("\n");
 			}
-			Svg svg = new Svg(svgBodySB.substring(0, svgBodySB.length()-1));
+			Str svg = new Str(svgBodySB.substring(0, svgBodySB.length()-1));
 			//
 			return new Product(id, svg,x,y,h,w);
 	}
