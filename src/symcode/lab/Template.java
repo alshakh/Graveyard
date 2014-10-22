@@ -5,11 +5,8 @@
 */
 package symcode.lab;
 
-import java.security.SecureRandom;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 /**
@@ -31,7 +28,7 @@ public abstract class Template{
 	public final Set<Property> _constProperties;
 	public final Set<Molecule> _elements;
 	//
-	private Template _parent = null; // should be the only mutable thing
+	public Template _parent = null; // Only non-final member only changed from the constructor of this class.
 	
 	/**
 	 *
@@ -41,8 +38,8 @@ public abstract class Template{
 	 */
 	public Template(String id, String version, Set<Property> propertySet, Set<Property> constsProperties, Set<Molecule> elementsSet) {
 		//+ Set parent for elements before adding
-		for(Molecule e : elementsSet){
-			e.setParent(this);
+		for(Template e : elementsSet){
+			e._parent = this;
 		}
 		this._elements = Collections.unmodifiableSet(elementsSet);
 		//-
@@ -180,23 +177,6 @@ public abstract class Template{
 			}
 		}
 		return myRetStr + (elementsRetStr.length() != 0 ? "\n" + elementsRetStr : "");
-	}
-
-	//
-	//
-	//
-	// TODO : (#PARENT-SAVE) better way to save parent and protect it 
-	//// to be used only by constructor of molecule
-	private boolean parentSetted = false;
-
-	/**
-	 *
-	 * @param parent
-	 */
-	protected void setParent(Template parent){
-		if(parentSetted) return;
-		_parent = parent;
-		parentSetted = true;
 	}
 
 	/**
