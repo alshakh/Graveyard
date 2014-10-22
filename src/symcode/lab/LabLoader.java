@@ -30,58 +30,77 @@ public class LabLoader {
 		//
 		//TODO :validate lab
 		//
-		try {
-			return (Lab) loadTemplate(jsonObj);
-		} catch (InvalidLabException ex) {
-			ex.printStackTrace();
-		}
-		return null;
+		return procLab(jsonObj);
 	}
-
-	/**
-	 * recursively load Template. usually called only once on a lab.
-	 *
-	 * @param jsonObj
-	 * @return
-	 */
-	private static Template loadTemplate(JSONObject jsonObj)
-		throws InvalidLabException {
-		//
-		String id, version, type;
-		//
-		type = readSimpleProperty(jsonObj, "type").toLowerCase();
-
-		//
-		id = readSimpleProperty(jsonObj, "id");
+	private static TemplateInfo procTemplateInfo(JSONObject jsonObj){
+		String id = readSimpleJsonProperty(jsonObj, "id");
 		if(id.isEmpty()) id=Util.generateRandomId(); // doublication will be a problems. Everything in the same scope should have a unique id.
-		version = readSimpleProperty(jsonObj, "version").toLowerCase();
-		//
-		//
-		switch (type) {
-			case "lab":
-				return new Lab(id, version, loadProperties(id, jsonObj), loadConsts(jsonObj), loadElements(jsonObj));
-			case "compound":
-				return new Compound(id, version, loadProperties(id, jsonObj), loadConsts(jsonObj), loadElements(jsonObj), loadDependencies(jsonObj));
-			case "atom":
-				return new Atom(id, version, loadProperties(id, jsonObj),loadConsts(jsonObj), loadDependencies(jsonObj));
-			default:
-				throw new InvalidLabException();
-		}
+		String version = readSimpleJsonProperty(jsonObj, "version").toLowerCase();
+		return new TemplateInfo(id, version);
 	}
-
-	private static Set<Molecule> loadElements(JSONObject jsonObj) throws InvalidLabException {
-		Set<Molecule> elementsSet = Template.EMPTY_ELEMENTS;
+	private static Lab procLab(JSONObject jsonObj){
+		TemplateInfo tInfo = procTemplateInfo(jsonObj);
+		//+ proc LabElements
+		Set<Molecule> elements = Lab.EMPTY_ELEMENTS;
 		if (jsonObj.containsKey("elements")) {
-			elementsSet = new HashSet<Molecule>();
+			elements = new HashSet<Molecule>();
 			JSONArray elementsJSONArray = (JSONArray) jsonObj.get("elements");
 			for (Object elementJsonObj : elementsJSONArray) {
-				elementsSet.add((Molecule) loadTemplate((JSONObject) elementJsonObj));
+				elements.add((Molecule) procMoleculeInLab((JSONObject) elementJsonObj));
 			}
 		}
-		return elementsSet;
+		//-
+		return new Lab(tInfo._id, tInfo._version, procConsts(jsonObj), elements);
+	}
+	private static Molecule procMoleculeInLab(JSONObject jsonObj){
+		if(jsonObj.containsKey("atoms")){
+			return procCompound(jsonObj);
+		} else { // SingleAtom
+			return procSingleAtom(jsonObj);
+		}
 	}
 
-	private static Set<Property> loadProperties(String objId, JSONObject jsonObj) {
+	private static SingleAtom procSingleAtom(JSONObject jsonObj){
+		TemplateInfo tInfo = procTemplateInfo(jsonObj);
+		return new SingleAtom(tInfo._id, tInfo._version, procProperties(tInfo._id,jsonObj),procConsts(jsonObj), procDependencies(jsonObj));
+	}
+	private static Compound procCompound(JSONObject jsonObj){
+		TemplateInfo tInfo = procTemplateInfo(jsonObj);
+		//
+		Set<BondedAtom> atoms = Compound.EMPTY_ATOMS_SET;
+		if (jsonObj.containsKey("atoms")) {
+			atoms = new HashSet<BondedAtom>();
+			JSONArray atomsJSONArray = (JSONArray) jsonObj.get("atoms");
+			for (Object atomObj : atomsJSONArray) {
+				atoms.add(procDoubleAtom((JSONObject) atomObj));
+			}
+		}
+		//
+		return new Compound(tInfo._id, tInfo._version, procProperties(tInfo._id,jsonObj),procConsts(jsonObj), atoms, procDependencies(jsonObj));
+	}
+
+	private static BondedAtom procDoubleAtom(JSONObject jsonObj){
+		TemplateInfo tInfo = procTemplateInfo(jsonObj);
+		return new BondedAtom(tInfo._id, tInfo._version, procProperties(tInfo._id,jsonObj),procConsts(jsonObj), procDependencies(jsonObj));
+	}
+
+	private static Set<Property> procConsts(JSONObject jsonObj){
+		Set<Property> ps =Template.EMPTY_CONSTS;
+		//+ constants are properties ( ==> Doub)
+		if (jsonObj.containsKey("const")) {
+			ps = new HashSet<Property>();
+			JSONObject constJsonObj = (JSONObject)jsonObj.get("const");
+			Iterator itr = constJsonObj.keySet().iterator();
+			while (itr.hasNext()) {
+				String key = (String) itr.next();
+				ps.add(new Property(key, new Doub(constJsonObj.get(key).toString())));
+			}
+		}
+		//-
+		return ps;
+	}
+
+	private static Set<Property> procProperties(String objId, JSONObject jsonObj) {
 		Set<Property> ps = new HashSet<Property>();
 		//+ mandatory properties ( position and shape => expressions )
 		String[] mandatoryProperties = new String[]{"x", "y", "h", "w"};
@@ -101,22 +120,7 @@ public class LabLoader {
 		return ps;
 	}
 
-	private static Set<Property> loadConsts(JSONObject jsonObj){
-		Set<Property> ps = new HashSet<Property>();
-		//+ constants are properties ( ==> Doub)
-		if (jsonObj.containsKey("const")) {
-			JSONObject constJsonObj = (JSONObject)jsonObj.get("const");
-			Iterator itr = constJsonObj.keySet().iterator();
-			while (itr.hasNext()) {
-				String key = (String) itr.next();
-				ps.add(new Property(key, new Doub(constJsonObj.get(key).toString())));
-			}
-		}
-		//-
-		return ps;
-	}
-
-	private static Set<String> loadDependencies(JSONObject jsonObj) {
+	private static Set<String> procDependencies(JSONObject jsonObj) {
 		Set<String> refSet = Molecule.EMPTY_DEPENDENCIES;
 		if (jsonObj.containsKey("dependsOn")) {
 			refSet = new HashSet<String>();
@@ -128,7 +132,7 @@ public class LabLoader {
 		return refSet;
 	}
 
-	private static String readSimpleProperty(JSONObject jsonObj, String property) {
+	private static String readSimpleJsonProperty(JSONObject jsonObj, String property) {
 		if (!jsonObj.containsKey(property)) {
 			return "";
 		}
@@ -155,5 +159,14 @@ public class LabLoader {
 		return null;
 
 	}
+}
 
+class TemplateInfo {
+	public final String _id;
+	public final String _version;
+	
+	public TemplateInfo(String _id, String _version) {
+		this._id = _id;
+		this._version = _version;
+	}
 }

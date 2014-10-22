@@ -9,6 +9,8 @@ package symcode.evaluator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import symcode.lab.BondedAtom;
+import symcode.lab.Compound;
 import symcode.lab.Molecule;
 import symcode.value.*;
 
@@ -59,13 +61,12 @@ public class EvalNode {
 		if(evaluationEvironment.inspect() == Environment.MISSING_DEPENDENCY)
 				throw new EvaluationError("Some of references are missing: probably the error is less input arguments for "+_sym._id);
 		//-
-		
 		// if Atom
-		if(_sym.isAtom()){
+		if(_sym.isSingleAtom()){
 			return processAtom(evaluationEvironment, _sym._id);
 		} else { // Compound
 			Set<Product> atomProductSet = new HashSet<Product>();
-			for(Molecule m : _sym._elements){
+			for(BondedAtom m : ((Compound)_sym)._subAtoms){
 				atomProductSet.add(processAtom(evaluationEvironment, m._id));
 			}
 			return processCompound(evaluationEvironment, _sym._id, atomProductSet);

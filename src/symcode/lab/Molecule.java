@@ -7,7 +7,6 @@
 package symcode.lab;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,83 +16,77 @@ import java.util.Set;
  */
 public abstract class Molecule extends Template {
 
+	public static final Set<Property> EMPTY_PROPERTY_SET = Collections.unmodifiableSet(new HashSet<Property>());
 	/**
 	 *
 	 */
 	public static final Set<String> EMPTY_DEPENDENCIES = Collections.unmodifiableSet(new HashSet<String>());
-	private final Set<String> _dependencies;
+	public final Set<String> _dependencies;
+	public final Set<Property> _properties; // properties
 	/**
 	 *
 	 * @param id
 	 * @param version
 	 * @param propertySet
 	 * @param constsProperties
-	 * @param elementsSet
 	 * @param deps
 	 */
-	public Molecule(String id,String version, Set<Property> propertySet, Set<Property> constsProperties, Set<Molecule> elementsSet, Set<String> deps){
-		super(id, version, propertySet, constsProperties, elementsSet);
+	public Molecule(String id,String version, Set<Property> propertySet, Set<Property> constsProperties, Set<String> deps){
+		super(id, version, constsProperties);
 		_dependencies = Collections.unmodifiableSet(deps);
-	}
-
-	/**
-	 *
-	 * @return
-	 */
-	public Set<String> getDependencies(){
-		return _dependencies;
+		//+ properties
+		this._properties =Collections.unmodifiableSet(propertySet); 
+		//-
 	}
 
 	/**
 	 * get the set properties needed to evaluate the molecule.
 	 * @return 
 	 */
-	public Set<Property> getEvaluablePropertySet(){
+	public final Set<Property> getEvaluablePropertySet(){
 		Set<Property> propertySet = new HashSet<Property>();
-		evaluablePropertySetHelper(propertySet);
+		this.evaluablePropertySet_Helper(propertySet);
 		return propertySet;
 	}
-	private void evaluablePropertySetHelper(Set<Property> propertySet){
-		// TODO : you can refer to consts as upper-deep they are but not molecules. molecules can only be referred to inside there compounds
+	
+	/**
+	 * add required properties to the property set. Must call isThisAddedToPropertySet() before doing anything.
+	 * @param propertySet 
+	 */
+	protected void evaluablePropertySet_Helper(Set<Property> propertySet){
 		//+ to avoid infinite adding in case of (valid or invalid) 
-		//	circular dependency
-		if(_properties.isEmpty() || propertySet.contains(_properties.iterator().next())){
+		if(propertySet == null) return;
+		if(propertySet.contains(_properties.iterator().next())){
 			return;
 		}
-		
 		//-
-		//+ adding this.propertySet
-		for(Property p : _properties){
-			propertySet.add(p);
-		}
+		//+ properties
+		propertySet.addAll(_properties);
+		//-
+		//+ myConsts
+		propertySet.addAll(_constProperties);
 		//-
 		//+ add dependencies
 		for(String ref : _dependencies){
-			// TODO : on the current implementation constants in 
-			//	distant scopes have priority over molecules with
-			//	the same name.
+			Molecule m = getMolecule(ref);
+			if(m != null) {
+				m.evaluablePropertySet_Helper(propertySet);
+				continue;
+			}
+			//
 			Property constProperty = getConst(ref);
 			if(constProperty !=null){
 				propertySet.add(constProperty);
 				continue;
 			}
-			// This ref is not a constant
-			Molecule m = getMolecule(ref);
-			if(m != null) {
-			m.evaluablePropertySetHelper(propertySet);
-			}
 		}
 		//-
-		//+ Add all childrenelements and consts to list
-		for(Molecule m : this.getElements()){
-			m.evaluablePropertySetHelper(propertySet);
-		}
-		for(Property p : this._constProperties){
-				propertySet.add(p);
-		}
-		//-
+		addClassSpecificPropertySet(propertySet);
+
 	}
+	abstract void addClassSpecificPropertySet(Set<Property> propertySet);
 
-	
-
+	public boolean isSingleAtom() {
+		return this.getClass().equals(SingleAtom.class);
+	}
 }

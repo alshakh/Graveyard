@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * @author Ahmed Alshakh www.alshakh.net
  */
-public class Atom extends Molecule {
+public abstract class Atom extends Molecule {
 
 	/**
 	 *
@@ -21,11 +21,21 @@ public class Atom extends Molecule {
 	 * @param deps
 	 */
 	public Atom(String id, String version, Set<Property> propertySet , Set<Property> constsProperties, Set<String> deps) {
-		super(id, version, propertySet, constsProperties, Template.EMPTY_ELEMENTS, deps);
+		super(id, version, propertySet, constsProperties, deps);
 	}
 
 	@Override
 	public String toString() {
 		return "atom " + super.toString();
 	}
+
+	/**
+	 * do nothing since everything in Atom is covered in Molecule's methods.
+	 * @param propertySet 
+	 */
+	@Override
+	void addClassSpecificPropertySet(Set<Property> propertySet) {
+		return;
+	}
+	
 }

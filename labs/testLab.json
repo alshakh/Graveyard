@@ -1,117 +1,124 @@
 {
-    "id": "testLab",
-    "type": "lab",
-    "version": "1.2.3",
-    "const": {
-    	"defHeight":"25"
-    },
-    "elements": [
-        {
-            "type": "atom",
-            "id": "notSoSimpleAtom",
-            "version": "1.2.2",
-            "dependsOn": "defHeight",
-            "x": "defHeight",
-            "y": "defHeight*2",
-            "h": "100",
-            "w": "100",
-            "svg": "SIMPLE\" ATOM"
-        },
-        {
-            "type": "atom",
-            "id": "simpleAtom",
-            "version": "1.2.2",
-            "x": "0",
-            "y": "0",
-            "h": "100",
-            "w": "100",
-            "svg": "SIMPLE\" ATOM"
-        },
-        {
-        	"type": "compound",
-            "id": "simpleCompound",
-            "version": "1.2.3",
-            "x": "1",
-            "y": "2",
-            "h": "300",
-            "w": "400",
-            "elements": [
-            	{
-            		"type": "atom",
-            		"id": "subAtom1",
-            		"version": "1.2.2",
-            		"x": "1",
-            		"y": "1",
-            		"h": "100",
-            		"w": "100",
-            		"svg": "content Atom 1"
-        		},
-        		{
-            		"type": "atom",
-            		"id": "subAtom2",
-            		"version": "1.2.2",
-            		"x": "2",
-            		"y": "2",
-            		"h": "200",
-            		"w": "200",
-            		"svg": "content Atom 2"
-        		}
-            ]
-        },
-        {
-            "type": "compound",
-            "id": "root",
-            "version": "1.2.3",
-            "x": "$1.x+2",
-            "y": "0",
-            "h": "radical.y+radical.h",
-            "w": "radix.x+radix.w",
-            "const": {
-                "aX": "20",
-                "aY": "30"
-            },
-            "elements": [
-                {
-                    "type": "atom",
-                    "id": "power",
-                    "dependsOn": "$1",
-                    "x": "0",
-                    "y": "0",
-                    "h": "$1.h",
-                    "w": "$1.w",
-                    "svg": "<<< $1.svg >>>"
-                },
-                {
-                    "type": "atom",
-                    "id": "radical",
-                    "dependsOn": "power, radix, base, aX, aY",
-                    "x": "power.x+power.w-aX",
-                    "y": "power.y+power.h-aY",
-                    "h": "radix.h+base.h+5",
-                    "w": "35",
-                    "svg": "RADICAL RADICAL RADICAL"
-                },
-                {
-                    "type": "atom",
-                    "id": "radix",
-                    "dependsOn": "radical, base",
-                    "x": "radical.x+radical.w",
-                    "y": "radical.y",
-                    "h": "23",
-                    "w": "base.w + 5",
-                    "svg": "RADIX RADIX RADIX"
-                },
-                {
-                    "type": "atom",
-                    "id": "base",
-                    "dependsOn": "radical, radix, $2",
-                    "x": "radical.x+radical.w",
-                    "y": "radix.y+radix.h",
-                    "h": "$2.h",
-                    "w": "$2.w",
-                    "svg": "AAA <<< $2.svg >>> BBB"
-                }
-            ]
-        }
-    ]
+	"id": "testLab",
+	"version": "1.2.3",
+	"const":{
+		"const1": "0.1",
+		"const2": "0.02"
+	},
+	"elements": [
+		{
+			"id": "atom_noProperties",
+			"comment": "atom with no properties (to test defaults)",
+			"version": "1.2.2"
+		},
+		{
+			"id": "atom_simpleProperties",
+			"comment": "atom with simple properties",
+			"version": "1.2.2",
+			"x": "1",
+			"y": "2",
+			"h": "3",
+			"w": "4",
+			"svg": "[atom_simpleProperties]"
+		},
+		{
+			"id": "atom_outerConst",
+			"comment": "atom with refering to outer const",
+			"version": "1.2.2",
+			"dependsOn": "const1",
+			"x": "const1",
+			"y": "const1+1",
+			"h": "102",
+			"w": "103",
+			"svg": "[atom_outerConst]"
+		},
+		{
+			"id": "atom_innerConst",
+			"comment": "atom with refering to inner const",
+			"version": "1.2.2",
+			"const": {
+				"const_1": "0.003"
+			},
+			"x": "const_1",
+			"y": "const_1+1",
+			"h": "202",
+			"w": "203",
+			"svg": "[atom_innerConst]"
+		},
+		{
+			"id": "atom_ExprSvg_1",
+			"comment": "atom with expression in svg comming after text",
+			"version": "1.2.2",
+			"x": "300",
+			"y": "301",
+			"h": "302",
+			"w": "303",
+			"svg": "[atom_innerConst]<<< 7*5 >>>"
+		},
+		{
+			"id": "atom_ExprSvg_2",
+			"comment": "atom with expression in svg without text",
+			"version": "1.2.2",
+			"x": "400",
+			"y": "401",
+			"h": "402",
+			"w": "403",
+			"svg": "<<< 7*5 >>>"
+		},
+		{
+			"id": "atom_ExprSvg_3",
+			"comment": "atom with expression in svg comming before text",
+			"version": "1.2.2",
+			"x": "500",
+			"y": "501",
+			"h": "502",
+			"w": "503",
+			"svg": "<<< 7*5 >>>[atom_ExprSvg_3]"
+		},
+		{
+			"id": "atom_ExprSvg_4",
+			"comment": "atom with reference expression",
+			"version": "1.2.2",
+			"dependsOn": "const1",
+			"x": "500",
+			"y": "501",
+			"h": "502",
+			"w": "503",
+			"svg": "<<< 7*const1 >>>[atom_ExprSvg_3]"
+		},
+		{
+			"id": "noType",
+			"comment": "element with no type",
+			"version": "1.2.2"
+		},
+		{
+			"id": "compound_simple",
+			"version": "1.2.3",
+			"comment": "simple compound",
+			"x": "subatom_1.x+subatom_2.x",
+			"y": "subatom_1.y+subatom_2.y",
+			"h": "subatom_1.h+subatom_2.h",
+			"w": "subatom_1.w+subatom_2.w",
+			"atoms": [
+				{
+					"id": "subatom_1",
+					"version": "1.2.2",
+					"x": "1",
+					"y": "2",
+					"h": "3",
+					"w": "4",
+					"svg": "[subatom_1]"
+				},
+				{
+					"id": "subatom_2",
+					"version": "1.2.2",
+					"x": "11",
+					"y": "22",
+					"h": "33",
+					"w": "44",
+					"svg": "[subatom_2]"
+				}
+			]
+		}
+	]
 }

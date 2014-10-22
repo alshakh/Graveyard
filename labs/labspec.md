@@ -13,3 +13,7 @@ x,y,h,w are Expr
 In Svg if you sourrand expression with <<< EXPR >>> it will be evaluated.
 
 svg will be used in atom and ignored with compound
+
+
+
+The difference between Compount and a SingleAtom is "atoms":[...] property

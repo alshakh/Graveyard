@@ -17,7 +17,7 @@ public class Svg extends Expr implements Value {
 		super(convertSvgStringToExprString(svgStr));
 	}
 
-	private static  String convertSvgStringToExprString(String inputStr) {
+	private static String convertSvgStringToExprString(String inputStr) {
 		/*
 		 * The general format of input is TEXT <<< CODE >>> TEXT <<< CODE >>> TEXT etc.
 		 *    the input will alternate between text and code
