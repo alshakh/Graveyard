@@ -38,10 +38,14 @@ public class SvgExpr extends Expr implements Value {
 			codeStart = strEnd+"<<<".length();
 			codeEnd = ends.get(i);
 			//
+			/*
+			expressions must be sorrounded by () because if stiring + expr + expr + string
+			expr will be evaluated as string
+			*/
 			script.append(escape(inputStr.substring(strStart, strEnd)))
-				.append("\"+")
+				.append("\"+(")
 				.append(inputStr.substring(codeStart,codeEnd))
-				.append("+\"");
+				.append(")+\"");
 			//
 			strStart = codeEnd+">>>".length();
 		}

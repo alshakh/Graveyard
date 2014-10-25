@@ -63,10 +63,11 @@ public class Svg implements Value {
 	}
 	private static String processToString(String subContent, double x, double y, double width, double height){
 		return "<g"
-		       +" x=\""+doubleToProperString(x)+"\""
-		       +" y=\""+doubleToProperString(y)+"\""
-		       +" height=\""+doubleToProperString(height)+"\""
-		       +" width=\""+doubleToProperString(width)+"\""
+		       +" transform=\""
+		       +" translate("+doubleToProperString(x)+", "+doubleToProperString(y)+")"
+		       +"\""
+		       //+" height=\""+doubleToProperString(height)+"\""
+		       //+" width=\""+doubleToProperString(width)+"\""
 		       +">"
 		       +"\n"
 		       +indentEveryLine(subContent)
@@ -87,14 +88,16 @@ public class Svg implements Value {
 		return (gap + str.replaceAll("\n", "\n"+gap));
 	}
 	private static String doubleToProperString(double d){
-		// TODO : no floating point except when neccesary 
 		if(d == (long) d)
 			return String.format("%d",(long)d);
 		else
 			return String.format("%s",d);
 	}
 	public Svg combine(Svg other){
-		return new Svg(this.toStripString()+"\n"+this.toStripString());
+		/*  #BUG: Svg(String) takes full content whare as the content 
+		below is not full
+		*/
+		return new Svg(this.toStripString()+"\n"+other.toStripString());
 	}
 
 	/**
@@ -122,8 +125,9 @@ public class Svg implements Value {
 		if(_contentIsFull)
 			return _content;
 		else {
-			return "<svg width=\""+doubleToProperString(_width)+"\n"
-			       +"height=\""+doubleToProperString(_height)+"\""
+			return "<svg"
+				+" width=\""+doubleToProperString(_width)+"\""
+			       +" height=\""+doubleToProperString(_height)+"\""
 			       +">"
 			       +"\n"
 			       +indentEveryLine(_content)

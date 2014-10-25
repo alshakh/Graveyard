@@ -61,6 +61,7 @@ public class EvalNode {
 		if(evaluationEvironment.inspect() == Environment.MISSING_DEPENDENCY)
 				throw new EvaluationError("Some of references are missing: probably the error is less input arguments for "+_sym._id);
 		//-
+		
 		// if Atom
 		if(_sym.isSingleAtom()){
 			return processAtom(evaluationEvironment, _sym._id);
@@ -89,7 +90,7 @@ public class EvalNode {
 			Svg combinedSvg = null;
 			for(Product p : atomProductSet){
 				if(combinedSvg==null) combinedSvg = new Svg(p);
-				combinedSvg = combinedSvg.combine(new Svg(p));
+				else combinedSvg = combinedSvg.combine(new Svg(p));
 			}
 			//
 			return new Product(id, combinedSvg, x,y,h,w);
