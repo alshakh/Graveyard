@@ -26,15 +26,16 @@ public class Str implements Value{
 
 	@Override
 	public String toEvaluableScript() {
-		return "\""+escapeString()+"\"";
+		return "\""+escapeString(_str)+"\"";
 	}
 
-	private String escapeString(){
-		return _str.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n");
+	public static String escapeString(String str){
+		return str.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n");
 	}
 
 	public String toString(){
 		return _str;
 	}
+
 	
 }

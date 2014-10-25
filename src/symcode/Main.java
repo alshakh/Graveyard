@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import symcode.evaluator.EvalNode;
 import symcode.evaluator.EvaluationError;
 import symcode.lab.*;
+import symcode.value.Svg;
 
 /**
  *
@@ -13,6 +14,7 @@ public class Main {
 
 	/**
 	 * @param args the command line arguments
+	 * @throws symcode.evaluator.EvaluationError
 	 */
 	public static void main(String[] args) throws EvaluationError {
 		//System.out.println(new Expr("df.svg").getNeededProperties());
@@ -27,6 +29,6 @@ public class Main {
 		//EvalNode evlNode = new EvalNode(molecule,input);
 		EvalNode evlNode = new EvalNode(molecule);
 		
-		System.out.println(evlNode.eval().toSvgString());
+		System.out.println(new Svg(evlNode.eval()).toFullString());
 	}
 }

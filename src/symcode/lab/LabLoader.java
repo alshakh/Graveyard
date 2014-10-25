@@ -114,7 +114,7 @@ public class LabLoader {
 		//-
 		//+ svg property ( => svg)
 		if (jsonObj.containsKey("svg")) {
-			ps.add(new Property(objId + ".svg", new Svg((String) jsonObj.get("svg"))));
+			ps.add(new Property(objId + ".svg", new SvgExpr((String) jsonObj.get("svg"))));
 		}
 		//-
 		return ps;

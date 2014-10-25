@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.Set;
 import symcode.lab.Property;
 import symcode.lab.Util;
+import symcode.value.Svg;
 import symcode.value.*;
 
 /**
@@ -22,14 +23,14 @@ public class Product {
 	public final Doub _y;
 	public final Doub _h;
 	public final Doub _w;
-	public final Str _svgStr;
+	public final Svg _svg;
 	public final String _id;
 	/**
 	 *
 	 * @param svg
 	 */
-	public Product(String id, Str svgStr, Doub x, Doub y, Doub h, Doub w) {
-		_svgStr = svgStr;
+	public Product(String id, Svg svg, Doub x, Doub y, Doub h, Doub w) {
+		_svg = svg;
 		_x = x;
 		_y = y;
 		_h = h;
@@ -40,8 +41,8 @@ public class Product {
 	 *
 	 * @param svg
 	 */
-	public Product(Str svgStr, Doub x, Doub y, Doub h, Doub w) {
-		this(Util.generateRandomId(), svgStr, x, y, h, w);
+	public Product(Svg svg, Doub x, Doub y, Doub h, Doub w) {
+		this(Util.generateRandomId(), svg, x, y, h, w);
 	}
 
 	public Set<Property> getEvaluablePropertySet(String underObjectRef) {
@@ -51,18 +52,10 @@ public class Product {
 		ps.add(new Property(underObjectRef + "." + "y", _y ));
 		ps.add(new Property(underObjectRef + "." + "h", _h ));
 		ps.add(new Property(underObjectRef + "." + "w", _w ));
-		ps.add(new Property(underObjectRef + "." + "svg",new Svg(toSvgString())));
+		ps.add(new Property(underObjectRef + "." + "svg",_svg));
 		// TODO : better way to do svg
 		//
 		return ps;
-	}
-	//
-	// TODO : #SVG evaluating actual svg must be separated
-	public String toSvgString() {
-		// TODO : this code is not actual svg. do actural svg code
-		return "<g x=\""+_x+"\" y=\""+_y+"\" h=\""+_h+"\" w=\""+_w+"\">\n" +
-			_svgStr.toString() + "\n" +
-			"</g>";
 	}
 
 	@Override
@@ -77,7 +70,7 @@ public class Product {
 		hash = 67 * hash + Objects.hashCode(this._y);
 		hash = 67 * hash + Objects.hashCode(this._h);
 		hash = 67 * hash + Objects.hashCode(this._w);
-		hash = 67 * hash + Objects.hashCode(this._svgStr);
+		hash = 67 * hash + Objects.hashCode(this._svg);
 		hash = 67 * hash + Objects.hashCode(this._id);
 		return hash;
 	}
@@ -103,7 +96,7 @@ public class Product {
 		if (!Objects.equals(this._w, other._w)) {
 			return false;
 		}
-		if (!Objects.equals(this._svgStr, other._svgStr)) {
+		if (!Objects.equals(this._svg, other._svg)) {
 			return false;
 		}
 		if (!Objects.equals(this._id, other._id)) {

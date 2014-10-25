@@ -37,5 +37,10 @@ public class Doub implements Value{
 	public String toEvaluableScript() {
 		return String.valueOf(_value);
 	}
+
+	public double toDouble() {
+		return _value;
+	}
+	
 	
 }

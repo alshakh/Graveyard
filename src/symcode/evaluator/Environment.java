@@ -121,7 +121,7 @@ class PropertyOrderList {
 
 	/**
 	 * Add property to property list. When adding multiple properties,
-	 * addPropertyCollection is recommended. because of fewer calls of sort();
+	 * <code>addPropertyCollection</code> is recommended. because of fewer calls of sort();
 	 * @param property 
 	 */
 	public void addProperty(Property property){

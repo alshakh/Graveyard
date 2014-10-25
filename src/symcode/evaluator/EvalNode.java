@@ -77,7 +77,7 @@ public class EvalNode {
 			Doub y = (Doub)env.resolveReference(id+".y");
 			Doub h = (Doub)env.resolveReference(id+".h");
 			Doub w = (Doub)env.resolveReference(id+".w");
-			Str svg = new Str(env.resolveReference(id+".svg").toString());
+			Svg svg = new Svg(env.resolveReference(id+".svg").toString());
 			return new Product(id, svg,x,y,h,w);
 	}
 	private Product processCompound(Environment env, String id, Set<Product> atomProductSet){
@@ -86,13 +86,12 @@ public class EvalNode {
 			Doub h = (Doub)env.resolveReference(id+".h");
 			Doub w = (Doub)env.resolveReference(id+".w");
 			//
-			// TODO : #SVG evaluating actual svg must be separated
-			StringBuilder svgBodySB = new StringBuilder();
+			Svg combinedSvg = null;
 			for(Product p : atomProductSet){
-				svgBodySB.append(p.toSvgString()).append("\n");
+				if(combinedSvg==null) combinedSvg = new Svg(p);
+				combinedSvg = combinedSvg.combine(new Svg(p));
 			}
-			Str svg = new Str(svgBodySB.substring(0, svgBodySB.length()-1));
 			//
-			return new Product(id, svg,x,y,h,w);
+			return new Product(id, combinedSvg, x,y,h,w);
 	}
 }

@@ -18,9 +18,9 @@ import static org.junit.Assert.*;
  *
  * @author Ahmed Alshakh www.alshakh.net
  */
-public class SvgTest {
+public class SvgExprTest {
 	
-	public SvgTest() {
+	public SvgExprTest() {
 	}
 	
 	@BeforeClass
@@ -40,12 +40,12 @@ public class SvgTest {
 	}
 
 	/**
-	 * Test of getNeededProperties method, of class Svg.
+	 * Test of getNeededProperties method, of class SvgExpr.
 	 */
 	@Test
 	public void testGetNeededProperties() {
 		System.out.println("getNeededProperties");
-		Svg instance = null;
+		SvgExpr instance = null;
 		Set<String> expResult = null;
 		Set<String> result = instance.getNeededProperties();
 		assertEquals(expResult, result);
@@ -54,12 +54,12 @@ public class SvgTest {
 	}
 
 	/**
-	 * Test of toString method, of class Svg.
+	 * Test of toString method, oSvgExprlass Svg.
 	 */
 	@Test
 	public void testToString() {
-		System.out.println("toString");
-		Svg instance = null;
+		System.out.println("toSvgExpring");
+		SvgExpr instance = null;
 		String expResult = "";
 		String result = instance.toString();
 		assertEquals(expResult, result);
@@ -68,20 +68,20 @@ public class SvgTest {
 	}
 
 	/**
-	 * Test of toEvaluableScript method, of class Svg.
+	 * Test of toEvaluableScript mSvgExprod, of class Svg.
 	 */
 	@Test
 	public void testToEvaluableScript_1() {
 		System.out.println("toEvaluableScript");
-		Svg instance = new Svg("AAA <<< SS >>> BBB <<< QQ >>>");
+		SvgExpr instance = new SvgExpr("AAA <<< SS >>> BBB <<< QQ >>>");
 		String expResult = "\"AAA \"+ SS +\" BBB \"+ QQ +\"\"";
 		String result = instance.toEvaluableScript();
 		assertEquals(expResult, result);
 	}
 	@Test
 	public void testToEvaluableScript_2() {
-		System.out.println("toEvaluableScript");
-		Svg instance = new Svg("AAA <<< SS >>> BBB");
+		System.out.print("toEvaluablSvgExprript");
+		SvgExpr instance = new SvgExpr("AAA <<< SS >>> BBB");
 		String expResult = "\"AAA \"+ SS +\" BBB\"";
 		String result = instance.toEvaluableScript();
 		assertEquals(expResult, result);
