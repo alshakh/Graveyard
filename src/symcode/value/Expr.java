@@ -74,7 +74,9 @@ public class Expr implements Value {
 			// regex for comment is //.*$
 			+ "|" + "(//.*$)"
 			// JS keywords are break,case,class,catch,const,continue,debugger,default,delete,do,else,export,extends,finally,for,function,if,import,in,instanceof,let,new,return,super,switch,this,throw,try,typeof,var,void,while,with,yield
-			+ "|" + "\\b(break|case|class|catch|const|continue|debugger|default|delete|do|else|export|extends|finally|for|function|if|import|in|instanceof|let|new|return|super|switch|this|throw|try|typeof|var|void|while|with|yield)\\b";
+			+ "|" + "\\b(break|case|class|catch|const|continue|debugger|default|delete|do|else|export|extends|finally|for|function|if|import|in|instanceof|let|new|return|super|switch|this|throw|try|typeof|var|void|while|with|yield)\\b"
+			// Custom references
+			+"|"+"\\b(Math.max|Math.min)\\b";
 
 		//
 

@@ -69,7 +69,7 @@ public class Parser {
 		}
 		//
 		// TODO :Change when native molecules are working
-		return new ParseNode(ParseNode.Type.MOLECULE, "WRAPPER", children);
+		return new ParseNode(ParseNode.Type.WRAPPER, "WRAPPER", children);
 	}
 
 	/**
@@ -191,7 +191,7 @@ public class Parser {
 		//
 		public static enum Type {
 
-			EMPTY, MOLECULE, QUOTED, NUMBER, UNKOWN;
+			EMPTY,WRAPPER, MOLECULE, QUOTED, NUMBER;
 		}
 		//
 		public final List<ParseNode> _children;

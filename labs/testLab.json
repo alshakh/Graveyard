@@ -6,6 +6,12 @@
 		"const2": "0.02"
 	},
 	"elements": [
+            {
+                "id": "a1",
+                "w":"100",
+                "h":"100",
+                "svg":"<circle cx=\"50\" cy=\"50\" r=\"50\" stroke=\"black\" stroke-width=\"3\" fill=\"red\" />",
+        },
 		{
 			"id": "atom_noProperties",
 			"comment": "atom with no properties (to test defaults)",
