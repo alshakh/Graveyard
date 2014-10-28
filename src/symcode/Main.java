@@ -1,10 +1,6 @@
 package symcode;
 
-import java.io.File;
-import java.io.IOException;
-import symcode.evaluator.EvalNode;
 import symcode.evaluator.EvaluationError;
-import symcode.lab.*;
 import symcode.value.Svg;
 
 /**
@@ -17,24 +13,8 @@ public class Main {
 	 * @param args the command line arguments
 	 * @throws symcode.evaluator.EvaluationError
 	 */
-	public static void main(String[] args) throws EvaluationError, IOException {
-		Svg.outputBufferedImage(EXAMPLE_SVG.toBufferedImage(), new File("test.png"));
-		
+	public static void main(String[] args) throws EvaluationError {
 
-		System.exit(0);
-		//System.out.println(new Expr("df.svg").getNeededProperties());
-		//
-		Lab testLab = symcode.lab.LabLoader.loadLab(new java.io.File("labs/testLab.json"));
-		Molecule molecule = testLab.getMolecule("compound_simple");
-		//System.out.println(molecule.getEvaluablePropertySet());
-		//
-		//ArrayList<EvalNode> input = new ArrayList<EvalNode>();
-		//input.add(new EvalNode(testLab.getMolecule("atom_outerConst")));
-		//input.add(new EvalNode(testLab.getMolecule("atom_innerConst")));
-		//EvalNode evlNode = new EvalNode(molecule,input);
-		EvalNode evlNode = new EvalNode(molecule);
-		
-		System.out.println(new Svg(evlNode.eval()).toFullString());
 	}
 	public static final Svg EXAMPLE_SVG =new Svg("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
 		"<svg id=\"svg2\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns=\"http://www.w3.org/2000/svg\" height=\"88.208\" width=\"190.97\" version=\"1.1\" xmlns:cc=\"http://creativecommons.org/ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n" +
