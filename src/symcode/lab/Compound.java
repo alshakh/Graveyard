@@ -36,10 +36,6 @@ public class Compound extends Molecule {
 	_subAtoms = Collections.unmodifiableSet(atomsSet);
     }
 
-    public String toString(){
-	    return "compound "+super.toString();
-    }
-
 	@Override
 	public Molecule getMolecule(String id) {
 		for(BondedAtom a: _subAtoms){
@@ -51,7 +47,7 @@ public class Compound extends Molecule {
 	}
 
 	@Override
-	void addClassSpecificPropertySet(Set<Property> propertySet) {
+	protected void addClassSpecificPropertySet(Set<Property> propertySet) {
 		for(BondedAtom ba: _subAtoms){
 			ba.evaluablePropertySet_Helper(propertySet);
 		}

@@ -84,7 +84,7 @@ public abstract class Molecule extends Template {
 		addClassSpecificPropertySet(propertySet);
 
 	}
-	abstract void addClassSpecificPropertySet(Set<Property> propertySet);
+	protected abstract void addClassSpecificPropertySet(Set<Property> propertySet);
 
 	public boolean isSingleAtom() {
 		return this.getClass().equals(SingleAtom.class);

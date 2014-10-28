@@ -27,5 +27,4 @@ public class BondedAtom extends Atom{
 	public Molecule getMolecule(String id) {
 		return this.getParent().getMolecule(id);
 	}
-	
 }

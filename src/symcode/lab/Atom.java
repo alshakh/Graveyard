@@ -34,7 +34,7 @@ public abstract class Atom extends Molecule {
 	 * @param propertySet 
 	 */
 	@Override
-	void addClassSpecificPropertySet(Set<Property> propertySet) {
+	protected void addClassSpecificPropertySet(Set<Property> propertySet) {
 		return;
 	}
 	

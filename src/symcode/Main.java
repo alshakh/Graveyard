@@ -1,6 +1,8 @@
 package symcode;
 
 import symcode.evaluator.EvaluationError;
+import symcode.lab.Molecule;
+import symcode.lab.nativemolecule.WrapperCompound;
 import symcode.value.Svg;
 
 /**
@@ -14,7 +16,8 @@ public class Main {
 	 * @throws symcode.evaluator.EvaluationError
 	 */
 	public static void main(String[] args) throws EvaluationError {
-
+		Molecule m = new WrapperCompound(3);
+		System.out.println(m);
 	}
 	public static final Svg EXAMPLE_SVG =new Svg("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
 		"<svg id=\"svg2\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns=\"http://www.w3.org/2000/svg\" height=\"88.208\" width=\"190.97\" version=\"1.1\" xmlns:cc=\"http://creativecommons.org/ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n" +
