@@ -111,11 +111,22 @@ public class Parser {
 		}
 		//
 		String moleculeName = token._string;
+		System.err.println(moleculeName);
+		//
+		boolean hasChildren = false;
 		// Check for children
-		Token nextToken = tokenizer.next();
-		// if no children, return the molecule
-		if (nextToken._type != Token.Type.OPEN_PARA) {
+		if(tokenizer.hasNext()){
+			Token nextToken = tokenizer.next();
 			tokenizer.revert();
+			// if no children, return the molecule
+			if (nextToken._type == Token.Type.OPEN_PARA) {
+				// bypass OPEN_PARA
+				tokenizer.next();
+				hasChildren = true;
+			}
+		}
+		//
+		if(!hasChildren){
 			return new ParseNode(ParseNode.Type.MOLECULE, moleculeName);
 		}
 		// If children, Process children

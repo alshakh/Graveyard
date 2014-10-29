@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 import symcode.evaluator.Parser.ParseNode;
 import symcode.lab.Lab;
+import symcode.lab.Molecule;
 import symcode.lab.nativemolecule.EmptyAtom;
 import symcode.lab.nativemolecule.NumberCompound;
 import symcode.lab.nativemolecule.TextCompound;
@@ -66,6 +67,15 @@ public class Evaluator {
 	private EvalNode constructEvalTree(String code) throws SyntaxError{
 		return constructEvalTree_helper(new Parser(code)._parseTree);
 	}
+	private Molecule getMolecule(String moleculeName){
+		// TODO : check if has children or not. to give priority to compound or atom
+		for(Lab l: _labs){
+			Molecule m = l.getMolecule(moleculeName);
+			if(m!=null) return m;
+		}
+		// if does not exist, return empty molecule
+		return EmptyAtom.INSTANCE;
+	}
 
 	private EvalNode constructEvalTree_helper(ParseNode parseNode){
 		List<EvalNode> children = null;
@@ -86,8 +96,11 @@ public class Evaluator {
 					return new EvalNode(EmptyAtom.INSTANCE);
 				}
 			case MOLECULE:
-				throw new UnsupportedOperationException();
-
+				if(children!=null){
+					return new EvalNode(getMolecule(parseNode._me),children);
+				} else {
+					return new EvalNode(getMolecule(parseNode._me));
+				}
 			case NUMBER:
 				return new EvalNode(new NumberCompound(parseNode._me));
 			case QUOTED:

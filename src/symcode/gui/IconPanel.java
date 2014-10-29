@@ -10,7 +10,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import javax.swing.Icon;
 import javax.swing.JPanel;
-
 /**
  *
  * @author Ahmed Alshakh www.alshakh.net
