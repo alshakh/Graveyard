@@ -1,0 +1,59 @@
+{
+	"id": "demoLab",
+	"version": "1.2.3",
+	"elements": [
+          {
+                "id": "circle",
+                "w":"100",
+                "h":"100;",
+                "svg":"<circle cx=\"50\" cy=\"50\" r=\"50\" stroke=\"black\" stroke-width=\"3\" fill=\"red\" />",
+        },
+        {
+        	"id": "enlarge",
+        	"const":{
+        		"factor": "2"
+        	}
+        	"w": "$1.w*factor",
+        	"h": "$1.h*factor",
+        	"svg": "<g transform=\"scale(<<<factor>>>)\"><<<$1.svg>>></g>"
+        },
+        {
+        	"id": "shrink",
+        	"const":{
+        		"factor": "0.5"
+        	}
+        	"w": "$1.w*factor",
+        	"h": "$1.h*factor",
+        	"svg": "<g transform=\"scale(<<<factor>>>)\"><<<$1.svg>>></g>"
+        },
+        {
+        	"id": "node",
+        	"w": "leftNode.w+rightNode.w",
+        	"h": "Math.max(leftNode.h, rightNode.h)+nodeTitle.h",
+        	"atoms": [
+        		{
+        			"id": "leftNode",
+        			"y": "nodeTitle.h",
+        			"w": "$2.w",
+        			"h": "$2.h",
+        			"svg": "<<<$2.svg>>>"
+        		},
+        		{
+        			"id": "rightNode",
+        			"y": "nodeTitle.h",
+        			"x": "leftNode.w"
+        			"w": "$3.w",
+        			"h": "$3.h",
+        			"svg": "<<<$3.svg>>>"
+        		},
+        		{
+        			"id": "nodeTitle",
+        			"x": "(node.w-nodeTitle.w)/2",
+        			"w": "$1.w",
+        			"h": "$1.h",
+        			"svg": "<<<$1.svg>>>"
+        		}
+        	]
+        }
+     ]
+}

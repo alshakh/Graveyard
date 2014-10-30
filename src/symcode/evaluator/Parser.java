@@ -111,7 +111,6 @@ public class Parser {
 		}
 		//
 		String moleculeName = token._string;
-		System.err.println(moleculeName);
 		//
 		boolean hasChildren = false;
 		// Check for children

@@ -26,20 +26,11 @@ public class Main {
 	 * @throws symcode.evaluator.EvaluationError
 	 */
 	public static void main(String[] args) throws EvaluationError, SyntaxError {
-		Molecule m = new WrapperCompound(3);
-		Lab lab = LabLoader.loadLab(new File("labs/testLab.json"));
-		SingleAtom a = (SingleAtom)lab.getMolecule("a1");
-		List<EvalNode> child = new ArrayList<EvalNode>();
-		child.add(new EvalNode(a));
-		child.add(new EvalNode(a));
-		child.add(new EvalNode(a));
-		//
-		EvalNode en = new EvalNode(m,child);
-		//System.out.println(new Svg(en.eval()).toFullString());
+		String code = "circle node(circle, circle, node(circle, circle, node(circle, circle, circle)))";
+		code = "node(circle,node(circle,circle,circle),circle)";
+		Lab lab = LabLoader.loadLab(new File("labs/demo.json"));
 		Evaluator evaluator = new Evaluator(lab);
-		//
-		System.out.println(new Parser("a1 tenX(a1)")._parseTree);
-		System.out.println(new Svg(evaluator.eval("a1 tenX(a1)")).toFullString());
+		System.out.println(new Svg(evaluator.eval(code)).toFullString());
 		//
 	}
 	public static final Svg EXAMPLE_SVG =new Svg("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
