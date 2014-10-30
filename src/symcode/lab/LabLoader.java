@@ -117,6 +117,15 @@ public class LabLoader {
 			ps.add(new Property(objId + ".svg", new SvgExpr((String) jsonObj.get("svg"))));
 		}
 		//-
+		//+ custom properties
+		Iterator itr = jsonObj.keySet().iterator();
+		while(itr.hasNext()){
+			String key = itr.next().toString();
+			if(key.startsWith("_")){
+				ps.add(new Property(objId + "." + key, new Expr(jsonObj.get(key).toString())));
+			}
+		}
+		//-
 		return ps;
 	}
 

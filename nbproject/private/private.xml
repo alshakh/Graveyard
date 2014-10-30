@@ -2,30 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/home/shakh/projects/symcode/src/symcode/lab/nativemolecule/TextCompound.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/evaluator/Evaluator.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/lab/Molecule.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/lab/Lab.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/evaluator/SyntaxError.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/lab/nativemolecule/EmptyAtom.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/lab/nativemolecule/WrapperCompound.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/evaluator/Product.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/lab/LabLoader.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/lab/nativemolecule/NumberCompound.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/value/Expr.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/value/Svg.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/value/Str.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/lab/Atom.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/evaluator/Tokenizer.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/Main.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/lab/Compound.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/evaluator/EvaluationError.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/evaluator/EvalNode.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/gui/IconPanel.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/evaluator/Parser.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/lab/InvalidLabException.java</file>
-            <file>file:/home/shakh/projects/symcode/src/symcode/evaluator/Environment.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
