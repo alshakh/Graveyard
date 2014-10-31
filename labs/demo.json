@@ -7,7 +7,7 @@
                 "w":"100",
                 "h":"100;",
                 "_pivot":"50",
-                "svg":"<circle cx=\"50\" cy=\"50\" r=\"50\" stroke=\"black\" stroke-width=\"3\" fill=\"red\" />",
+                "svg":"<circle cx=\"50\" cy=\"50\" r=\"50\" fill=\"red\" />",
         },
         {
         	"id": "enlarge",
@@ -55,7 +55,15 @@
         			"x": "(rightNode._pivot+leftNode._pivot)/2-nodeTitle.w/2",
         			"w": "$1.w",
         			"h": "$1.h",
+        			"_pivot": "nodeTitle.x+nodeTitle.w/2",
         			"svg": "<<<$1.svg>>>"
+        		},
+        		{
+        			"id": "lines",
+        			"w": "rightNode._pivot-leftNode._pivot",
+        			"h": "4",
+        			"y": "nodeTitle.y",
+        			"svg":"<line x1=\"<<<nodeTitle._pivot>>>\" y1=\"<<<nodeTitle.h>>>\" x2=\"<<<leftNode._pivot>>>\" y2=\"<<<leftNode.y>>>\" stroke-width=\"4\" stroke=\"black\"/><line x1=\"<<<nodeTitle._pivot>>>\" y1=\"<<<nodeTitle.h>>>\" x2=\"<<<rightNode._pivot>>>\" y2=\"<<<rightNode.y>>>\" stroke-width=\"4\" stroke=\"black\"/>"
         		}
         	]
         }

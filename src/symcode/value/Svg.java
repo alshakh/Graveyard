@@ -13,8 +13,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Collections;
-import java.util.Set;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import symcode.evaluator.Product;
@@ -23,7 +21,7 @@ import symcode.evaluator.Product;
  *
  * @author Ahmed Alshakh www.alshakh.net
  */
-public class Svg implements Value {
+public class Svg {
 	public static final String INDENT_SPACE="    ";
 	//
 	private final String _content;
@@ -62,6 +60,8 @@ public class Svg implements Value {
 		_height = h;
 	}
 	private static String processToString(String subContent, double x, double y, double width, double height){
+		if(x==0 && y==0) return subContent;
+		//
 		return "<g"
 		       +" transform=\""
 		       +" translate("+doubleToProperString(x)+", "+doubleToProperString(y)+")"
@@ -73,7 +73,6 @@ public class Svg implements Value {
 		       +indentEveryLine(subContent)
 		       +"\n"
 		       +"</g>";
-
 	}
 	private static String indentEveryLine(String str){
 		return indentEveryLine(str,1);
@@ -110,16 +109,6 @@ public class Svg implements Value {
 		return _content;
 	}
 
-	@Override
-	public Set<String> getNeededProperties() {
-		return Collections.<String>emptySet();
-	}
-
-	@Override
-	public String toEvaluableScript() {
-		return "\""+Str.escapeString(_content)+"\"";
-	}
-
 	public String toFullString() {
 		// TODO : replace by actual SvgCode
 		if(_contentIsFull)
@@ -139,7 +128,7 @@ public class Svg implements Value {
 	
 	@Override
 	public String toString(){
-		return toFullString();
+		return toStripString();
 	}
 	/*
 	 *******************************************************************
@@ -172,9 +161,8 @@ public class Svg implements Value {
 	public static void outputBufferedImage(BufferedImage bi, File f) throws IOException{
 		ImageIO.write(bi, "PNG", f);
 	}
-	
-	@Override
-	public double toDouble(){
-		return 0.0;
+
+	public Str toStr() {
+		return new Str(_content);
 	}
 }

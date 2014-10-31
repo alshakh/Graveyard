@@ -1,18 +1,12 @@
 package symcode;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import symcode.evaluator.EvalNode;
+import java.io.IOException;
 import symcode.evaluator.EvaluationError;
 import symcode.evaluator.Evaluator;
-import symcode.evaluator.Parser;
 import symcode.evaluator.SyntaxError;
 import symcode.lab.Lab;
 import symcode.lab.LabLoader;
-import symcode.lab.Molecule;
-import symcode.lab.SingleAtom;
-import symcode.lab.nativemolecule.WrapperCompound;
 import symcode.value.Svg;
 
 /**
@@ -24,12 +18,12 @@ public class Main {
 	 * @param args the command line arguments
 	 * @throws symcode.evaluator.EvaluationError
 	 */
-	public static void main(String[] args) throws EvaluationError, SyntaxError {
-		String code = "node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,circle)))))";
+	public static void main(String[] args) throws EvaluationError, SyntaxError, IOException {
+		String code = "node(circle,node(circle,circle,node(circle,circle,node(circle,node(circle,circle,node(circle,node(circle,node(circle,circle,node(circle,circle,node(circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,circle))))),node(circle,circle,node(circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,circle))))),circle))))),node(circle,circle,node(circle,circle,node(circle,node(circle,node(circle,circle,node(circle,circle,node(circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,node(circle,node(circle,circle,node(circle,circle,node(circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,circle))))),node(circle,circle,node(circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,circle))))),circle))))),node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,circle))))),circle))))),node(circle,circle,node(circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,circle))))),circle))))),node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,circle))))),node(circle,circle,circle))))),node(circle,circle,node(circle,circle,node(circle,circle,circle))))),node(circle,circle,node(circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,circle))))),circle))))),node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,circle)))))";
 		//code = "node(circle,circle,circle)";
 		Lab lab = LabLoader.loadLab(new File("labs/demo.json"));
 		Evaluator evaluator = new Evaluator(lab);
-		System.out.println(new Svg(evaluator.eval(code)).toFullString());
+		Svg.outputBufferedImage(new Svg(evaluator.eval(code)).toBufferedImage(), new File("a.png"));
 		//
 	}
 	public static final Svg EXAMPLE_SVG =new Svg("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +

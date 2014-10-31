@@ -126,7 +126,7 @@ public class EvalNode {
 			}
 		}
 		// Svg Property
-		properties.add(new ProductProperty("svg", combinedSvg));
+		properties.add(new ProductProperty("svg", combinedSvg.toStr()));
 		//
 		return new Product(id, properties);
 	}
