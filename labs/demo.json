@@ -30,12 +30,15 @@
         {
         	"id": "node",
         	"w": "leftNode.w+rightNode.w",
-        	"h": "Math.max(leftNode.h, rightNode.h)+nodeTitle.h",
+        	"h": "Math.max(leftNode.h, rightNode.h)+nodeTitle.h+gap",
         	"_pivot": "nodeTitle.w/2+nodeTitle.x",
+                "const": {
+                    "gap":"20*lines.w/200"
+                },
         	"atoms": [
         		{
         			"id": "leftNode",
-        			"y": "nodeTitle.h",
+        			"y": "nodeTitle.h+gap",
         			"w": "$2.w",
         			"h": "$2.h",
         			"_pivot": "$2._pivot",
@@ -43,7 +46,7 @@
         		},
         		{
         			"id": "rightNode",
-        			"y": "nodeTitle.h",
+        			"y": "nodeTitle.h+gap",
         			"x": "leftNode.w"
         			"w": "$3.w",
         			"h": "$3.h",

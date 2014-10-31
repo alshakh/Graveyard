@@ -95,7 +95,7 @@ public class LabLoader {
 			Iterator itr = constJsonObj.keySet().iterator();
 			while (itr.hasNext()) {
 				String key = (String) itr.next();
-				ps.add(new ConstProperty(key, new Doub(constJsonObj.get(key).toString())));
+				ps.add(new ConstProperty(key, new Expr(constJsonObj.get(key).toString())));
 			}
 		}
 		//-
