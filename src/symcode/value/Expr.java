@@ -90,4 +90,9 @@ public class Expr implements Value {
 			return  text.replaceAll(jsCleanPattern, "");
 		}
 	}
+	
+	@Override
+	public double toDouble(){
+		return 0.0;
+	}
 }

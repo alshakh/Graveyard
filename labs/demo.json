@@ -2,17 +2,11 @@
 	"id": "demoLab",
 	"version": "1.2.3",
 	"elements": [
-          {
-                "id": "customProp",
-                "w":"100",
-                "h":"100;",
-                "_pivot": "customProp.w",
-                "svg":"<circle cx=\"50\" cy=\"50\" r=\"50\" stroke=\"black\" stroke-width=\"3\" fill=\"red\" />",
-        },
         {
                 "id": "circle",
                 "w":"100",
                 "h":"100;",
+                "_pivot":"50",
                 "svg":"<circle cx=\"50\" cy=\"50\" r=\"50\" stroke=\"black\" stroke-width=\"3\" fill=\"red\" />",
         },
         {
@@ -37,12 +31,14 @@
         	"id": "node",
         	"w": "leftNode.w+rightNode.w",
         	"h": "Math.max(leftNode.h, rightNode.h)+nodeTitle.h",
+        	"_pivot": "nodeTitle.w/2+nodeTitle.x",
         	"atoms": [
         		{
         			"id": "leftNode",
         			"y": "nodeTitle.h",
         			"w": "$2.w",
         			"h": "$2.h",
+        			"_pivot": "$2._pivot",
         			"svg": "<<<$2.svg>>>"
         		},
         		{
@@ -51,11 +47,12 @@
         			"x": "leftNode.w"
         			"w": "$3.w",
         			"h": "$3.h",
+        			"_pivot": "rightNode.x+$3._pivot",
         			"svg": "<<<$3.svg>>>"
         		},
         		{
         			"id": "nodeTitle",
-        			"x": "(node.w-nodeTitle.w)/2",
+        			"x": "(rightNode._pivot+leftNode._pivot)/2-nodeTitle.w/2",
         			"w": "$1.w",
         			"h": "$1.h",
         			"svg": "<<<$1.svg>>>"

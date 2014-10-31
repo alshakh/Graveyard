@@ -7,6 +7,8 @@
 package symcode.lab;
 
 import java.util.Set;
+import symcode.lab.Property.ConstProperty;
+import symcode.lab.Property.NormalProperty;
 
 /**
  *
@@ -14,7 +16,7 @@ import java.util.Set;
  */
 public class BondedAtom extends Atom{
 
-	public BondedAtom(String id, String version, Set<Property> propertySet, Set<Property> constsProperties, Set<String> deps) {
+	public BondedAtom(String id, String version, Set<NormalProperty> propertySet, Set<ConstProperty> constsProperties, Set<String> deps) {
 		super(id, version, propertySet, constsProperties, deps);
 	}
 

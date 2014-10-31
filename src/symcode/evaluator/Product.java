@@ -6,56 +6,51 @@
 
 package symcode.evaluator;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import symcode.lab.Property;
+import symcode.lab.Property.EvaluableProperty;
+import symcode.lab.Property.NormalProperty;
+import symcode.lab.Property.ProductProperty;
 import symcode.lab.Util;
-import symcode.value.Svg;
-import symcode.value.*;
 
 /**
  *
  * @author Ahmed Alshakh www.alshakh.net
  */
 public class Product {
-	public final Doub _x;
-	public final Doub _y;
-	public final Doub _h;
-	public final Doub _w;
-	public final Svg _svg;
 	public final String _id;
-	/**
-	 *
-	 * @param svg
-	 */
-	public Product(String id, Svg svg, Doub x, Doub y, Doub h, Doub w) {
-		_svg = svg;
-		_x = x;
-		_y = y;
-		_h = h;
-		_w = w;
+	public final Set<ProductProperty> _properties;
+
+	public Product(String id, Set<ProductProperty> properties) {
+		// TODO : check if properties has all Property.MANDATORY_PROPERTIES
 		_id = id;
+		_properties = Collections.unmodifiableSet(properties);
 	}
 	/**
 	 *
 	 * @param svg
 	 */
-	public Product(Svg svg, Doub x, Doub y, Doub h, Doub w) {
-		this(Util.generateRandomId(), svg, x, y, h, w);
+	public Product(Set<ProductProperty> properties) {
+		this(Util.generateRandomId(), properties);
 	}
 
-	public Set<Property> getEvaluablePropertySet(String underObjectRef) {
-		Set<Property> ps = new HashSet<Property>();
-		////////////////////
-		ps.add(new Property(underObjectRef + "." + "x", _x ));
-		ps.add(new Property(underObjectRef + "." + "y", _y ));
-		ps.add(new Property(underObjectRef + "." + "h", _h ));
-		ps.add(new Property(underObjectRef + "." + "w", _w ));
-		ps.add(new Property(underObjectRef + "." + "svg",_svg));
-		// TODO : better way to do svg
-		//
+	public Set<EvaluableProperty> getEvaluablePropertySet(String underObjectRef) {
+		Set<EvaluableProperty> ps = new HashSet<EvaluableProperty>();
+		for(ProductProperty p : _properties){
+			ps.add(new NormalProperty(underObjectRef, p._propertyName, p._value));
+		}
 		return ps;
+	}
+	public Property getProperty(String propertyName){
+		for(ProductProperty p : _properties){
+			if(p._propertyName.equals(propertyName)){
+				return p;
+			}
+		}
+		return null;
 	}
 
 	@Override
@@ -66,11 +61,7 @@ public class Product {
 	@Override
 	public int hashCode() {
 		int hash = 7;
-		hash = 67 * hash + Objects.hashCode(this._x);
-		hash = 67 * hash + Objects.hashCode(this._y);
-		hash = 67 * hash + Objects.hashCode(this._h);
-		hash = 67 * hash + Objects.hashCode(this._w);
-		hash = 67 * hash + Objects.hashCode(this._svg);
+		hash = 67 * hash + Objects.hashCode(this._properties);
 		hash = 67 * hash + Objects.hashCode(this._id);
 		return hash;
 	}
@@ -84,26 +75,12 @@ public class Product {
 			return false;
 		}
 		final Product other = (Product) obj;
-		if (!Objects.equals(this._x, other._x)) {
-			return false;
-		}
-		if (!Objects.equals(this._y, other._y)) {
-			return false;
-		}
-		if (!Objects.equals(this._h, other._h)) {
-			return false;
-		}
-		if (!Objects.equals(this._w, other._w)) {
-			return false;
-		}
-		if (!Objects.equals(this._svg, other._svg)) {
-			return false;
-		}
 		if (!Objects.equals(this._id, other._id)) {
 			return false;
 		}
+		if(! _properties.equals(other._properties))
+			return true;
 		return true;
 	}
-
 
 }

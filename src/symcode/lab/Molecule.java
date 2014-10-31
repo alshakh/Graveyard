@@ -9,6 +9,9 @@ package symcode.lab;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import symcode.lab.Property.ConstProperty;
+import symcode.lab.Property.EvaluableProperty;
+import symcode.lab.Property.NormalProperty;
 
 /**
  *
@@ -16,13 +19,13 @@ import java.util.Set;
  */
 public abstract class Molecule extends Template {
 
-	public static final Set<Property> EMPTY_PROPERTY_SET = Collections.unmodifiableSet(new HashSet<Property>());
+	public static final Set<NormalProperty> EMPTY_PROPERTY_SET = Collections.unmodifiableSet(new HashSet<NormalProperty>());
 	/**
 	 *
 	 */
 	public static final Set<String> EMPTY_DEPENDENCIES = Collections.unmodifiableSet(new HashSet<String>());
 	public final Set<String> _dependencies;
-	public final Set<Property> _properties; // properties
+	public final Set<NormalProperty> _properties; // properties
 	/**
 	 *
 	 * @param id
@@ -31,7 +34,7 @@ public abstract class Molecule extends Template {
 	 * @param constsProperties
 	 * @param deps
 	 */
-	public Molecule(String id,String version, Set<Property> propertySet, Set<Property> constsProperties, Set<String> deps){
+	public Molecule(String id,String version, Set<NormalProperty> propertySet, Set<ConstProperty> constsProperties, Set<String> deps){
 		super(id, version, constsProperties);
 		_dependencies = Collections.unmodifiableSet(deps);
 		//+ properties
@@ -43,8 +46,8 @@ public abstract class Molecule extends Template {
 	 * get the set properties needed to evaluate the molecule.
 	 * @return 
 	 */
-	public final Set<Property> getEvaluablePropertySet(){
-		Set<Property> propertySet = new HashSet<Property>();
+	public final Set<EvaluableProperty> getEvaluablePropertySet(){
+		Set<EvaluableProperty> propertySet = new HashSet<EvaluableProperty>();
 		this.evaluablePropertySet_Helper(propertySet);
 		return propertySet;
 	}
@@ -53,7 +56,7 @@ public abstract class Molecule extends Template {
 	 * add required properties to the property set. Must call isThisAddedToPropertySet() before doing anything.
 	 * @param propertySet 
 	 */
-	protected void evaluablePropertySet_Helper(Set<Property> propertySet){
+	protected void evaluablePropertySet_Helper(Set<EvaluableProperty> propertySet){
 		//+ to avoid infinite adding in case of (valid or invalid) 
 		if(propertySet == null) return;
 		if(propertySet.contains(_properties.iterator().next())){
@@ -74,7 +77,7 @@ public abstract class Molecule extends Template {
 				continue;
 			}
 			//
-			Property constProperty = getConst(ref);
+			ConstProperty constProperty = getConst(ref);
 			if(constProperty !=null){
 				propertySet.add(constProperty);
 				continue;
@@ -84,7 +87,7 @@ public abstract class Molecule extends Template {
 		addClassSpecificPropertySet(propertySet);
 
 	}
-	protected abstract void addClassSpecificPropertySet(Set<Property> propertySet);
+	protected abstract void addClassSpecificPropertySet(Set<EvaluableProperty> propertySet);
 
 	public boolean isSingleAtom() {
 		return this.getClass().equals(SingleAtom.class);

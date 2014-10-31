@@ -19,6 +19,7 @@ public interface Value {
 
 	@Override
 	public String toString();
+	public double toDouble();
 
 	public String toEvaluableScript();
 }

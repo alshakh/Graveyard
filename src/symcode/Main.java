@@ -20,14 +20,13 @@ import symcode.value.Svg;
  * @author Ahmed Alshakh <ahmed.s.alshakh@gmail.com>
  */
 public class Main {
-
 	/**
 	 * @param args the command line arguments
 	 * @throws symcode.evaluator.EvaluationError
 	 */
 	public static void main(String[] args) throws EvaluationError, SyntaxError {
-		String code = "circle node(circle, circle, node(circle, circle, node(circle, circle, circle)))";
-		code = "node(circle,node(circle,circle,circle),circle)";
+		String code = "node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,circle)))))";
+		//code = "node(circle,circle,circle)";
 		Lab lab = LabLoader.loadLab(new File("labs/demo.json"));
 		Evaluator evaluator = new Evaluator(lab);
 		System.out.println(new Svg(evaluator.eval(code)).toFullString());

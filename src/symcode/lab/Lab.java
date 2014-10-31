@@ -2,8 +2,8 @@
 package symcode.lab;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
+import symcode.lab.Property.ConstProperty;
 
 /**
  * This class will handle the lab information and provide it to the processing class.
@@ -27,7 +27,7 @@ public class Lab extends Template {
 	 * @param constsProperties
 	 * @param elementsSet
 	 */
-	public Lab(String id,String version, Set<Property> constsProperties, Set<Molecule> elementsSet)
+	public Lab(String id,String version, Set<ConstProperty> constsProperties, Set<Molecule> elementsSet)
 	{
              super( id, version, constsProperties);
 		//+ Set parent for elements before adding

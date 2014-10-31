@@ -7,17 +7,18 @@ package symcode.lab;
 
 import java.util.Collections;
 import java.util.Set;
+import symcode.lab.Property.ConstProperty;
 
 /**
  *
  * @author Ahmed Alshakh www.alshakh.net
  */
 public abstract class Template{
-	public static final Set<Property> EMPTY_CONSTS = Collections.emptySet();
+	public static final Set<ConstProperty> EMPTY_CONSTS = Collections.emptySet();
 	//
 	public final String _id;
 	public final String _version;
-	public final Set<Property> _constProperties;
+	public final Set<ConstProperty> _constProperties;
 	//
 	private Template _parent = null; // Only non-final member only changed from the constructor of this class.
 	
@@ -25,9 +26,9 @@ public abstract class Template{
 	 *
 	 * @param id
 	 * @param version
-	 * @param elementsSet
+	 * @param constsProperties
 	 */
-	public Template(String id, String version, Set<Property> constsProperties) {
+	public Template(String id, String version, Set<ConstProperty> constsProperties) {
 		//+ Set constsProperties
 		this._constProperties = Collections.unmodifiableSet(constsProperties);
 		//-
@@ -41,9 +42,9 @@ public abstract class Template{
 		return _parent;
 	}
 	
-	public final Property getConst(String id) {
-		for(Property p: _constProperties){
-			if(p._id.equals(id)) {
+	public final ConstProperty getConst(String id) {
+		for(ConstProperty p: _constProperties){
+			if(p._constName.equals(id)) {
 				return p;
 			}
 		}

@@ -1,8 +1,10 @@
 package symcode.lab;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
+import symcode.lab.Property.ConstProperty;
+import symcode.lab.Property.EvaluableProperty;
+import symcode.lab.Property.NormalProperty;
 
 /**
  * All classes in lab should fallow this abstract class.
@@ -30,7 +32,7 @@ public class Compound extends Molecule {
 	 * @param atomsSet
 	 * @param deps
 	 */
-	public Compound(String id, String version, Set<Property> propertySet, Set<Property> constsProperties, Set<BondedAtom> atomsSet, Set<String> deps) {
+	public Compound(String id, String version, Set<NormalProperty> propertySet, Set<ConstProperty> constsProperties, Set<BondedAtom> atomsSet, Set<String> deps) {
 		super(id, version, propertySet,constsProperties, deps);
 	//
 	_subAtoms = Collections.unmodifiableSet(atomsSet);
@@ -47,7 +49,7 @@ public class Compound extends Molecule {
 	}
 
 	@Override
-	protected void addClassSpecificPropertySet(Set<Property> propertySet) {
+	protected void addClassSpecificPropertySet(Set<EvaluableProperty> propertySet) {
 		for(BondedAtom ba: _subAtoms){
 			ba.evaluablePropertySet_Helper(propertySet);
 		}

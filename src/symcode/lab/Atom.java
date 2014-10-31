@@ -6,6 +6,9 @@
 package symcode.lab;
 
 import java.util.Set;
+import symcode.lab.Property.ConstProperty;
+import symcode.lab.Property.EvaluableProperty;
+import symcode.lab.Property.NormalProperty;
 
 /**
  * @author Ahmed Alshakh www.alshakh.net
@@ -20,7 +23,7 @@ public abstract class Atom extends Molecule {
 	 * @param constsProperties
 	 * @param deps
 	 */
-	public Atom(String id, String version, Set<Property> propertySet , Set<Property> constsProperties, Set<String> deps) {
+	public Atom(String id, String version, Set<NormalProperty> propertySet , Set<ConstProperty> constsProperties, Set<String> deps) {
 		super(id, version, propertySet, constsProperties, deps);
 	}
 
@@ -33,8 +36,7 @@ public abstract class Atom extends Molecule {
 	 * do nothing since everything in Atom is covered in Molecule's methods.
 	 * @param propertySet 
 	 */
-	@Override
-	protected void addClassSpecificPropertySet(Set<Property> propertySet) {
+	protected void addClassSpecificPropertySet(Set<EvaluableProperty> propertySet) {
 		return;
 	}
 	

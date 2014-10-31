@@ -6,12 +6,6 @@
 		"const2": "0.02"
 	},
 	"elements": [
-            {
-                "id": "a1",
-                "w":"100",
-                "h":"100;",
-                "svg":"<circle cx=\"50\" cy=\"50\" r=\"50\" stroke=\"black\" stroke-width=\"3\" fill=\"red\" />",
-        },
 		{
 			"id": "atom_noProperties",
 			"comment": "atom with no properties (to test defaults)",
@@ -27,15 +21,6 @@
 			"w": "4",
 			"svg": "[atom_simpleProperties]"
 		},
-                {
-                    "id": "tenX",
-                    "w": "$1.w*factor",
-                    "h": "$1.h*factor",
-                    "const":{
-                        "factor":"2"
-                    }
-                    "svg":"<g transform=\"scale(<<<factor>>>)\"><<<$1.svg>>></g>"
-                },
 		{
 			"id": "atom_outerConst",
 			"comment": "atom with refering to outer const",

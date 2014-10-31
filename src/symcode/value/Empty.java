@@ -3,40 +3,31 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package symcode.value;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
  *
  * @author Ahmed Alshakh www.alshakh.net
  */
-public class Str implements Value{
-	private final String _str;
-
-	public Str(String str) {
-		_str = str;
+public class Empty implements Value {
+	public static final Empty INSTANCE = new Empty();
+	private Empty(){
+		
 	}
-
 	@Override
 	public Set<String> getNeededProperties() {
-		return java.util.Collections.EMPTY_SET;
-	}
+		return Collections.EMPTY_SET;
+			}
 
 	@Override
 	public String toEvaluableScript() {
-		return "\""+escapeString(_str)+"\"";
+		return "0.0";
+		// TODO : maybe wanted string instead of zero ???
 	}
-
-	public static String escapeString(String str){
-		return str.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n");
-	}
-
-	public String toString(){
-		return _str;
-	}
-
+	
 	@Override
 	public double toDouble(){
 		return 0.0;

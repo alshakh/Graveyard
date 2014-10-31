@@ -3,156 +3,204 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package symcode.evaluator;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import sun.org.mozilla.javascript.internal.NativeObject;
 import symcode.lab.Property;
+import symcode.lab.Property.EvaluableProperty;
+import symcode.lab.Property.ProductProperty;
 import symcode.value.*;
 
 /**
  * Environment manages the execution of properties to get the result. It closely
  * related to value.Expr class.
+ *
  * @author Ahmed Alshakh www.alshakh.net
  */
 public class Environment {
-	// Values to be return by inspect
-	public static final int VALID = 1;
-	public static final int CIRCULAR_DEPENDENCY = 2;
-	public static final int MISSING_DEPENDENCY = 3;
-	//
+
+	private final ScriptEngine _engine;
 	private static final ScriptEngineManager FACTORY = new ScriptEngineManager();
 
-	private final PropertyOrderList _propertyOrderList;
-
-	public Environment(){
-		_propertyOrderList = new PropertyOrderList();
-		
+	//
+	public Environment(String initScript) throws ScriptException {
+		_engine = FACTORY.getEngineByName("JavaScript");
+		_engine.eval(initScript);
 	}
 
-	public Value resolveReference(String ref){
+	public Value resolveReference(String ref) {
 		return eval(new Expr(ref));
 	}
+
 	public Value eval(Value value) {
-		// non-expressions are needed to evaluate.
-		if(! value.getClass().equals(Expr.class)) return value;
-		//
-		if(inspect()!=VALID) return new Doub("0");
-		// 
-		ScriptEngine engine = FACTORY.getEngineByName("JavaScript");
 		//
 		Object result = null;
 		try {
-			engine.eval(_propertyOrderList.toEvaluableScript());
 			// evaluate JavaScript code from String
-			result = engine.eval(value.toEvaluableScript());
+			result = _engine.eval(value.toEvaluableScript());
 		} catch (ScriptException ex) {
 			ex.printStackTrace();
 		}
 		//
-		if (result == null) {
-			return new Doub("0");
+		return objectToValue(result);
+	}
+	private static Value objectToValue(Object obj){
+		if (obj == null) {
+			return Empty.INSTANCE;
 		}
-		if (result.getClass().equals(Double.class)){
-			return new Doub(result.toString());
+		if (obj.getClass().equals(Double.class)) {
+			return new Doub(obj.toString());
 		}
-		return new Str(result.toString());
+		return new Str(obj.toString());
 	}
-
-	public void addPropertyCollection(Collection<Property> pc){
-		_propertyOrderList.addPropertyCollection(pc);
-	}
-	public void addProperty(Property property){
-		_propertyOrderList.addProperty(property);
-	}
-	public int inspect(){
-		return _propertyOrderList.inspect();
-	}
-	
-	public String toString(){
-		return _propertyOrderList.toEvaluableScript();
+	/**
+	 * returns a full evaluated properties as product properties.
+	 * @param id
+	 * @return 
+	 */
+	public Set<ProductProperty> evalMolecule(String id) throws ScriptException {
+		Set<ProductProperty> properties = new HashSet<ProductProperty>();
+		Iterator<Map.Entry<Object, Object>> itr = ((NativeObject)_engine.eval(id)).entrySet().iterator();
+		while(itr.hasNext()){
+			Map.Entry entry = itr.next();
+			properties.add(new ProductProperty(entry.getKey().toString(), objectToValue(entry.getValue())));
+		}
+		return properties;
 	}
 }
+
 /**
  * An instance of this class maintains the order of execution of properties in
- * order to get the right order of dependency. This class only interacted with 
- by Environment and nothing else.
+ * order to get the right order of dependency until converting to actual
+ * environment. Mutable object
+ *
  * @author Ahmed Alshakh www.alshakh.net
  */
-class PropertyOrderList {
-	private final ArrayList<Property> _propertyList;	
-	private boolean _circularDependency = false;
-	private boolean _missingDependency = false;
+class EnvironmentBuilder {
 
-	public PropertyOrderList() {
-		_propertyList = new ArrayList<Property>();
+	private final ArrayList<EvaluableProperty> _propertyList;
+	/**
+	 * in case isCircular() OR isMissing called before prepare().
+	 *if prepare() called first, it will call sort which will put the correct values
+	*/
+	private boolean _circularDependency = true; 
+	private boolean _missingDependency = true;
+
+	public EnvironmentBuilder() {
+		_propertyList = new ArrayList<EvaluableProperty>();
 	}
 
-	protected String toEvaluableScript(){
+	@Override
+	public String toString() {
+		return toEvaluableScript();
+	}
+	/**
+	 * turning the environment builder into an actual environment. 
+	 * @param substituteMissing if true missing references will be substituted 
+	 * by empty values.
+	 * @return 
+	 */
+	public Environment toEnvironment(/*boolean substituteMissing*/) throws ScriptException{
+		if (! isValid()){
+			throw new RuntimeException("Cannot convert non-valid environment");
+		}
+		return new Environment(toEvaluableScript());
+	}
+
+	protected String toEvaluableScript() {
 		StringBuilder script = new StringBuilder();
 		//+ collect object references
 		Set<String> refs = new HashSet<String>();
-		for(Property p : _propertyList){
-			if(!p.isObjectMember()) continue;
-			refs.add(p.getObjectReference());
+		for (EvaluableProperty p : _propertyList) {
+			if (!p.needsJsObject()) {
+				continue;
+			}
+			refs.add(p.getJsObjectName());
 		}
 		//-
 		//+ add objects to script
-		for(String ref : refs){
+		for (String ref : refs) {
 			script.append("var ").append(ref).append(" = {}\n");
 		}
 		//-
 		//+ add properties to script
-		for(Property p : _propertyList){
-			script.append(p._id).append(" = ").append(p._value.toEvaluableScript()).append("\n");
+		for (EvaluableProperty p : _propertyList) {
+			script.append(constructRefNameOfProperty(p)).append(" = ").append(p.getValue().toEvaluableScript()).append("\n");
 		}
 		//-
 
 		return script.toString();
 
 	}
-
 	/**
 	 * Add property to property list. When adding multiple properties,
-	 * <code>addPropertyCollection</code> is recommended. because of fewer calls of sort();
-	 * @param property 
+	 * <code>addPropertyCollection</code> is recommended. because of fewer
+	 * calls of sort();
+	 *
+	 * @param property
 	 */
-	public void addProperty(Property property){
-		if(_propertyList.contains(property)) return; // no duplication
-		_propertyList.add(property);
-		//
-		sort();
-	}
-        public void addPropertyCollection(Collection<Property> properties){
-		for(Property p : properties){
-			if(_propertyList.contains(p)) continue; // no duplication
-			_propertyList.add(p);
+	public void addProperty(EvaluableProperty property) {
+		if (_propertyList.contains(property)) {
+			return; // no duplication
 		}
-		//
-		sort();
+		_propertyList.add(property);
 	}
 
-	protected int inspect(){
-		if(_circularDependency) return Environment.CIRCULAR_DEPENDENCY;
-		if(_missingDependency) return Environment.MISSING_DEPENDENCY;
-		return Environment.VALID;
+	public void addPropertyCollection(Collection<EvaluableProperty> properties) {
+		for (EvaluableProperty p : properties) {
+			if (_propertyList.contains(p)) {
+				continue; // no duplication
+			}
+			_propertyList.add(p);
+		}
+	}
+
+	public void prepare(){
+		sort();
+	}
+	/**
+	 * must prepare() be called before.
+	 * @return 
+	 */
+	public boolean isValid(){
+		if(_circularDependency) return false;
+		else if(_missingDependency) return false;
+		else return true;
+	}
+		/**
+	 * must prepare() be called before.
+	 * @return 
+	 */
+	public boolean isCirculeDependency(){
+		return _circularDependency;
+	}
+        /**
+	 * must prepare() be called before.
+	 * @return 
+	 */
+	public boolean isMissingDependecy(){
+		return _missingDependency;
 	}
 
 	private int indexOfPropertyInList(String propId) {
 		for (int i = 0; i < _propertyList.size(); i++) {
-			if (_propertyList.get(i)._id.equals(propId)) {
+			if (constructRefNameOfProperty(_propertyList.get(i)).equals(propId)) {
 				return i;
 			}
 		}
 		return -1;
 	}
+
 	/**
 	 * sort properties such that dependencies come before. If dependency
 	 * don't exist, no action.
@@ -176,8 +224,8 @@ class PropertyOrderList {
 		//
 		for (int i = 0; i < _propertyList.size(); i++) {
 			{ // fix element i 
-				Property pty = _propertyList.get(i);
-				Set<String> dependsOnSet = pty._value.getNeededProperties();
+				EvaluableProperty pty = _propertyList.get(i);
+				Set<String> dependsOnSet = pty.getValue().getNeededProperties();
 				Set<String> depsCache = new HashSet<String>();// new cache for every element
 				while (!dependsOnSet.isEmpty()) {
 					int depIdx = -1;
@@ -198,20 +246,24 @@ class PropertyOrderList {
 					if (noDepFixing) {
 						break;
 					} else {
-						if (depsCache.contains(_propertyList.get(i)._id)) {
+						if (depsCache.contains(constructRefNameOfProperty(_propertyList.get(i)))) {
 							System.err.println("Circular dependency");
 							_circularDependency = true;
 							return;
 						} else {
-							depsCache.add(_propertyList.get(i)._id);
+							depsCache.add(constructRefNameOfProperty(_propertyList.get(i)));
 							Collections.swap(_propertyList, i, depIdx);
-							dependsOnSet = _propertyList.get(i)._value.getNeededProperties();
+							dependsOnSet = _propertyList.get(i).getValue().getNeededProperties();
 						}
 					}
 				}
 			} // END : fix element i
 		}
 		////
+	}
+	private String constructRefNameOfProperty(EvaluableProperty p){
+		if(!p.needsJsObject()) return p.getPropertyName();
+		return p.getJsObjectName() + "."+ p.getPropertyName();
 	}
 
 }

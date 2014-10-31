@@ -9,6 +9,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import symcode.lab.Property.ConstProperty;
+import symcode.lab.Property.NormalProperty;
 import symcode.value.*;
 
 /**
@@ -46,7 +48,7 @@ public class LabLoader {
 			elements = new HashSet<Molecule>();
 			JSONArray elementsJSONArray = (JSONArray) jsonObj.get("elements");
 			for (Object elementJsonObj : elementsJSONArray) {
-				elements.add((Molecule) procMoleculeInLab((JSONObject) elementJsonObj));
+				elements.add(procMoleculeInLab((JSONObject) elementJsonObj));
 			}
 		}
 		//-
@@ -62,7 +64,7 @@ public class LabLoader {
 
 	private static SingleAtom procSingleAtom(JSONObject jsonObj){
 		TemplateInfo tInfo = procTemplateInfo(jsonObj);
-		return new SingleAtom(tInfo._id, tInfo._version, procProperties(tInfo._id,jsonObj),procConsts(jsonObj), procDependencies(jsonObj));
+		return new SingleAtom(tInfo._id, tInfo._version, procNormalProperties(tInfo._id,jsonObj),procConsts(jsonObj), procDependencies(jsonObj));
 	}
 	private static Compound procCompound(JSONObject jsonObj){
 		TemplateInfo tInfo = procTemplateInfo(jsonObj);
@@ -76,45 +78,48 @@ public class LabLoader {
 			}
 		}
 		//
-		return new Compound(tInfo._id, tInfo._version, procProperties(tInfo._id,jsonObj),procConsts(jsonObj), atoms, procDependencies(jsonObj));
+		return new Compound(tInfo._id, tInfo._version, procNormalProperties(tInfo._id,jsonObj),procConsts(jsonObj), atoms, procDependencies(jsonObj));
 	}
 
 	private static BondedAtom procDoubleAtom(JSONObject jsonObj){
 		TemplateInfo tInfo = procTemplateInfo(jsonObj);
-		return new BondedAtom(tInfo._id, tInfo._version, procProperties(tInfo._id,jsonObj),procConsts(jsonObj), procDependencies(jsonObj));
+		return new BondedAtom(tInfo._id, tInfo._version, procNormalProperties(tInfo._id,jsonObj),procConsts(jsonObj), procDependencies(jsonObj));
 	}
 
-	private static Set<Property> procConsts(JSONObject jsonObj){
-		Set<Property> ps =Template.EMPTY_CONSTS;
+	private static Set<ConstProperty> procConsts(JSONObject jsonObj){
+		Set<ConstProperty> ps =Template.EMPTY_CONSTS;
 		//+ constants are properties ( ==> Doub)
 		if (jsonObj.containsKey("const")) {
-			ps = new HashSet<Property>();
+			ps = new HashSet<ConstProperty>();
 			JSONObject constJsonObj = (JSONObject)jsonObj.get("const");
 			Iterator itr = constJsonObj.keySet().iterator();
 			while (itr.hasNext()) {
 				String key = (String) itr.next();
-				ps.add(new Property(key, new Doub(constJsonObj.get(key).toString())));
+				ps.add(new ConstProperty(key, new Doub(constJsonObj.get(key).toString())));
 			}
 		}
 		//-
 		return ps;
 	}
 
-	private static Set<Property> procProperties(String objId, JSONObject jsonObj) {
-		Set<Property> ps = new HashSet<Property>();
+	private static Set<NormalProperty> procNormalProperties(String objId, JSONObject jsonObj) {
+		Set<NormalProperty> ps = new HashSet<NormalProperty>();
 		//+ mandatory properties ( position and shape => expressions )
-		String[] mandatoryProperties = new String[]{"x", "y", "h", "w"};
-		for (String pName : mandatoryProperties) {
+		for (String pName : NormalProperty.MANDATORY_PROPERTIES.keySet()) {
 			if (jsonObj.containsKey(pName)) {
-				ps.add(new Property(objId + "." + pName, new Expr((String) jsonObj.get(pName))));
+				if(Property.isSvgProperty(pName)){
+					ps.add(new NormalProperty(objId, pName, new SvgExpr(jsonObj.get(pName).toString())));
+				} else {
+					ps.add(new NormalProperty(objId, pName, new Expr((String) jsonObj.get(pName))));
+				}
 			} else {
-				ps.add(new Property(objId + "." + pName, new Doub("0")));
+				ps.add(new NormalProperty(objId, pName, NormalProperty.MANDATORY_PROPERTIES.get(pName)));
 			}
 		}
 		//-
 		//+ svg property ( => svg)
 		if (jsonObj.containsKey("svg")) {
-			ps.add(new Property(objId + ".svg", new SvgExpr((String) jsonObj.get("svg"))));
+			ps.add(new NormalProperty(objId, "svg", new SvgExpr((String) jsonObj.get("svg"))));
 		}
 		//-
 		//+ custom properties
@@ -122,7 +127,7 @@ public class LabLoader {
 		while(itr.hasNext()){
 			String key = itr.next().toString();
 			if(key.startsWith("_")){
-				ps.add(new Property(objId + "." + key, new Expr(jsonObj.get(key).toString())));
+				ps.add(new NormalProperty(objId, key, new Expr(jsonObj.get(key).toString())));
 			}
 		}
 		//-

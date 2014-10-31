@@ -50,18 +50,9 @@ public class Evaluator {
 	 * @param inputCode
 	 * @return
 	 */
-	public Product eval(String inputCode){
-		EvalNode evalTree;
-		try {
-			evalTree = constructEvalTree(inputCode);
-			return evalTree.eval();
-		} catch (SyntaxError ex) {
-			// TODO ; display message and do something
-			return null;
-		} catch (EvaluationError ex) {
-			// TODO ; display message and do something
-			return null;
-		}
+	public Product eval(String inputCode) throws SyntaxError, EvaluationError{
+		EvalNode evalTree = constructEvalTree(inputCode);
+		return evalTree.eval();
 	}
 
 	private EvalNode constructEvalTree(String code) throws SyntaxError{
@@ -73,11 +64,10 @@ public class Evaluator {
 			Molecule m = l.getMolecule(moleculeName);
 			if(m!=null) return m;
 		}
-		// if does not exist, return empty molecule
-		return EmptyAtom.INSTANCE;
+		return null;
 	}
 
-	private EvalNode constructEvalTree_helper(ParseNode parseNode){
+	private EvalNode constructEvalTree_helper(ParseNode parseNode) throws SyntaxError{
 		List<EvalNode> children = null;
 		if(! parseNode.isLeaf()){
 			children = new ArrayList<EvalNode>();
@@ -96,9 +86,12 @@ public class Evaluator {
 					return new EvalNode(EmptyAtom.INSTANCE);
 				}
 			case MOLECULE:
+				Molecule m = getMolecule(parseNode._me);
+				if(m==null) throw new SyntaxError("cannot find molecule " + parseNode._me);
 				if(children!=null){
 					return new EvalNode(getMolecule(parseNode._me),children);
 				} else {
+					
 					return new EvalNode(getMolecule(parseNode._me));
 				}
 			case NUMBER:

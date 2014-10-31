@@ -39,11 +39,11 @@ public class Svg implements Value {
 
 	public Svg(Product p){
 		this(
-			p._svg.toStripString()
-			, p._x.toDouble()
-			, p._y.toDouble()
-			, p._h.toDouble()
-			, p._w.toDouble()
+			p.getProperty("svg")._value.toString()
+			, p.getProperty("x")._value.toDouble()
+			, p.getProperty("y")._value.toDouble()
+			, p.getProperty("h")._value.toDouble()
+			, p.getProperty("w")._value.toDouble()
 		);
 	}
 	/**
@@ -171,5 +171,10 @@ public class Svg implements Value {
 	//
 	public static void outputBufferedImage(BufferedImage bi, File f) throws IOException{
 		ImageIO.write(bi, "PNG", f);
+	}
+	
+	@Override
+	public double toDouble(){
+		return 0.0;
 	}
 }
