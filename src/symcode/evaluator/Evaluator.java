@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package symcode.evaluator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import symcode.evaluator.Parser.MoleculeParseNode;
 import symcode.evaluator.Parser.ParseNode;
 import symcode.lab.Lab;
 import symcode.lab.Molecule;
@@ -33,7 +33,7 @@ public class Evaluator {
 	 *
 	 * @param labs
 	 */
-	public Evaluator(HashSet<Lab> labs){
+	public Evaluator(HashSet<Lab> labs) {
 		_labs = labs;
 	}
 
@@ -41,7 +41,7 @@ public class Evaluator {
 	 *
 	 * @param lab
 	 */
-	public Evaluator(Lab lab){
+	public Evaluator(Lab lab) {
 		this(new HashSet<Lab>(java.util.Arrays.asList(new Lab[]{lab})));
 	}
 
@@ -50,56 +50,58 @@ public class Evaluator {
 	 * @param inputCode
 	 * @return
 	 */
-	public Product eval(String inputCode) throws SyntaxError, EvaluationError{
+	public Product eval(String inputCode) throws SyntaxError, EvaluationError {
 		EvalNode evalTree = constructEvalTree(inputCode);
 		return evalTree.eval();
 	}
 
-	private EvalNode constructEvalTree(String code) throws SyntaxError{
+	private EvalNode constructEvalTree(String code) throws SyntaxError {
 		return constructEvalTree_helper(new Parser(code)._parseTree);
 	}
-	private Molecule getMolecule(String moleculeName){
+
+	private Molecule getMolecule(String moleculeName) {
 		// TODO : check if has children or not. to give priority to compound or atom
-		for(Lab l: _labs){
+		for (Lab l : _labs) {
 			Molecule m = l.getMolecule(moleculeName);
-			if(m!=null) return m;
+			if (m != null) {
+				return m;
+			}
 		}
 		return null;
 	}
 
-	private EvalNode constructEvalTree_helper(ParseNode parseNode) throws SyntaxError{
+	private EvalNode constructEvalTree_helper(ParseNode parseNode) throws SyntaxError {
 		List<EvalNode> children = null;
-		if(! parseNode.isLeaf()){
+		if (parseNode.isMolecule()
+		    && ((Parser.MoleculeParseNode) parseNode)._children != null) {
 			children = new ArrayList<EvalNode>();
-			for(ParseNode childParseNode : parseNode._children){
+			for (ParseNode childParseNode : ((Parser.MoleculeParseNode) parseNode)._children) {
 				children.add(constructEvalTree_helper(childParseNode));
 			}
 		}
-		switch(parseNode._type){
+		switch (parseNode._type) {
 			case EMPTY:
 				return new EvalNode(EmptyAtom.INSTANCE);
 			case WRAPPER:
-				if(children!=null){
-					return new EvalNode(new WrapperCompound(children.size())
-					, children);
+				if (children != null) {
+					return new EvalNode(
+						new WrapperCompound(children.size()), null, children);
 				} else {
 					return new EvalNode(EmptyAtom.INSTANCE);
 				}
 			case MOLECULE:
-				Molecule m = getMolecule(parseNode._me);
-				if(m==null) throw new SyntaxError("cannot find molecule " + parseNode._me);
-				if(children!=null){
-					return new EvalNode(getMolecule(parseNode._me),children);
-				} else {
-					
-					return new EvalNode(getMolecule(parseNode._me));
+				MoleculeParseNode mpn = (MoleculeParseNode)parseNode;
+				Molecule m = getMolecule(mpn._me);
+				if (m == null) {
+					throw new SyntaxError("cannot find molecule " + mpn._me);
 				}
+				return new EvalNode(getMolecule(mpn._me),mpn._values, children);
 			case NUMBER:
 				return new EvalNode(new NumberCompound(parseNode._me));
 			case QUOTED:
 				return new EvalNode(new TextCompound(parseNode._me));
 			default:
-				throw new RuntimeException("SOMETHING IS WRONG WITH THE EVALUATOR -- constructEvalTree_helper() : "+parseNode._me);
+				throw new RuntimeException("SOMETHING IS WRONG WITH THE EVALUATOR -- constructEvalTree_helper() : " + parseNode._me);
 		}
 	}
 }

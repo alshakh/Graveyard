@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import symcode.evaluator.Tokenizer.Token;
+import symcode.value.Doub;
+import symcode.value.Str;
+import symcode.value.Value;
 
 /**
  *
@@ -20,6 +23,41 @@ public class Parser {
 
 	public Parser(String code) throws SyntaxError {
 		_parseTree = toParseTree(new Tokenizer(code));
+	}
+
+	/**
+	 * Checks the next token. Every method is required to go through this
+	 * method.
+	 *
+	 * @param tokenizer
+	 * @param type
+	 * @return
+	 */
+	public boolean isNextToken(Tokenizer tokenizer, Token.Type type) {
+		// TODO : Tokenizer needs to be more optimized if it is going to get next token and then revert.
+		if (!tokenizer.hasNext()) {
+			return false;
+		}
+		Token token = tokenizer.next();
+		tokenizer.revert();
+		return token._type == type;
+	}
+
+	/**
+	 * Gets the type of the next token. returns Token.Type.End if no more
+	 * tokens.
+	 *
+	 * @param tokenizer
+	 * @return
+	 */
+	public Token.Type getNextTokenType(Tokenizer tokenizer) {
+		if (!tokenizer.hasNext()) {
+			return Token.Type.END;
+		}
+		//
+		Token.Type type = tokenizer.next()._type;
+		tokenizer.revert();
+		return type;
 	}
 
 	private ParseNode toParseTree(Tokenizer tokenizer) throws SyntaxError {
@@ -38,9 +76,8 @@ public class Parser {
 	 * node in case only one. Syntax Error * @param tokenizer
 	 *
 	 * @return
-	 * @throws SyntaxError if found [,] OR [)] in root wrapper or [(] in any
-	 * case because [(] is expected to be processed by
-	 * <code>parseMolecule</code>.
+	 * @throws SyntaxError if found , OR ) in root wrapper or ( in any case
+	 * because ( is expected to be processed by <code>parseMolecule</code>.
 	 */
 	private ParseNode parseWrapper(Tokenizer tokenizer, boolean isRootWrapper) throws SyntaxError {
 		List<ParseNode> children = new ArrayList<ParseNode>();
@@ -53,7 +90,7 @@ public class Parser {
 				// continuable tokens
 				tokenizer.revert();
 				children.add(parse(tokenizer));
-			} else if (token._type == Token.Type.OPEN_PARA) {
+			} else if (token._type == Token.Type.OPEN_PARANTHESES) {
 				throw SyntaxError.createError("This token is not expected", token);
 			} else if (isRootWrapper) {
 				// if not isRootWrapper means that wrapper has ended its job and should return to parent
@@ -69,7 +106,7 @@ public class Parser {
 		}
 		//
 		// TODO :Change when native molecules are working
-		return new ParseNode(ParseNode.Type.WRAPPER, "WRAPPER", children);
+		return new MoleculeParseNode(ParseNode.Type.WRAPPER, "WRAPPER", children);
 	}
 
 	/**
@@ -85,75 +122,137 @@ public class Parser {
 			throw new SyntaxError("Expected more tokens");
 		}
 		//
-		Token token = tokenizer.next();
-		switch (token._type) {
+
+		switch (getNextTokenType(tokenizer)) {
 			case NUMBER:
 			case QUOTED:
-				tokenizer.revert();
 				return parseValue(tokenizer);
 			case IDENTIFIER:
-				tokenizer.revert();
 				return parseMolecule(tokenizer);
-			case OPEN_PARA:
+			/* ERRORS !!! */
+			case OPEN_PARANTHESES:
 			case COMMA:
-			case CLOSE_PARA:
-				throw SyntaxError.createError("This token is not expected", token);
+			case CLOSE_PARANTHESES:
+				throw SyntaxError.createUnexpectedTokenError(tokenizer.next());
 			default: // for UNKOWN which is the only remaining type
-				throw SyntaxError.createError("unkown token", token);
+				throw SyntaxError.createError("unkown token", tokenizer.next());
 		}
 	}
 
 	private ParseNode parseMolecule(Tokenizer tokenizer) throws SyntaxError {
-		Token token = tokenizer.next();
-		if (token._type != Token.Type.IDENTIFIER) {
+		if (getNextTokenType(tokenizer) != Token.Type.IDENTIFIER) {
 			// the only way this could happen is if parseValue is called on something that is not molecule
-			throw new RuntimeException("SOMETHING IS WRONG WITH THE PARSER -- parseMolecule():" + token);
+			throw new RuntimeException("SOMETHING IS WRONG WITH THE PARSER -- parseMolecule():" + tokenizer.next());
 		}
+		//+ 
+		Token moleculeToken = tokenizer.next();
+		//-
+		String moleculeName = moleculeToken._string;
+		//+ determaine values and children
+		Token.Type nextType = getNextTokenType(tokenizer);
+		List<Value> values = null;
+		List<ParseNode> children = null;
+		if (nextType == Token.Type.OPEN_BRACKET) {
+			values = parseMoleculeValueInput(tokenizer);
+			nextType = getNextTokenType(tokenizer);
+		}
+		if (nextType == Token.Type.OPEN_PARANTHESES) {
+			children = parseMoleculeChildrenInput(tokenizer);
+		}
+		return new MoleculeParseNode(ParseNode.Type.MOLECULE, moleculeName, values, children);
+	}
+
+	/**
+	 * parse [...] for molecule. precondition: first token to encounter is
+	 * OPEN_BRACKET
+	 *
+	 * @param tokenizer
+	 * @return list of value inputs, null if no input
+	 */
+	private List<Value> parseMoleculeValueInput(Tokenizer tokenizer) throws SyntaxError {
+		//+ skip first [
+		tokenizer.next();
+		//-
+		List<Value> values = new ArrayList<Value>();
 		//
-		String moleculeName = token._string;
-		//
-		boolean hasChildren = false;
-		// Check for children
-		if(tokenizer.hasNext()){
-			Token nextToken = tokenizer.next();
-			tokenizer.revert();
-			// if no children, return the molecule
-			if (nextToken._type == Token.Type.OPEN_PARA) {
-				// bypass OPEN_PARA
+		Token.Type nType =  getNextTokenType(tokenizer);
+		// check if no input
+		if (nType == Token.Type.CLOSE_BRACKET) {
+			tokenizer.next(); // skip close bracket
+			return null;
+		}
+		//+ evaluate first value before the loop
+		if (nType == Token.Type.NUMBER) {
+			values.add(new Doub(tokenizer.next()._string));
+		} else if (nType == Token.Type.QUOTED) {
+			values.add(new Str(processQuotedText(tokenizer.next()._string)));
+		} else {
+			throw SyntaxError.createUnexpectedTokenError(tokenizer.next());
+		}
+		//-
+		//+ parse all values until ]
+		while ((nType = getNextTokenType(tokenizer)) != Token.Type.CLOSE_BRACKET) {
+			//+ skip comman :: not a comma ---> SyntaxError
+			if (nType != Token.Type.COMMA) {
+				throw SyntaxError.createUnexpectedTokenError(tokenizer.next());
+			} else {
 				tokenizer.next();
-				hasChildren = true;
+			}
+			//-
+			nType = getNextTokenType(tokenizer);
+
+			if (nType == Token.Type.NUMBER) {
+				values.add(new Doub(tokenizer.next()._string));
+			} else if (nType == Token.Type.QUOTED) {
+				values.add(new Str(processQuotedText(tokenizer.next()._string)));
+			} else {
+				throw SyntaxError.createUnexpectedTokenError(tokenizer.next());
 			}
 		}
-		//
-		if(!hasChildren){
-			return new ParseNode(ParseNode.Type.MOLECULE, moleculeName);
-		}
-		// If children, Process children
+		//-
+		//+ skip CLOSE_BRACKET, since it's out of while loop
+		tokenizer.next();
+		//-
+		return values;
+	}
+	/**
+	 * parse () for molecule. precondition: first token to encounter is
+	 * OPEN_PARANTHESES
+	 *
+	 * @param tokenizer
+	 * @return list of children inputs, null if no input
+	 */
+	private List<ParseNode> parseMoleculeChildrenInput(Tokenizer tokenizer) throws SyntaxError {
+		//+ skip first (
+		tokenizer.next();
+		//-
 		List<ParseNode> children = new ArrayList<ParseNode>();
 		//
-		if (!tokenizer.hasNext()) {
-			throw SyntaxError.createError("cannot end code with", token);
+		Token.Type nextType = getNextTokenType(tokenizer);
+		// check if no input
+		if (nextType == Token.Type.CLOSE_PARANTHESES) {
+			tokenizer.next(); // skip close_prantheses
+			return null;
 		}
-		//
-		while (tokenizer.hasNext()) {
-			token = tokenizer.next();
-			if (token._type == Token.Type.COMMA) {
-				if (tokenizer.previousToken()._type == Token.Type.COMMA || // this case ,, => empty child
-					tokenizer.previousToken()._type == Token.Type.OPEN_PARA) { // this case (, =>  empty child
-					children.add(ParseNode.EMPTY_NODE);
-				}
-				continue;
-			} else if (token._type == Token.Type.CLOSE_PARA) {
-				if (tokenizer.previousToken()._type == Token.Type.COMMA) { // this case ,) => empty child
-					children.add(ParseNode.EMPTY_NODE);
-				}
-				break;
+		//+ evaluate first child before the loop
+		children.add(parseWrapper(tokenizer));
+		//-
+		//+ parse all values until )
+		while ((nextType = getNextTokenType(tokenizer)) != Token.Type.CLOSE_PARANTHESES) {
+			//+ skip comman :: not a comma ---> SyntaxError
+			if (nextType != Token.Type.COMMA) {
+				throw SyntaxError.createUnexpectedTokenError(tokenizer.next());
+			} else { // skip comma
+				tokenizer.next();
 			}
-			tokenizer.revert();
+			//-
 			children.add(parseWrapper(tokenizer));
 		}
-		//
-		return new ParseNode(ParseNode.Type.MOLECULE, moleculeName, children);
+		//-
+		//+ skip CLOSE_PARANTHESES, since it's out of while loop
+		tokenizer.next();
+		//-
+		return children;
 	}
 
 	private ParseNode parseValue(Tokenizer tokenizer) {
@@ -170,7 +269,7 @@ public class Parser {
 			// the only way this could happen is if parseValue is called on something that is not value
 			throw new RuntimeException("SOMETHING IS WRONG WITH THE PARSER -- parseValue(): " + token);
 		}
-		return new ParseNode(type, me);
+		return new SimpleParseNode(type, me);
 	}
 
 	private static String processQuotedText(String str) {
@@ -194,35 +293,69 @@ public class Parser {
 		return strippedStr.replace("\\\\", "\\").replace("\\\"", "\"");
 	}
 
-	public static class ParseNode {
+	//////////////////////////////////////////////
+	//////////////////////////////////////////////
+	//////////////////////////////////////////////
+	public static abstract class ParseNode {
 
-		public static final ParseNode EMPTY_NODE = new ParseNode(Type.EMPTY, "Empty");
-
-		//
 		public static enum Type {
 
-			EMPTY,WRAPPER, MOLECULE, QUOTED, NUMBER;
+			EMPTY, WRAPPER, MOLECULE, QUOTED, NUMBER;
 		}
 		//
-		public final List<ParseNode> _children;
+
+		public static final ParseNode EMPTY_NODE = new SimpleParseNode(Type.EMPTY, "Empty");
+
+		//
 		public final String _me;
 		public final Type _type;
 
-		ParseNode(Type type, String me) {
+		public ParseNode(Type type, String me) {
 			_type = type;
 			_me = me;
-			_children = null;
 		}
 
-		ParseNode(Type type, String me, List<ParseNode> children) {
+		public abstract boolean isMolecule();
 
-			_children = (children == null ? null : Collections.<ParseNode>unmodifiableList(children));
-			_me = me;
-			_type = type;
+		@Override
+		public String toString() {
+			StringBuilder output = new StringBuilder();
+			print("", true, output);
+			return output.toString();
 		}
 
-		boolean isLeaf() {
-			return (_children == null);
+		protected void print(String prefix, boolean isTail, StringBuilder outputBuilder) {
+			outputBuilder.append(prefix).append(isTail ? "└── " : "├── ").append(_me).append("\n");
+		}
+	}
+
+	public static class SimpleParseNode extends ParseNode {
+
+		SimpleParseNode(ParseNode.Type type, String me) {
+			super(type, me);
+		}
+
+		@Override
+		public boolean isMolecule() {
+			return false;
+		}
+	}
+
+	public static class MoleculeParseNode extends ParseNode {
+
+		public final List<ParseNode> _children;
+		public final List<Value> _values;
+
+		public MoleculeParseNode(ParseNode.Type type, String me, List<Value> values, List<ParseNode> children) {
+			super(type, me);
+			_children = (children == null ? null
+				     : Collections.<ParseNode>unmodifiableList(children));
+			_values = (values == null ? null
+				   : Collections.<Value>unmodifiableList(values));
+		}
+		
+		public MoleculeParseNode(ParseNode.Type type, String me, List<ParseNode> children) {
+			this(type,me,null,children);
 		}
 
 		@Override
@@ -232,8 +365,19 @@ public class Parser {
 			return output.toString();
 		}
 
-		private void print(String prefix, boolean isTail, StringBuilder outputBuilder) {
-			outputBuilder.append(prefix).append(isTail ? "└── " : "├── ").append(_me).append("\n");
+		protected void print(String prefix, boolean isTail, StringBuilder outputBuilder) {
+			outputBuilder.append(prefix).append(isTail ? "└── " : "├── ").append(_me);
+			if(_values!=null){
+				outputBuilder.append(" (");
+				for(int i = 0 ; i<_values.size() ; i++){
+					if(i!=0) outputBuilder.append(", ");
+					outputBuilder.append(_values.get(i).toString());
+				}
+				outputBuilder.append(")");
+			}
+			outputBuilder.append("\n");
+			//
+			//
 			if (_children == null) {
 				return;
 			}
@@ -243,6 +387,11 @@ public class Parser {
 			if (_children.size() > 0) {
 				_children.get(_children.size() - 1).print(prefix + (isTail ? "    " : "│   "), true, outputBuilder);
 			}
+		}
+
+		@Override
+		public boolean isMolecule() {
+			return true;
 		}
 	}
 }

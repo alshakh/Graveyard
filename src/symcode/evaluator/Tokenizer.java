@@ -117,9 +117,13 @@ public class Tokenizer {
 		} else if (c == '"') {
 			return nextHelper(pos + 1, Token.Type.QUOTED);
 		} else if (c == '(') {
-			return nextHelper(pos + 1, Token.Type.OPEN_PARA);
+			return nextHelper(pos + 1, Token.Type.OPEN_PARANTHESES);
 		} else if (c == ')') {
-			return nextHelper(pos + 1, Token.Type.CLOSE_PARA);
+			return nextHelper(pos + 1, Token.Type.CLOSE_PARANTHESES);
+		} else if (c == '[') {
+			return nextHelper(pos + 1, Token.Type.OPEN_BRACKET);
+		} else if (c == ']') {
+			return nextHelper(pos + 1, Token.Type.CLOSE_BRACKET);
 		} else if (c == ',') {
 			return nextHelper(pos + 1, Token.Type.COMMA);
 		} else {
@@ -165,8 +169,10 @@ public class Tokenizer {
 					return nextHelper(pos + 1, type);
 				}
 			}
-			case OPEN_PARA:
-			case CLOSE_PARA:
+			case OPEN_PARANTHESES:
+			case CLOSE_PARANTHESES:
+			case OPEN_BRACKET:
+			case CLOSE_BRACKET:
 			case COMMA:
 				return new ReturnTuple(type, pos); // openPara,closePara,comma are only one char long
 			default:
@@ -194,8 +200,7 @@ public class Tokenizer {
 	public static class Token {
 
 		public static enum Type {
-
-			NUMBER, IDENTIFIER, QUOTED, OPEN_PARA, CLOSE_PARA, COMMA, UNKOWN;
+			NUMBER, IDENTIFIER, QUOTED, OPEN_PARANTHESES, CLOSE_PARANTHESES, OPEN_BRACKET, CLOSE_BRACKET, COMMA, UNKOWN, END;
 		}
 
 		public final String _string;

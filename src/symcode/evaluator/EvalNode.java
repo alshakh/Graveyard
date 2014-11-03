@@ -14,6 +14,7 @@ import javax.script.ScriptException;
 import symcode.lab.BondedAtom;
 import symcode.lab.Compound;
 import symcode.lab.Molecule;
+import symcode.lab.Property;
 import symcode.lab.Property.ProductProperty;
 import symcode.value.*;
 
@@ -23,25 +24,26 @@ import symcode.value.*;
  */
 public class EvalNode {
 
+	
 	private final Molecule _sym;// either atom or compound 
-	private final List<EvalNode> _inputNodes; // list because the order of input matters
-
+	private final List<EvalNode> _children; // list because the order of input matters
+	private final List<Value> _values; 
 	/**
 	 *
 	 * @param sym
 	 * @param inputList
 	 */
-	public EvalNode(Molecule sym, List<EvalNode> inputList) {
+	public EvalNode(Molecule sym, List<Value> values, List<EvalNode> inputList) {
 		_sym = sym;
-		_inputNodes = inputList;
+		_children = inputList;
+		_values = values;
 	}
-
 	/**
 	 *
 	 * @param sym
 	 */
 	public EvalNode(Molecule sym) {
-		this(sym, null);
+		this(sym, null,null);
 	}
 
 	/**
@@ -53,13 +55,18 @@ public class EvalNode {
 		EnvironmentBuilder envBuilder = new EnvironmentBuilder();
 		envBuilder.addPropertyCollection(_sym.getEvaluablePropertySet());
 		//
-		if (_inputNodes != null) {
-			for (int i = 0; i < _inputNodes.size(); i++) {
-				envBuilder.addPropertyCollection(_inputNodes.get(i).eval().getEvaluablePropertySet("$" + (i + 1)));
+		if (_children != null) {
+			for (int i = 0; i < _children.size(); i++) {
+				envBuilder.addPropertyCollection(_children.get(i).eval().getEvaluablePropertySet("$" + (i + 1)));
 			}
 		}
-
+		if(_values != null) {
+			for (int i = 0; i < _values.size(); i++) {
+				envBuilder.addProperty(new Property.ConstProperty("$$" + (i + 1), _values.get(i)));
+			}
+		}
 		envBuilder.prepare();
+		System.out.println(envBuilder.toString());
 		//+ checking validity before executing
 		if (envBuilder.isCirculeDependency()) {
 			throw new EvaluationError("CircularDependancy: The problem is most likely in the Lab");
@@ -140,14 +147,14 @@ public class EvalNode {
 
 	private void print(String prefix, boolean isTail, StringBuilder outputBuilder) {
 		outputBuilder.append(prefix).append(isTail ? "└── " : "├── ").append(_sym._id).append("\n");
-		if (_inputNodes == null) {
+		if (_children == null) {
 			return;
 		}
-		for (int i = 0; i < _inputNodes.size() - 1; i++) {
-			_inputNodes.get(i).print(prefix + (isTail ? "    " : "│   "), false, outputBuilder);
+		for (int i = 0; i < _children.size() - 1; i++) {
+			_children.get(i).print(prefix + (isTail ? "    " : "│   "), false, outputBuilder);
 		}
-		if (_inputNodes.size() > 0) {
-			_inputNodes.get(_inputNodes.size() - 1).print(prefix + (isTail ? "    " : "│   "), true, outputBuilder);
+		if (_children.size() > 0) {
+			_children.get(_children.size() - 1).print(prefix + (isTail ? "    " : "│   "), true, outputBuilder);
 		}
 	}
 }

@@ -56,7 +56,7 @@ public class Expr implements Value {
 			// clean comments, quotes and keywords
 			String toCheckExprStr = cleanForExtraction(exprStr);
 
-			Pattern p = Pattern.compile("(\\$\\w+|[a-zA-z][\\w\\d\\_]*|\\.)+");
+			Pattern p = Pattern.compile("(\\$\\$?\\w+|[a-zA-z][\\w\\d\\_]*|\\.)+");
 			Matcher m = p.matcher(toCheckExprStr);
 			//
 			Set<String> deps = new HashSet<String>();
