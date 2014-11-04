@@ -1,5 +1,3 @@
-* Custom properties
-* Input consts
 * molecules using outside molecules (root uses rectangle molecule for radex bonded atom). Maybe outside Labs ?!
 * Inferring properties
     - compound height, width based on largest bondedAtom
