@@ -9,6 +9,7 @@ package symcode.lab;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import symcode.lab.Property.BackupProperty;
 import symcode.lab.Property.ConstProperty;
 import symcode.lab.Property.EvaluableProperty;
 import symcode.lab.Property.NormalProperty;
@@ -26,6 +27,7 @@ public abstract class Molecule extends Template {
 	public static final Set<String> EMPTY_DEPENDENCIES = Collections.unmodifiableSet(new HashSet<String>());
 	public final Set<String> _dependencies;
 	public final Set<NormalProperty> _properties; // properties
+	public final Set<BackupProperty> _backupProperties;
 	/**
 	 *
 	 * @param id
@@ -34,11 +36,12 @@ public abstract class Molecule extends Template {
 	 * @param constsProperties
 	 * @param deps
 	 */
-	public Molecule(String id,String version, Set<NormalProperty> propertySet, Set<ConstProperty> constsProperties, Set<String> deps){
+	public Molecule(String id,String version, Set<NormalProperty> propertySet, Set<ConstProperty> constsProperties, Set<String> deps, Set<BackupProperty> backupProperties){
 		super(id, version, constsProperties);
 		_dependencies = Collections.unmodifiableSet(deps);
 		//+ properties
 		this._properties =Collections.unmodifiableSet(propertySet); 
+		this._backupProperties = Collections.unmodifiableSet(backupProperties);
 		//-
 	}
 

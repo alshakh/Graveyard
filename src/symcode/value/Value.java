@@ -15,7 +15,7 @@ import java.util.Set;
  */
 public interface Value {
 	
-	public Set<String> getNeededProperties();
+	public Set<String> getNeededReferences();
 
 	@Override
 	public String toString();

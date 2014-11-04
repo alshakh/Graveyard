@@ -20,7 +20,7 @@ public class Str implements Value{
 	}
 
 	@Override
-	public Set<String> getNeededProperties() {
+	public Set<String> getNeededReferences() {
 		return java.util.Collections.EMPTY_SET;
 	}
 

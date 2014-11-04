@@ -5,7 +5,9 @@
  */
 package symcode.lab;
 
+import java.util.Collections;
 import java.util.Set;
+import symcode.lab.Property.BackupProperty;
 import symcode.lab.Property.ConstProperty;
 import symcode.lab.Property.EvaluableProperty;
 import symcode.lab.Property.NormalProperty;
@@ -22,9 +24,14 @@ public abstract class Atom extends Molecule {
 	 * @param propertySet
 	 * @param constsProperties
 	 * @param deps
+	 * @param backupProperties
 	 */
-	public Atom(String id, String version, Set<NormalProperty> propertySet , Set<ConstProperty> constsProperties, Set<String> deps) {
-		super(id, version, propertySet, constsProperties, deps);
+	public Atom(String id, String version, Set<NormalProperty> propertySet , Set<ConstProperty> constsProperties, Set<String> deps, Set<BackupProperty> backupProperties) {
+		super(id, version, propertySet, constsProperties, deps, backupProperties);
+	}
+
+	public Atom(String id, String version, Set<NormalProperty> propertySet, Set<ConstProperty> constsProperties, Set<String> deps) {
+		this(id, version, propertySet, constsProperties, deps, Collections.<BackupProperty>emptySet());
 	}
 
 	@Override

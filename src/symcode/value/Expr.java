@@ -32,7 +32,7 @@ public class Expr implements Value {
 	 * @return immutable Set<String> of variables
 	 */
 	@Override
-	public Set<String> getNeededProperties() {
+	public Set<String> getNeededReferences() {
 		return _neededProperties;
 	}
 

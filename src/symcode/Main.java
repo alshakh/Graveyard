@@ -19,10 +19,11 @@ public class Main {
 	 * @throws symcode.evaluator.EvaluationError
 	 */
 	public static void main(String[] args) throws EvaluationError, SyntaxError, IOException {
-		String code = "node(circle,node(circle,circle,node(circle,circle,node(circle,node(circle,circle,node(circle,node(circle,node(circle,circle,node(circle,circle,node(circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,circle))))),node(circle,circle,node(circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,circle))))),circle))))),node(circle,circle,node(circle,circle,node(circle,node(circle,node(circle,circle,node(circle,circle,node(circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,node(circle,node(circle,circle,node(circle,circle,node(circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,circle))))),node(circle,circle,node(circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,circle))))),circle))))),node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,circle))))),circle))))),node(circle,circle,node(circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,circle))))),circle))))),node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,circle))))),node(circle,circle,circle))))),node(circle,circle,node(circle,circle,node(circle,circle,circle))))),node(circle,circle,node(circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,circle))))),circle))))),node(circle,circle,node(circle,circle,node(circle,circle,node(circle,circle,circle)))))";
-		//code = "node(circle,circle,circle)";
+		String code = "customInputTest(debugObject[1,2,3,4,\"aaa\"]) customInputTest(customExample)";
 		Lab lab = LabLoader.loadLab(new File("labs/demo.json"));
+		
 		Evaluator evaluator = new Evaluator(lab);
+		System.out.println(new Svg(evaluator.eval(code)).toFullString());
 		Svg.outputBufferedImage(new Svg(evaluator.eval(code)).toBufferedImage(), new File("a.png"));
 		//
 	}

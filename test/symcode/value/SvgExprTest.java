@@ -40,14 +40,14 @@ public class SvgExprTest {
 	}
 
 	/**
-	 * Test of getNeededProperties method, of class SvgExpr.
+	 * Test of getNeededReferences method, of class SvgExpr.
 	 */
 	@Test
 	public void testGetNeededProperties() {
 		System.out.println("getNeededProperties");
 		SvgExpr instance = null;
 		Set<String> expResult = null;
-		Set<String> result = instance.getNeededProperties();
+		Set<String> result = instance.getNeededReferences();
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

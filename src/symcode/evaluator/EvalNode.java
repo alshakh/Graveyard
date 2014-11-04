@@ -65,8 +65,8 @@ public class EvalNode {
 				envBuilder.addProperty(new Property.ConstProperty("$$" + (i + 1), _values.get(i)));
 			}
 		}
-		envBuilder.prepare();
-		System.out.println(envBuilder.toString());
+		// fix missing properties with backupProperties and sort()
+		envBuilder.prepare(_sym._backupProperties);
 		//+ checking validity before executing
 		if (envBuilder.isCirculeDependency()) {
 			throw new EvaluationError("CircularDependancy: The problem is most likely in the Lab");

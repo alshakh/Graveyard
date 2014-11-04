@@ -130,8 +130,20 @@ public abstract class Property {
 		public String getPropertyName() {
 			return _propertyName;
 		}
-
-		
+	}
+	/**
+	 * BackupProperties aren't used always they are only used when the 
+	 *  property is not defined by other molecule.
+	 * 
+	 * Molecule1 wants $1 to have _property but $1 does not have _property
+	 * so Molecule1 will have a BackupProperty as $1._property = $1.w+$1.h
+	 * This property will be defined in the environment if _property is not 
+	 * defined by $1
+	 */
+	public static class BackupProperty extends NormalProperty {
+		public BackupProperty(String moleculeId, String propertyName, Value value) {
+			super(moleculeId, propertyName, value);
+		}
 	}
 
 	public static interface EvaluableProperty {

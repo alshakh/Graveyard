@@ -43,7 +43,7 @@ public class ExprTest {
 	@Test
 	public void testGetNeededProperties() {
 		Expr instance = new Expr("2*x+2b2h+a.b2h");
-		Set<String> result = instance.getNeededProperties();
+		Set<String> result = instance.getNeededReferences();
 		Set<String> expResult = new HashSet<String>();
 		expResult.add("x");
 		expResult.add("b2h");

@@ -18,7 +18,7 @@ public class Empty implements Value {
 		
 	}
 	@Override
-	public Set<String> getNeededProperties() {
+	public Set<String> getNeededReferences() {
 		return Collections.EMPTY_SET;
 			}
 

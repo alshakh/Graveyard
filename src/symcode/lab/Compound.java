@@ -2,6 +2,7 @@ package symcode.lab;
 
 import java.util.Collections;
 import java.util.Set;
+import symcode.lab.Property.BackupProperty;
 import symcode.lab.Property.ConstProperty;
 import symcode.lab.Property.EvaluableProperty;
 import symcode.lab.Property.NormalProperty;
@@ -32,11 +33,15 @@ public class Compound extends Molecule {
 	 * @param atomsSet
 	 * @param deps
 	 */
-	public Compound(String id, String version, Set<NormalProperty> propertySet, Set<ConstProperty> constsProperties, Set<BondedAtom> atomsSet, Set<String> deps) {
-		super(id, version, propertySet,constsProperties, deps);
+	public Compound(String id, String version, Set<NormalProperty> propertySet, Set<ConstProperty> constsProperties, Set<BondedAtom> atomsSet, Set<String> deps, Set<BackupProperty> backupProperty) {
+		super(id, version, propertySet,constsProperties, deps, backupProperty);
 	//
 	_subAtoms = Collections.unmodifiableSet(atomsSet);
     }
+
+	public Compound(String id, String version, Set<NormalProperty> propertySet, Set<ConstProperty> constsProperties, Set<BondedAtom> _subAtoms, Set<String> deps) {
+		this(id, version, propertySet, constsProperties,_subAtoms, deps, Collections.<BackupProperty>emptySet());
+	}
 
 	@Override
 	public Molecule getMolecule(String id) {

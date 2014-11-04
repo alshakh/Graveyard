@@ -17,6 +17,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import sun.org.mozilla.javascript.internal.NativeObject;
 import symcode.lab.Property;
+import symcode.lab.Property.BackupProperty;
 import symcode.lab.Property.EvaluableProperty;
 import symcode.lab.Property.ProductProperty;
 import symcode.value.*;
@@ -164,9 +165,33 @@ class EnvironmentBuilder {
 			_propertyList.add(p);
 		}
 	}
-
-	public void prepare(){
+	
+	public void prepare(Set<BackupProperty> _backupProperties) {
+		Set<String> missingDependencies =  getMissingReferences();
+		for(BackupProperty p : _backupProperties ){
+			String ref= constructRefNameOfProperty(p);
+			if(missingDependencies.contains(ref)){
+				_propertyList.add(p);
+			}
+		}
 		sort();
+	}
+	
+	public Set<String> getMissingReferences(){
+		Set<String> missingeReference = new HashSet<String>();
+		Set<String> allAvaliableReferences = new HashSet<String>();
+		for(EvaluableProperty p : _propertyList){
+			allAvaliableReferences.add(constructRefNameOfProperty(p));
+		}
+		//
+		for(EvaluableProperty ep: _propertyList){
+			for(String ref: ep.getValue().getNeededReferences()){
+				if(!allAvaliableReferences.contains(ref)){
+					missingeReference.add(ref);
+				}
+			}
+		}
+		return missingeReference;
 	}
 	/**
 	 * must prepare() be called before.
@@ -225,7 +250,7 @@ class EnvironmentBuilder {
 		for (int i = 0; i < _propertyList.size(); i++) {
 			{ // fix element i 
 				EvaluableProperty pty = _propertyList.get(i);
-				Set<String> dependsOnSet = pty.getValue().getNeededProperties();
+				Set<String> dependsOnSet = pty.getValue().getNeededReferences();
 				Set<String> depsCache = new HashSet<String>();// new cache for every element
 				while (!dependsOnSet.isEmpty()) {
 					int depIdx = -1;
@@ -253,7 +278,7 @@ class EnvironmentBuilder {
 						} else {
 							depsCache.add(constructRefNameOfProperty(_propertyList.get(i)));
 							Collections.swap(_propertyList, i, depIdx);
-							dependsOnSet = _propertyList.get(i).getValue().getNeededProperties();
+							dependsOnSet = _propertyList.get(i).getValue().getNeededReferences();
 						}
 					}
 				}
@@ -265,5 +290,6 @@ class EnvironmentBuilder {
 		if(!p.needsJsObject()) return p.getPropertyName();
 		return p.getJsObjectName() + "."+ p.getPropertyName();
 	}
+
 
 }

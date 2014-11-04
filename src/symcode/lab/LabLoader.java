@@ -2,6 +2,7 @@ package symcode.lab;
 
 import java.io.File;
 import java.io.FileReader;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -9,6 +10,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import symcode.lab.Property.BackupProperty;
 import symcode.lab.Property.ConstProperty;
 import symcode.lab.Property.NormalProperty;
 import symcode.value.*;
@@ -64,7 +66,7 @@ public class LabLoader {
 
 	private static SingleAtom procSingleAtom(JSONObject jsonObj){
 		TemplateInfo tInfo = procTemplateInfo(jsonObj);
-		return new SingleAtom(tInfo._id, tInfo._version, procNormalProperties(tInfo._id,jsonObj),procConsts(jsonObj), procDependencies(jsonObj));
+		return new SingleAtom(tInfo._id, tInfo._version, procNormalProperties(tInfo._id,jsonObj),procConsts(jsonObj), procDependencies(jsonObj),  procBackupProperties(jsonObj));
 	}
 	private static Compound procCompound(JSONObject jsonObj){
 		TemplateInfo tInfo = procTemplateInfo(jsonObj);
@@ -78,12 +80,12 @@ public class LabLoader {
 			}
 		}
 		//
-		return new Compound(tInfo._id, tInfo._version, procNormalProperties(tInfo._id,jsonObj),procConsts(jsonObj), atoms, procDependencies(jsonObj));
+		return new Compound(tInfo._id, tInfo._version, procNormalProperties(tInfo._id,jsonObj),procConsts(jsonObj), atoms, procDependencies(jsonObj),  procBackupProperties(jsonObj));
 	}
 
 	private static BondedAtom procDoubleAtom(JSONObject jsonObj){
 		TemplateInfo tInfo = procTemplateInfo(jsonObj);
-		return new BondedAtom(tInfo._id, tInfo._version, procNormalProperties(tInfo._id,jsonObj),procConsts(jsonObj), procDependencies(jsonObj));
+		return new BondedAtom(tInfo._id, tInfo._version, procNormalProperties(tInfo._id,jsonObj),procConsts(jsonObj), procDependencies(jsonObj), procBackupProperties(jsonObj));
 	}
 
 	private static Set<ConstProperty> procConsts(JSONObject jsonObj){
@@ -131,6 +133,25 @@ public class LabLoader {
 			}
 		}
 		//-
+		return ps;
+	}
+	private static Set<BackupProperty> procBackupProperties(JSONObject jsonObj) {
+		String objName = "backupProperties";
+		if(!jsonObj.containsKey(objName)) return Collections.<BackupProperty>emptySet();
+		//
+		Set<BackupProperty> ps = new HashSet<BackupProperty>();
+
+		JSONObject backupJson = (JSONObject)jsonObj.get(objName);
+		Iterator itr = backupJson.keySet().iterator();
+		while(itr.hasNext()){
+			String key = itr.next().toString();
+			if(!key.contains(".")) continue;
+			// TODO : backupProperties should support constants in the future.
+			String objId = key.split("\\.")[0];
+			String pName = key.split("\\.")[1];
+			ps.add(new BackupProperty(objId, pName, new Expr(backupJson.get(key).toString())));
+		}
+		
 		return ps;
 	}
 
