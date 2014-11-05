@@ -5,6 +5,7 @@
  */
 package symcode.evaluator;
 
+import symcode.svg.Svg;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +17,7 @@ import symcode.lab.Compound;
 import symcode.lab.Molecule;
 import symcode.lab.Property;
 import symcode.lab.Property.ProductProperty;
+import symcode.svg.StripSvg;
 import symcode.value.*;
 
 /**
@@ -127,9 +129,9 @@ public class EvalNode {
 		Svg combinedSvg = null;
 		for (Product p : atomProductSet) {
 			if (combinedSvg == null) {
-				combinedSvg = new Svg(p);
+				combinedSvg = new StripSvg(p);
 			} else {
-				combinedSvg = combinedSvg.combine(new Svg(p));
+				combinedSvg = combinedSvg.combine(new StripSvg(p));
 			}
 		}
 		// Svg Property

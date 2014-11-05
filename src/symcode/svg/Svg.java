@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package symcode.value;
+package symcode.svg;
 
 import com.kitfox.svg.SVGCache;
 import com.kitfox.svg.app.beans.SVGIcon;
@@ -15,51 +15,46 @@ import java.io.IOException;
 import java.io.StringReader;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
-import symcode.evaluator.Product;
+import symcode.value.Str;
 
 /**
  *
  * @author Ahmed Alshakh www.alshakh.net
  */
-public class Svg {
+public abstract class Svg {
+	public enum Type { FULL, STRIP}
+	//
 	public static final String INDENT_SPACE="    ";
 	//
-	private final String _content;
-	/**
-	 * if true, content is a standalone drawable svg, no need to wrap it in
-	 * any way in <code>toStringFull</code
-	 */
-	private final boolean _contentIsFull;
+	public final String _content;
 	/**
 	 * to be used in toStringFull because it need to encode the width and height
 	 */
-	private final double _width, _height;
+	public final double _width, _height;
 
-	public Svg(Product p){
-		this(
-			p.getProperty("svg")._value.toString()
-			, p.getProperty("x")._value.toDouble()
-			, p.getProperty("y")._value.toDouble()
-			, p.getProperty("h")._value.toDouble()
-			, p.getProperty("w")._value.toDouble()
-		);
-	}
-	/**
-	 * to be used if you want to treat string as Svg Obj. 
-	 * @param fullContent 
-	 */
-	public Svg(String fullContent){
-		_content = fullContent;
-		_contentIsFull = true;
-		_width=_height=0;// the value doesn't matter because they wont be used
-	}
-	private Svg(String svgSubContent, double x, double y, double h, double w){
-		_content = processToString(svgSubContent, x, y, h, w);
-		_contentIsFull = false;
+	public Svg(String content, double w, double h){
 		_width = w;
 		_height = h;
+		_content = content;
 	}
-	private static String processToString(String subContent, double x, double y, double width, double height){
+
+	@Override
+	public abstract String toString();
+	public abstract Svg combine(Svg other);
+	public abstract FullSvg toFullSvg();
+	public abstract StripSvg toStripSvg();
+
+	public abstract Type getType();
+	/**
+	 * gets the svg as is as opposed to ready to draw svg.
+	 * if content is full already, <code>toStringString</code> will be 
+	 * identical to <code>toStringFull</code>
+	 * @param subContent
+	 * @param x
+	 * @param y
+	 * @return 
+	 */
+	protected static String processPosition(String subContent, double x, double y){
 		if(x==0 && y==0) return subContent;
 		//
 		return "<g"
@@ -74,10 +69,10 @@ public class Svg {
 		       +"\n"
 		       +"</g>";
 	}
-	private static String indentEveryLine(String str){
+	protected static String indentEveryLine(String str){
 		return indentEveryLine(str,1);
 	}
-	private static String indentEveryLine(String str, int factor){
+	protected static String indentEveryLine(String str, int factor){
 		StringBuilder gapBuilder = new StringBuilder();
 		for(int i=0 ; i < factor ; i++){
 			gapBuilder.append(INDENT_SPACE);
@@ -86,49 +81,11 @@ public class Svg {
 		//
 		return (gap + str.replaceAll("\n", "\n"+gap));
 	}
-	private static String doubleToProperString(double d){
+	protected static String doubleToProperString(double d){
 		if(d == (long) d)
 			return String.format("%d",(long)d);
 		else
 			return String.format("%s",d);
-	}
-	public Svg combine(Svg other){
-		/*  #BUG: Svg(String) takes full content whare as the content 
-		below is not full
-		*/
-		return new Svg(this.toStripString()+"\n"+other.toStripString());
-	}
-
-	/**
-	 * gets the svg as is as opposed to ready to draw svg.
-	 * if content is full already, <code>toStringString</code> will be 
-	 * identical to <code>toStringFull</code>
-	 * @return 
-	 */
-	public String toStripString() {
-		return _content;
-	}
-
-	public String toFullString() {
-		// TODO : replace by actual SvgCode
-		if(_contentIsFull)
-			return _content;
-		else {
-			return "<svg"
-				+" width=\""+doubleToProperString(_width)+"\""
-			       +" height=\""+doubleToProperString(_height)+"\""
-			       +">"
-			       +"\n"
-			       +indentEveryLine(_content)
-			       +"\n"
-			       +"</svg>";
-		}
-	}
-
-	
-	@Override
-	public String toString(){
-		return toStripString();
 	}
 	/*
 	 *******************************************************************
@@ -139,7 +96,7 @@ public class Svg {
 	 *******************************************************************
 	 */
 	public Icon toIcon(){
-		String svgToConvert = this.toFullString();
+		String svgToConvert = this.toFullSvg().toString();
 		SVGIcon icon;
 		StringReader reader = new StringReader(svgToConvert);
 		java.net.URI uri = SVGCache.getSVGUniverse().loadSVG(reader, "myImage"); 

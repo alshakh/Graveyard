@@ -34,7 +34,6 @@
                 "id": "circle",
                 "w":"100",
                 "h":"100;",
-                "_pivot":"50",
                 "svg":"<circle cx=\"50\" cy=\"50\" r=\"50\" fill=\"red\" />",
         },
         {
@@ -62,6 +61,11 @@
         	"_pivot": "nodeTitle.w/2+nodeTitle.x",
                 "const": {
                     "gap":"20*lines.w/200"
+                },
+                "backupProperties": {
+                    "$1._pivot": "$1.x+$1.w/2",
+                    "$2._pivot": "$2.x+$2.w/2",
+                    "$3._pivot": "$3.x+$3.w/2"
                 },
         	"atoms": [
         		{
