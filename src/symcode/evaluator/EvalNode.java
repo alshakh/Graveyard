@@ -17,6 +17,7 @@ import symcode.lab.Compound;
 import symcode.lab.Molecule;
 import symcode.lab.Property;
 import symcode.lab.Property.ProductProperty;
+import symcode.lab.SingleAtom;
 import symcode.svg.StripSvg;
 import symcode.value.*;
 
@@ -25,8 +26,6 @@ import symcode.value.*;
  * @author Ahmed Alshakh www.alshakh.net
  */
 public class EvalNode {
-
-	
 	private final Molecule _sym;// either atom or compound 
 	private final List<EvalNode> _children; // list because the order of input matters
 	private final List<Value> _values; 
@@ -68,9 +67,11 @@ public class EvalNode {
 			}
 		}
 		// fix missing properties with backupProperties and sort()
-		envBuilder.prepare(_sym._backupProperties);
+		envBuilder.prepare();
+		System.err.println("-------------------------------------------");
+		System.out.println(envBuilder);
 		//+ checking validity before executing
-		if (envBuilder.isCirculeDependency()) {
+		if (envBuilder.isCircularDependency()) {
 			throw new EvaluationError("CircularDependancy: The problem is most likely in the Lab");
 		}
 		if (envBuilder.isMissingDependecy()) {
@@ -85,9 +86,10 @@ public class EvalNode {
 			Logger.getLogger(EvalNode.class.getName()).log(Level.SEVERE, null, ex);
 			throw new EvaluationError("Problem with preparing the environment to evaluate " + _sym._id);
 		}
+		
 		//-
 		// if Atom
-		if (_sym.isSingleAtom()) {
+		if (_sym instanceof SingleAtom) {
 			try {
 				return processAtom(evalEnv, _sym._id);
 			} catch (ScriptException ex) {

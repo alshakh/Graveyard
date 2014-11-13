@@ -21,7 +21,8 @@ public class Main {
 	 * @throws symcode.evaluator.EvaluationError
 	 */
 	public static void main(String[] args) throws EvaluationError, SyntaxError, IOException {
-		String code = "circle node(circle,node(circle,node(circle,node(circle,circle,circle),node(circle,circle,circle)),circle),node(circle,node(circle,node(circle,node(circle,node(circle,circle,circle),node(circle,circle,circle)),circle),node(circle,circle,circle)),node(circle,node(circle,node(circle,node(circle,node(circle,node(circle,node(circle,node(circle,circle,circle),node(circle,circle,circle)),circle),node(circle,circle,circle)),circle),node(circle,circle,circle)),circle),node(circle,circle,node(circle,node(circle,node(circle,node(circle,circle,node(circle,node(circle,node(circle,node(circle,circle,circle),node(circle,circle,circle)),circle),node(circle,circle,circle))),node(circle,circle,circle)),circle),node(circle,circle,circle))))))";
+		String code = "node(circle,node(circle,node(circle,node(circle,circle,circle),node(circle,circle,circle)),circle),node(circle,node(circle,node(circle,node(circle,node(circle,circle,circle),node(circle,circle,circle)),circle),node(circle,circle,circle)),node(circle,node(circle,node(circle,node(circle,node(circle,node(circle,node(circle,node(circle,circle,circle),node(circle,circle,circle)),circle),node(circle,circle,circle)),circle),node(circle,circle,circle)),circle),node(circle,circle,node(circle,node(circle,node(circle,node(circle,circle,node(circle,node(circle,node(circle,node(circle,circle,circle),node(circle,circle,circle)),circle),node(circle,circle,circle))),node(circle,circle,circle)),circle),node(circle,circle,circle))))))";
+		code = "node(circle,circle,circle)";
 		Lab lab = LabLoader.loadLab(new File("labs/demo.json"));
 		
 		Evaluator evaluator = new Evaluator(lab);

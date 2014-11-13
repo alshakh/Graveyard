@@ -2,11 +2,9 @@ package symcode.lab.nativemolecule;
 
 import java.util.HashSet;
 import java.util.Set;
-import symcode.lab.Molecule;
 import symcode.lab.Property;
 import symcode.lab.Property.NormalProperty;
 import symcode.lab.SingleAtom;
-import symcode.lab.Template;
 import symcode.value.Doub;
 import symcode.value.Str;
 
@@ -20,11 +18,11 @@ public class EmptyAtom extends SingleAtom{
 	public static final String ID = "EMPTY";
 	//
 	private EmptyAtom(){
-		super("empty","",generateEmptyAtomProperties() ,Template.EMPTY_CONSTS, Molecule.EMPTY_DEPENDENCIES);
+		super("empty","",generateEmptyAtomProperties());
 	}
 	
-	private static Set<NormalProperty> generateEmptyAtomProperties(){
-		Set<NormalProperty> properties = new HashSet<NormalProperty>();
+	private static Set<Property> generateEmptyAtomProperties(){
+		Set<Property> properties = new HashSet<Property>();
 		properties.add(new NormalProperty(ID, "x",new Doub("0")));
 		properties.add(new NormalProperty(ID, "y",new Doub("0")));
 		properties.add(new NormalProperty(ID, "h",new Doub("100")));

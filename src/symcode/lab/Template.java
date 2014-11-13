@@ -14,11 +14,11 @@ import symcode.lab.Property.ConstProperty;
  * @author Ahmed Alshakh www.alshakh.net
  */
 public abstract class Template{
-	public static final Set<ConstProperty> EMPTY_CONSTS = Collections.emptySet();
+	public static final Set<Property> EMPTY_PROPERTIES = Collections.emptySet();
 	//
 	public final String _id;
 	public final String _version;
-	public final Set<ConstProperty> _constProperties;
+	public final Set<Property> _properties;
 	//
 	private Template _parent = null; // Only non-final member only changed from the constructor of this class.
 	
@@ -26,11 +26,11 @@ public abstract class Template{
 	 *
 	 * @param id
 	 * @param version
-	 * @param constsProperties
+	 * @param properties
 	 */
-	public Template(String id, String version, Set<ConstProperty> constsProperties) {
+	public Template(String id, String version, Set<Property> properties) {
 		//+ Set constsProperties
-		this._constProperties = Collections.unmodifiableSet(constsProperties);
+		this._properties = Collections.unmodifiableSet(properties);
 		//-
 		//+ Setting ID and Version
 		this._id = id;
@@ -43,9 +43,10 @@ public abstract class Template{
 	}
 	
 	public final ConstProperty getConst(String id) {
-		for(ConstProperty p: _constProperties){
-			if(p._constName.equals(id)) {
-				return p;
+		for(Property p: _properties){
+			if(p instanceof ConstProperty 
+			   && p._propertyName.equals(id)) {
+				return (ConstProperty)p;
 			}
 		}
 		if(getParent()!=null)
@@ -54,31 +55,6 @@ public abstract class Template{
 	}
 
 	public abstract Molecule getMolecule(String id);
-
-	/**
-	 *
-	 * @return
-	 */
-	public boolean isAtom(){
-		return (this.getClass().equals(Atom.class));
-	}
-
-	/**
-	 *
-	 * @return
-	 */
-	public boolean isLab(){
-		return this.getClass().equals(Lab.class);
-	}
-
-	/**
-	 *
-	 * @return
-	 */
-	public boolean isCompound(){
-		return this.getClass().equals(Compound.class);
-	}
-	
 
 	@Override
 	public String toString() {

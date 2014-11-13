@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import symcode.lab.Property;
-import symcode.lab.Property.EvaluableProperty;
 import symcode.lab.Property.NormalProperty;
 import symcode.lab.Property.ProductProperty;
 import symcode.lab.Util;
@@ -37,8 +36,8 @@ public class Product {
 		this(Util.generateRandomId(), properties);
 	}
 
-	public Set<EvaluableProperty> getEvaluablePropertySet(String underObjectRef) {
-		Set<EvaluableProperty> ps = new HashSet<EvaluableProperty>();
+	public Set<Property> getEvaluablePropertySet(String underObjectRef) {
+		Set<Property> ps = new HashSet<Property>();
 		for(ProductProperty p : _properties){
 			ps.add(new NormalProperty(underObjectRef, p._propertyName, p._value));
 		}
@@ -57,30 +56,4 @@ public class Product {
 	public String toString(){
 		return "product "+super.toString();
 	}
-
-	@Override
-	public int hashCode() {
-		int hash = 7;
-		hash = 67 * hash + Objects.hashCode(this._properties);
-		hash = 67 * hash + Objects.hashCode(this._id);
-		return hash;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final Product other = (Product) obj;
-		if (!Objects.equals(this._id, other._id)) {
-			return false;
-		}
-		if(! _properties.equals(other._properties))
-			return true;
-		return true;
-	}
-
 }

@@ -1,11 +1,9 @@
 package symcode.lab;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
-import symcode.lab.Property.BackupProperty;
-import symcode.lab.Property.ConstProperty;
-import symcode.lab.Property.EvaluableProperty;
-import symcode.lab.Property.NormalProperty;
+import symcode.lab.Property;
 
 /**
  * All classes in lab should fallow this abstract class.
@@ -33,14 +31,9 @@ public class Compound extends Molecule {
 	 * @param atomsSet
 	 * @param deps
 	 */
-	public Compound(String id, String version, Set<NormalProperty> propertySet, Set<ConstProperty> constsProperties, Set<BondedAtom> atomsSet, Set<String> deps, Set<BackupProperty> backupProperty) {
-		super(id, version, propertySet,constsProperties, deps, backupProperty);
-	//
-	_subAtoms = Collections.unmodifiableSet(atomsSet);
-    }
-
-	public Compound(String id, String version, Set<NormalProperty> propertySet, Set<ConstProperty> constsProperties, Set<BondedAtom> _subAtoms, Set<String> deps) {
-		this(id, version, propertySet, constsProperties,_subAtoms, deps, Collections.<BackupProperty>emptySet());
+	public Compound(String id, String version, Set<Property> properties, Set<BondedAtom> subAtoms) {
+		super(id, version, properties);
+		_subAtoms = Collections.unmodifiableSet(subAtoms);
 	}
 
 	@Override
@@ -54,9 +47,10 @@ public class Compound extends Molecule {
 	}
 
 	@Override
-	protected void addClassSpecificPropertySet(Set<EvaluableProperty> propertySet) {
-		for(BondedAtom ba: _subAtoms){
-			ba.evaluablePropertySet_Helper(propertySet);
+	public void insertPropertiesToBuilder(EvaluablePropertiesBuilder builder){
+		builder.addProperties(_properties);
+		for(BondedAtom atom : _subAtoms){
+			atom.insertPropertiesToBuilder(builder);
 		}
 	}
 }

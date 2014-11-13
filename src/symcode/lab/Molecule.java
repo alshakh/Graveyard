@@ -3,16 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package symcode.lab;
 
-import java.util.Collections;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import symcode.lab.Property.BackupProperty;
 import symcode.lab.Property.ConstProperty;
-import symcode.lab.Property.EvaluableProperty;
-import symcode.lab.Property.NormalProperty;
 
 /**
  *
@@ -20,79 +16,69 @@ import symcode.lab.Property.NormalProperty;
  */
 public abstract class Molecule extends Template {
 
-	public static final Set<NormalProperty> EMPTY_PROPERTY_SET = Collections.unmodifiableSet(new HashSet<NormalProperty>());
-	/**
-	 *
-	 */
-	public static final Set<String> EMPTY_DEPENDENCIES = Collections.unmodifiableSet(new HashSet<String>());
-	public final Set<String> _dependencies;
-	public final Set<NormalProperty> _properties; // properties
-	public final Set<BackupProperty> _backupProperties;
 	/**
 	 *
 	 * @param id
 	 * @param version
 	 * @param propertySet
-	 * @param constsProperties
-	 * @param deps
 	 */
-	public Molecule(String id,String version, Set<NormalProperty> propertySet, Set<ConstProperty> constsProperties, Set<String> deps, Set<BackupProperty> backupProperties){
-		super(id, version, constsProperties);
-		_dependencies = Collections.unmodifiableSet(deps);
-		//+ properties
-		this._properties =Collections.unmodifiableSet(propertySet); 
-		this._backupProperties = Collections.unmodifiableSet(backupProperties);
-		//-
+	public Molecule(String id, String version, Set<Property> propertySet) {
+		super(id, version, propertySet);
 	}
 
 	/**
 	 * get the set properties needed to evaluate the molecule.
-	 * @return 
+	 *
+	 * @return
 	 */
-	public final Set<EvaluableProperty> getEvaluablePropertySet(){
-		Set<EvaluableProperty> propertySet = new HashSet<EvaluableProperty>();
-		this.evaluablePropertySet_Helper(propertySet);
-		return propertySet;
+	public final Set<Property> getEvaluablePropertySet() {
+		EvaluablePropertiesBuilder evaluableProperties = 
+			new EvaluablePropertiesBuilder();
+		insertPropertiesToBuilder(evaluableProperties);
+		return evaluableProperties.getEvaluableProperties();
 	}
-	
-	/**
-	 * add required properties to the property set. Must call isThisAddedToPropertySet() before doing anything.
-	 * @param propertySet 
-	 */
-	protected void evaluablePropertySet_Helper(Set<EvaluableProperty> propertySet){
-		//+ to avoid infinite adding in case of (valid or invalid) 
-		if(propertySet == null) return;
-		if(propertySet.contains(_properties.iterator().next())){
-			return;
-		}
-		//-
-		//+ properties
-		propertySet.addAll(_properties);
-		//-
-		//+ myConsts
-		propertySet.addAll(_constProperties);
-		//-
-		//+ add dependencies
-		for(String ref : _dependencies){
-			Molecule m = getMolecule(ref);
-			if(m != null) {
-				m.evaluablePropertySet_Helper(propertySet);
-				continue;
-			}
-			//
-			ConstProperty constProperty = getConst(ref);
-			if(constProperty !=null){
-				propertySet.add(constProperty);
-				continue;
-			}
-		}
-		//-
-		addClassSpecificPropertySet(propertySet);
-
+	public void insertPropertiesToBuilder(EvaluablePropertiesBuilder builder){
+		builder.addProperties(super._properties);
 	}
-	protected abstract void addClassSpecificPropertySet(Set<EvaluableProperty> propertySet);
 
-	public boolean isSingleAtom() {
-		return this.getClass().equals(SingleAtom.class);
+	public static class EvaluablePropertiesBuilder {
+
+		private final Set<Property> _currentProperties;
+
+		public EvaluablePropertiesBuilder() {
+			_currentProperties = new HashSet<Property>();
+		}
+
+		/**
+		 * add property to the set considering property type and 
+		 * duplications.
+		 * @param property 
+		 */
+		public void addProperty(Property property) {
+			/*
+			check if constProperty is already defined
+			*/
+			if (property instanceof ConstProperty) {
+				for (Property p : _currentProperties) {
+					if (!(p instanceof ConstProperty)) {
+						continue;
+					}
+
+					if (p._propertyName.equals(property._propertyName)) {
+						return;
+					}
+				}
+			}
+			_currentProperties.add(property);
+		}
+
+		public void addProperties(Collection<Property> properties) {
+			for(Property p : properties)
+				addProperty(p);
+		}
+
+		public Set<Property> getEvaluableProperties(){
+			return _currentProperties;
+		}
 	}
 }

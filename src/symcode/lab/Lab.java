@@ -23,13 +23,12 @@ public class Lab extends Template {
 	 *
 	 * @param id
 	 * @param version
-	 * @param propertySet
-	 * @param constsProperties
+	 * @param properties
 	 * @param elementsSet
 	 */
-	public Lab(String id,String version, Set<ConstProperty> constsProperties, Set<Molecule> elementsSet)
+	public Lab(String id,String version, Set<Property> properties, Set<Molecule> elementsSet)
 	{
-             super( id, version, constsProperties);
+             super( id, version, properties);
 		//+ Set parent for elements before adding
 		for(Molecule m : elementsSet){
 			m.initParent(this);

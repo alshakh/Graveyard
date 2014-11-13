@@ -12,8 +12,8 @@ import java.util.List;
  *
  * @author Ahmed Alshakh www.alshakh.net
  */
-public class SvgExpr extends Expr implements Value {
-	public SvgExpr(String svgStr) {
+public class SemiExpr extends Expr implements Value {
+	public SemiExpr(String svgStr) {
 		super(convertSvgStringToExprString(svgStr));
 	}
 

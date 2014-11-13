@@ -6,11 +6,9 @@
 package symcode.lab;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
-import symcode.lab.Property.BackupProperty;
-import symcode.lab.Property.ConstProperty;
-import symcode.lab.Property.EvaluableProperty;
-import symcode.lab.Property.NormalProperty;
+import symcode.lab.Property;
 
 /**
  * @author Ahmed Alshakh www.alshakh.net
@@ -26,25 +24,12 @@ public abstract class Atom extends Molecule {
 	 * @param deps
 	 * @param backupProperties
 	 */
-	public Atom(String id, String version, Set<NormalProperty> propertySet , Set<ConstProperty> constsProperties, Set<String> deps, Set<BackupProperty> backupProperties) {
-		super(id, version, propertySet, constsProperties, deps, backupProperties);
-	}
-
-	public Atom(String id, String version, Set<NormalProperty> propertySet, Set<ConstProperty> constsProperties, Set<String> deps) {
-		this(id, version, propertySet, constsProperties, deps, Collections.<BackupProperty>emptySet());
+	public Atom(String id, String version, Set<Property> properties) {
+		super(id, version, properties);
 	}
 
 	@Override
 	public String toString() {
 		return "atom " + super.toString();
 	}
-
-	/**
-	 * do nothing since everything in Atom is covered in Molecule's methods.
-	 * @param propertySet 
-	 */
-	protected void addClassSpecificPropertySet(Set<EvaluableProperty> propertySet) {
-		return;
-	}
-	
 }

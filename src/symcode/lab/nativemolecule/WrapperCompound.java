@@ -5,24 +5,22 @@ import java.util.Set;
 
 import symcode.lab.BondedAtom;
 import symcode.lab.Compound;
-import symcode.lab.Molecule;
+import symcode.lab.Property;
 import symcode.lab.Property.NormalProperty;
-import symcode.lab.Template;
 import symcode.value.Doub;
 import symcode.value.Expr;
-import symcode.value.SvgExpr;
+import symcode.value.SemiExpr;
 
 public class WrapperCompound extends Compound {
 	private static final String ID = "wrapper";
 	private static final String subAtomPrefix = "container_";
 
 	public WrapperCompound(int inputSize) {
-		super(ID, "", generateProperties(inputSize), Template.EMPTY_CONSTS,
-				generateAtomSet(inputSize), Molecule.EMPTY_DEPENDENCIES);
+		super(ID, "", generateProperties(inputSize), generateAtomSet(inputSize));
 	}
 
-	private static Set<NormalProperty> generateProperties(int n) {
-		Set<NormalProperty> ps = new HashSet<NormalProperty>();
+	private static Set<Property> generateProperties(int n) {
+		Set<Property> ps = new HashSet<Property>();
 		ps.add(new NormalProperty(ID, "x", new Doub("0")));
 		ps.add(new NormalProperty(ID, "y", new Doub("0")));
 		ps.add(new NormalProperty(ID, "h", new Expr("Math.max("+generatePropertyString(n,"h")+")")));
@@ -53,7 +51,7 @@ public class WrapperCompound extends Compound {
 	private static BondedAtom generateAtomNo(int i) {
 		String prevId = subAtomPrefix + (i - 1);
 		String id = subAtomPrefix + i;
-		Set<NormalProperty> properties = new HashSet<NormalProperty>();
+		Set<Property> properties = new HashSet<Property>();
 		if (i == 1)
 			properties.add(new NormalProperty(id, "x", new Doub("0")));
 		else
@@ -62,9 +60,8 @@ public class WrapperCompound extends Compound {
 		properties.add(new NormalProperty(id, "y", new Doub("0")));
 		properties.add(new NormalProperty(id, "w", new Expr("$" + i + ".w")));
 		properties.add(new NormalProperty(id, "h", new Expr("$" + i + ".h")));
-		properties.add(new NormalProperty(id, "svg", new SvgExpr("<<< $" + i
+		properties.add(new NormalProperty(id, "svg", new SemiExpr("<<< $" + i
 				+ ".svg >>>")));
-		return new BondedAtom(id, "", properties,
-				Template.EMPTY_CONSTS, Molecule.EMPTY_DEPENDENCIES);
+		return new BondedAtom(id, "", properties);
 	}
 }

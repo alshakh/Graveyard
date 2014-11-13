@@ -14,7 +14,7 @@ public class TextCompound extends Compound  {
 	 * @param text
 	 */
 	public TextCompound(String text) {
-		super("text", "", Molecule.EMPTY_PROPERTY_SET, Molecule.EMPTY_CONSTS, Compound.EMPTY_ATOMS_SET, Molecule.EMPTY_DEPENDENCIES);
+		super("text", "",Molecule.EMPTY_PROPERTIES, Compound.EMPTY_ATOMS_SET);
 		throw new UnsupportedOperationException("Not supported yet."); 
 	}
 	

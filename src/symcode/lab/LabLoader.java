@@ -2,15 +2,15 @@ package symcode.lab;
 
 import java.io.File;
 import java.io.FileReader;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import symcode.lab.Property.BackupProperty;
+import symcode.lab.Property.BackupConstProperty;
+import symcode.lab.Property.BackupNormalProperty;
+import symcode.lab.Property.Call;
 import symcode.lab.Property.ConstProperty;
 import symcode.lab.Property.NormalProperty;
 import symcode.value.*;
@@ -36,13 +36,17 @@ public class LabLoader {
 		//
 		return procLab(jsonObj);
 	}
-	private static TemplateInfo procTemplateInfo(JSONObject jsonObj){
+
+	private static TemplateInfo procTemplateInfo(JSONObject jsonObj) {
 		String id = readSimpleJsonProperty(jsonObj, "id");
-		if(id.isEmpty()) id=Util.generateRandomId(); // doublication will be a problems. Everything in the same scope should have a unique id.
+		if (id.isEmpty()) {
+			id = Util.generateRandomId(); // doublication will be a problems. Everything in the same scope should have a unique id.
+		}
 		String version = readSimpleJsonProperty(jsonObj, "version").toLowerCase();
 		return new TemplateInfo(id, version);
 	}
-	private static Lab procLab(JSONObject jsonObj){
+
+	private static Lab procLab(JSONObject jsonObj) {
 		TemplateInfo tInfo = procTemplateInfo(jsonObj);
 		//+ proc LabElements
 		Set<Molecule> elements = Lab.EMPTY_ELEMENTS;
@@ -54,21 +58,23 @@ public class LabLoader {
 			}
 		}
 		//-
-		return new Lab(tInfo._id, tInfo._version, procConsts(jsonObj), elements);
+		return new Lab(tInfo._id, tInfo._version, processProperties(tInfo._id, jsonObj), elements);
 	}
-	private static Molecule procMoleculeInLab(JSONObject jsonObj){
-		if(jsonObj.containsKey("atoms")){
+
+	private static Molecule procMoleculeInLab(JSONObject jsonObj) {
+		if (jsonObj.containsKey("atoms")) {
 			return procCompound(jsonObj);
 		} else { // SingleAtom
 			return procSingleAtom(jsonObj);
 		}
 	}
 
-	private static SingleAtom procSingleAtom(JSONObject jsonObj){
+	private static SingleAtom procSingleAtom(JSONObject jsonObj) {
 		TemplateInfo tInfo = procTemplateInfo(jsonObj);
-		return new SingleAtom(tInfo._id, tInfo._version, procNormalProperties(tInfo._id,jsonObj),procConsts(jsonObj), procDependencies(jsonObj),  procBackupProperties(jsonObj));
+		return new SingleAtom(tInfo._id, tInfo._version, processProperties(tInfo._id, jsonObj));
 	}
-	private static Compound procCompound(JSONObject jsonObj){
+
+	private static Compound procCompound(JSONObject jsonObj) {
 		TemplateInfo tInfo = procTemplateInfo(jsonObj);
 		//
 		Set<BondedAtom> atoms = Compound.EMPTY_ATOMS_SET;
@@ -80,91 +86,75 @@ public class LabLoader {
 			}
 		}
 		//
-		return new Compound(tInfo._id, tInfo._version, procNormalProperties(tInfo._id,jsonObj),procConsts(jsonObj), atoms, procDependencies(jsonObj),  procBackupProperties(jsonObj));
+		return new Compound(tInfo._id, tInfo._version, processProperties(tInfo._id, jsonObj), atoms);
 	}
 
-	private static BondedAtom procDoubleAtom(JSONObject jsonObj){
+	private static BondedAtom procDoubleAtom(JSONObject jsonObj) {
 		TemplateInfo tInfo = procTemplateInfo(jsonObj);
-		return new BondedAtom(tInfo._id, tInfo._version, procNormalProperties(tInfo._id,jsonObj),procConsts(jsonObj), procDependencies(jsonObj), procBackupProperties(jsonObj));
+		return new BondedAtom(tInfo._id, tInfo._version, processProperties(tInfo._id, jsonObj));
 	}
 
-	private static Set<ConstProperty> procConsts(JSONObject jsonObj){
-		Set<ConstProperty> ps =Template.EMPTY_CONSTS;
-		//+ constants are properties ( ==> Doub)
-		if (jsonObj.containsKey("const")) {
-			ps = new HashSet<ConstProperty>();
-			JSONObject constJsonObj = (JSONObject)jsonObj.get("const");
-			Iterator itr = constJsonObj.keySet().iterator();
-			while (itr.hasNext()) {
-				String key = (String) itr.next();
-				ps.add(new ConstProperty(key, new Expr(constJsonObj.get(key).toString())));
+	private static Set<Property> processProperties(final String objId, JSONObject jsonObj) {
+		final Set<Property> properties = new HashSet<Property>();
+		//+ constants
+		final String CONST = "const";
+		if (jsonObj.containsKey(CONST)) {
+			JSONObject constJsonObj = (JSONObject) jsonObj.get(CONST);
+			for (Object key : constJsonObj.keySet()) {
+				properties.add(new ConstProperty(key.toString(), new Expr(constJsonObj.get(key.toString()).toString())));
 			}
 		}
 		//-
-		return ps;
-	}
-
-	private static Set<NormalProperty> procNormalProperties(String objId, JSONObject jsonObj) {
-		Set<NormalProperty> ps = new HashSet<NormalProperty>();
+		//+ Normal properties
 		//+ mandatory properties ( position and shape => expressions )
 		for (String pName : NormalProperty.MANDATORY_PROPERTIES.keySet()) {
 			if (jsonObj.containsKey(pName)) {
-				if(Property.isSvgProperty(pName)){
-					ps.add(new NormalProperty(objId, pName, new SvgExpr(jsonObj.get(pName).toString())));
-				} else {
-					ps.add(new NormalProperty(objId, pName, new Expr((String) jsonObj.get(pName))));
-				}
+				properties.add(new NormalProperty(objId, pName, new Expr((String) jsonObj.get(pName))));
 			} else {
-				ps.add(new NormalProperty(objId, pName, NormalProperty.MANDATORY_PROPERTIES.get(pName)));
+				properties.add(new NormalProperty(objId, pName, NormalProperty.MANDATORY_PROPERTIES.get(pName)));
 			}
 		}
 		//-
 		//+ svg property ( => svg)
-		if (jsonObj.containsKey("svg")) {
-			ps.add(new NormalProperty(objId, "svg", new SvgExpr((String) jsonObj.get("svg"))));
+		final String SVG = "svg";
+		if (jsonObj.containsKey(SVG)) {
+			properties.add(new NormalProperty(objId, "svg", new SemiExpr((String) jsonObj.get(SVG))));
 		}
 		//-
 		//+ custom properties
-		Iterator itr = jsonObj.keySet().iterator();
-		while(itr.hasNext()){
-			String key = itr.next().toString();
-			if(key.startsWith("_")){
-				ps.add(new NormalProperty(objId, key, new Expr(jsonObj.get(key).toString())));
+		for (Object key : jsonObj.keySet()) {
+			if (key.toString().startsWith("_")) {
+				properties.add(new NormalProperty(
+					objId, key.toString(),
+					new Expr(jsonObj.get(key.toString()).toString())));
 			}
 		}
 		//-
-		return ps;
-	}
-	private static Set<BackupProperty> procBackupProperties(JSONObject jsonObj) {
-		String objName = "backupProperties";
-		if(!jsonObj.containsKey(objName)) return Collections.<BackupProperty>emptySet();
-		//
-		Set<BackupProperty> ps = new HashSet<BackupProperty>();
-
-		JSONObject backupJson = (JSONObject)jsonObj.get(objName);
-		Iterator itr = backupJson.keySet().iterator();
-		while(itr.hasNext()){
-			String key = itr.next().toString();
-			if(!key.contains(".")) continue;
-			// TODO : backupProperties should support constants in the future.
-			String objId = key.split("\\.")[0];
-			String pName = key.split("\\.")[1];
-			ps.add(new BackupProperty(objId, pName, new Expr(backupJson.get(key).toString())));
-		}
-		
-		return ps;
-	}
-
-	private static Set<String> procDependencies(JSONObject jsonObj) {
-		Set<String> refSet = Molecule.EMPTY_DEPENDENCIES;
-		if (jsonObj.containsKey("dependsOn")) {
-			refSet = new HashSet<String>();
-			String[] refStrArr = ((String) jsonObj.get("dependsOn")).split(",");
-			for (String s : refStrArr) {
-				refSet.add(s.trim());
+		//- normal
+		//+ BackupProperties
+		final String BACKUP = "backupProperties";
+		if (jsonObj.containsKey(BACKUP)) {
+			JSONObject backupJson = (JSONObject) jsonObj.get(BACKUP);
+			for (Object key : backupJson.keySet()) {
+				if (key.toString().contains(".")) {
+					String[] parts = key.toString().split("\\.");
+					properties.add(new BackupNormalProperty(parts[0], parts[1], new Expr(backupJson.get(key).toString())));
+				} else {
+					properties.add(new BackupConstProperty(key.toString(), new Expr(backupJson.get(key).toString())));
+				}
 			}
 		}
-		return refSet;
+		//-
+		//+ Calls
+		final String CALLS = "calls";
+		if (jsonObj.containsKey(CALLS)) {
+			JSONObject jsonCalls = (JSONObject) jsonObj.get(CALLS);
+			for (Object key : jsonCalls.keySet()) {
+				properties.add(new Call(key.toString(), new SemiExpr(jsonCalls.get(key).toString())));
+			}
+		}
+		//-
+		return properties;
 	}
 
 	private static String readSimpleJsonProperty(JSONObject jsonObj, String property) {
@@ -192,14 +182,14 @@ public class LabLoader {
 			e.printStackTrace();
 		}
 		return null;
-
 	}
 }
 
 class TemplateInfo {
+
 	public final String _id;
 	public final String _version;
-	
+
 	public TemplateInfo(String _id, String _version) {
 		this._id = _id;
 		this._version = _version;
