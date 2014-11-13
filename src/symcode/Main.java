@@ -7,6 +7,8 @@ import symcode.evaluator.Evaluator;
 import symcode.evaluator.SyntaxError;
 import symcode.lab.Lab;
 import symcode.lab.LabLoader;
+import symcode.lab.Property;
+import symcode.lab.Property.BackupNormalProperty;
 import symcode.svg.FullSvg;
 import symcode.svg.StripSvg;
 import symcode.svg.Svg;
@@ -22,12 +24,12 @@ public class Main {
 	 */
 	public static void main(String[] args) throws EvaluationError, SyntaxError, IOException {
 		String code = "node(circle,node(circle,node(circle,node(circle,circle,circle),node(circle,circle,circle)),circle),node(circle,node(circle,node(circle,node(circle,node(circle,circle,circle),node(circle,circle,circle)),circle),node(circle,circle,circle)),node(circle,node(circle,node(circle,node(circle,node(circle,node(circle,node(circle,node(circle,circle,circle),node(circle,circle,circle)),circle),node(circle,circle,circle)),circle),node(circle,circle,circle)),circle),node(circle,circle,node(circle,node(circle,node(circle,node(circle,circle,node(circle,node(circle,node(circle,node(circle,circle,circle),node(circle,circle,circle)),circle),node(circle,circle,circle))),node(circle,circle,circle)),circle),node(circle,circle,circle))))))";
-		code = "node(circle,circle,circle)";
+		//code = "node(circle,circle,circle)";
 		Lab lab = LabLoader.loadLab(new File("labs/demo.json"));
-		
 		Evaluator evaluator = new Evaluator(lab);
-		System.out.println(new StripSvg(evaluator.eval(code)).toFullSvg().toString());
-		Svg.outputBufferedImage(new StripSvg(evaluator.eval(code)).toFullSvg().toBufferedImage(), new File("a.png"));
+		evaluator.eval("node(circle,circle,circle)");
+		//System.out.println(new StripSvg(evaluator.eval(code)).toFullSvg().toString());
+		//Svg.outputBufferedImage(new StripSvg(evaluator.eval(code)).toFullSvg().toBufferedImage(), new File("a.png"));
 		//
 	}
 	public static final Svg EXAMPLE_SVG =new FullSvg("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +

@@ -110,16 +110,22 @@ class EnvironmentBuilder {
 	}
 
 	public EnvDef makeEnvDef(Property property) {
-		if (property instanceof NormalProperty) {
+		/*
+			must check backupNormalProperty and backupConstProperty
+		before checing constProperty and NormalProperty because
+		backupNormalProperty is instance of NormalProeprty and it will match
+		and the same thing with backupConstProperty
+		*/
+		if (property instanceof BackupNormalProperty) {
+			return new BackupNormalEnvDef(property);
+		} else if (property instanceof BackupConstProperty) {
+			return new BackupConstEnvDef(property);
+		} else if (property instanceof NormalProperty) {
 			return new NormalEnvDef(property);
 		} else if (property instanceof ConstProperty) {
 			return new ConstEnvDef(property);
 		} else if (property instanceof Call) {
 			return new CallEnvDef(property);
-		} else if (property instanceof BackupNormalProperty) {
-			return new BackupNormalEnvDef(property);
-		} else if (property instanceof BackupConstProperty) {
-			return new BackupConstEnvDef(property);
 		}
 		throw new IllegalArgumentException("Illegal property type");
 	}
@@ -137,6 +143,7 @@ class EnvironmentBuilder {
 		 if property reference exists
 		 */
 		if (idx != DOES_NOT_EXIST) {
+			
 			// If new envDef is backup, and real one exists don't add
 			if (envDef instanceof BackupEnvDef) {
 				return;

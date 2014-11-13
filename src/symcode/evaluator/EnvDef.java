@@ -7,6 +7,8 @@ package symcode.evaluator;
 
 import java.util.Set;
 import symcode.lab.Property;
+import symcode.lab.Property.BackupConstProperty;
+import symcode.lab.Property.BackupNormalProperty;
 import symcode.lab.Property.Call;
 import symcode.lab.Property.ConstProperty;
 import symcode.lab.Property.NormalProperty;
@@ -38,8 +40,10 @@ public abstract class EnvDef {
 	 *
 	 */
 	public static class CallEnvDef extends EnvDef {
-		public CallEnvDef(Property call) {
-			super(call, call._propertyName);
+		public CallEnvDef(Property property) {
+			super(property, property._propertyName);
+			if(!(property instanceof Call)) 
+				throw new IllegalArgumentException("Only accepts Call Property");
 		}
 
 		@Override
@@ -113,30 +117,44 @@ public abstract class EnvDef {
 	/**
 	 *
 	 */
-	public static class BackupEnvDef extends EnvDef {
+	public static abstract class BackupEnvDef extends EnvDef {
 
 		public BackupEnvDef(Property property, String reference) {
 			super(property, reference);
-		}
-
-		@Override
-		public boolean needsJsObject() {
-			throw new UnsupportedOperationException("NO JS FOR BACKUP."); 
-		}
-
-		@Override
-		public String getJsObjectName() {
-			throw new UnsupportedOperationException("NO JS FOR BACKUP."); 
 		}
 	}
 	public static class BackupNormalEnvDef extends BackupEnvDef {
 		public BackupNormalEnvDef(Property property){
 			super(property, NormalEnvDef.constructReference(property));
+			if(!(property instanceof BackupNormalProperty)) 
+				throw new IllegalArgumentException("Only accepts backupNormalProperty");
+		}
+
+		@Override
+		public boolean needsJsObject() {
+			return true;
+		}
+
+		@Override
+		public String getJsObjectName() {
+			return ((NormalProperty)_property)._moleculeId;
 		}
 	}
 	public static class BackupConstEnvDef extends BackupEnvDef {
 		public BackupConstEnvDef(Property property){
 			super(property, ConstEnvDef.constructReference(property));
+			if(!(property instanceof BackupConstProperty)) 
+				throw new IllegalArgumentException("Only accepts backupConstProperty");
+		}
+
+		@Override
+		public boolean needsJsObject() {
+			return false;
+		}
+
+		@Override
+		public String getJsObjectName() {
+			throw new UnsupportedOperationException(" no js object for backup const property");
 		}
 	}
 }
