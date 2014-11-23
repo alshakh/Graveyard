@@ -45,7 +45,7 @@ public class SvgExprTest {
 	@Test
 	public void testGetNeededProperties() {
 		System.out.println("getNeededProperties");
-		SvgExpr instance = null;
+		SemiExpr instance = null;
 		Set<String> expResult = null;
 		Set<String> result = instance.getNeededReferences();
 		assertEquals(expResult, result);
@@ -59,7 +59,7 @@ public class SvgExprTest {
 	@Test
 	public void testToString() {
 		System.out.println("toSvgExpring");
-		SvgExpr instance = null;
+		SemiExpr instance = null;
 		String expResult = "";
 		String result = instance.toString();
 		assertEquals(expResult, result);
@@ -73,7 +73,7 @@ public class SvgExprTest {
 	@Test
 	public void testToEvaluableScript_1() {
 		System.out.println("toEvaluableScript");
-		SvgExpr instance = new SvgExpr("AAA <<< SS >>> BBB <<< QQ >>>");
+		SemiExpr instance = new SemiExpr("AAA <<< SS >>> BBB <<< QQ >>>");
 		String expResult = "\"AAA \"+ SS +\" BBB \"+ QQ +\"\"";
 		String result = instance.toEvaluableScript();
 		assertEquals(expResult, result);
@@ -81,7 +81,7 @@ public class SvgExprTest {
 	@Test
 	public void testToEvaluableScript_2() {
 		System.out.print("toEvaluablSvgExprript");
-		SvgExpr instance = new SvgExpr("AAA <<< SS >>> BBB");
+		SemiExpr instance = new SemiExpr("AAA <<< SS >>> BBB");
 		String expResult = "\"AAA \"+ SS +\" BBB\"";
 		String result = instance.toEvaluableScript();
 		assertEquals(expResult, result);

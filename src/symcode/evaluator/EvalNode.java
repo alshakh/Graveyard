@@ -9,9 +9,6 @@ import symcode.svg.Svg;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.script.ScriptException;
 import symcode.lab.BondedAtom;
 import symcode.lab.Compound;
 import symcode.lab.Molecule;
@@ -26,32 +23,42 @@ import symcode.value.*;
  * @author Ahmed Alshakh www.alshakh.net
  */
 public class EvalNode {
-	private final Molecule _sym;// either atom or compound 
-	private final List<EvalNode> _children; // list because the order of input matters
-	private final List<Value> _values; 
+
+	public final Molecule _sym;// either atom or compound 
+	public final List<EvalNode> _children; // list because the order of input matters
+	public final List<Value> _values;
+	public final Evaluator _evaluator;
+
 	/**
 	 *
+	 * @param evaluator
 	 * @param sym
+	 * @param values
 	 * @param inputList
 	 */
-	public EvalNode(Molecule sym, List<Value> values, List<EvalNode> inputList) {
+	public EvalNode(Evaluator evaluator, Molecule sym, List<Value> values, List<EvalNode> inputList) {
 		_sym = sym;
 		_children = inputList;
 		_values = values;
+		_evaluator = evaluator;
 	}
+
 	/**
 	 *
+	 * @param evaluator
 	 * @param sym
 	 */
-	public EvalNode(Molecule sym) {
-		this(sym, null,null);
+	public EvalNode(Evaluator evaluator, Molecule sym) {
+		this(evaluator, sym, null, null);
 	}
 
 	/**
 	 *
 	 * @return
+	 * @throws symcode.evaluator.EvaluationError
+	 * @throws symcode.evaluator.SyntaxError
 	 */
-	public Product eval() throws EvaluationError {
+	public Product eval() throws EvaluationError, SyntaxError {
 		//
 		EnvironmentBuilder envBuilder = new EnvironmentBuilder();
 		envBuilder.addPropertyCollection(_sym.getEvaluablePropertySet());
@@ -61,72 +68,41 @@ public class EvalNode {
 				envBuilder.addPropertyCollection(_children.get(i).eval().getEvaluablePropertySet("$" + (i + 1)));
 			}
 		}
-		if(_values != null) {
+		if (_values != null) {
 			for (int i = 0; i < _values.size(); i++) {
 				envBuilder.addProperty(new Property.ConstProperty("$$" + (i + 1), _values.get(i)));
 			}
 		}
-		// fix missing properties with backupProperties and sort()
-		envBuilder.prepare();
-		System.err.println("-------------------------------------------");
-		System.out.println(envBuilder);
-		//+ checking validity before executing
-		if (envBuilder.isCircularDependency()) {
-			throw new EvaluationError("CircularDependancy: The problem is most likely in the Lab");
-		}
-		if (envBuilder.isMissingDependecy()) {
-			throw new EvaluationError("Some of references are missing: probably the error is less input arguments for " + _sym._id);
-		}
-		//-
+
+		envBuilder.prepare(_evaluator);
 		//+ make environemnt
-		Environment evalEnv;
-		try {
-			evalEnv = envBuilder.toEnvironment();
-		} catch (ScriptException ex) {
-			Logger.getLogger(EvalNode.class.getName()).log(Level.SEVERE, null, ex);
-			throw new EvaluationError("Problem with preparing the environment to evaluate " + _sym._id);
-		}
-		
+		Environment evalEnv = envBuilder.toEnvironment(_sym._id);
 		//-
 		// if Atom
 		if (_sym instanceof SingleAtom) {
-			try {
-				return processAtom(evalEnv, _sym._id);
-			} catch (ScriptException ex) {
-				Logger.getLogger(EvalNode.class.getName()).log(Level.SEVERE, null, ex);
-				throw new EvaluationError("Problem with evaluating " + _sym._id);
-			}
-		}//
-		// if Compound
+			return processAtom(evalEnv, _sym._id);
+		} // if Compound
 		else {
-			Set<Product> atomProductSet = new HashSet<Product>();
-			//
-			for (BondedAtom m : ((Compound) _sym)._subAtoms) {
-				try {
-					atomProductSet.add(processAtom(evalEnv, m._id));
-				} catch (ScriptException ex) {
-					Logger.getLogger(EvalNode.class.getName()).log(Level.SEVERE, null, ex);
-					throw new EvaluationError("Problem with evaluating bonded atom " + m._id + " for " + _sym._id);
-				}
-				//	
-			}
-			try {
-				return processCompound(evalEnv, _sym._id, atomProductSet);
-			} catch (ScriptException ex) {
-				Logger.getLogger(EvalNode.class.getName()).log(Level.SEVERE, null, ex);
-				throw new EvaluationError("Problem with evaluating " + _sym._id);
-			}
+			return processCompound(evalEnv, _sym);
 		}
 	}
 
-	private Product processAtom(Environment env, String id) throws ScriptException {
+	private Product processAtom(Environment env, String id) throws EvaluationError {
 		Set<ProductProperty> properties = env.evalMolecule(id);
 		return new Product(id, properties);
 	}
 
-	private Product processCompound(Environment env, String id, Set<Product> atomProductSet) throws ScriptException {
-
-		Set<ProductProperty> properties = env.evalMolecule(id);
+	private Product processCompound(Environment env, Molecule sym) throws EvaluationError {
+	Set<Product> atomProductSet = new HashSet<Product>();
+	//
+	for (BondedAtom m : ((Compound) sym)._subAtoms) {
+				atomProductSet.add(processAtom(env, m._id));
+	}
+			
+			
+			
+			
+		Set<ProductProperty> properties = env.evalMolecule(sym._id);
 		//
 		Svg combinedSvg = null;
 		for (Product p : atomProductSet) {
@@ -139,7 +115,7 @@ public class EvalNode {
 		// Svg Property
 		properties.add(new ProductProperty("svg", combinedSvg.toStr()));
 		//
-		return new Product(id, properties);
+		return new Product(sym._id, properties);
 	}
 
 	@Override

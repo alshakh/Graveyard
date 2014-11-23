@@ -9,23 +9,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import javax.script.ScriptException;
-import symcode.evaluator.EnvDef.BackupConstEnvDef;
 import symcode.evaluator.EnvDef.BackupEnvDef;
-import symcode.evaluator.EnvDef.BackupNormalEnvDef;
 import symcode.evaluator.EnvDef.CallEnvDef;
-import symcode.evaluator.EnvDef.ConstEnvDef;
-import symcode.evaluator.EnvDef.NormalEnvDef;
+import symcode.evaluator.EnvDef.EnvDefFactory;
 import symcode.lab.Property;
-import symcode.lab.Property.BackupConstProperty;
-import symcode.lab.Property.BackupNormalProperty;
-import symcode.lab.Property.Call;
-import symcode.lab.Property.ConstProperty;
-import symcode.lab.Property.NormalProperty;
+import symcode.lab.Property.ProductProperty;
 
 /**
  * An instance of this class maintains the order of execution of properties in
@@ -34,16 +25,22 @@ import symcode.lab.Property.NormalProperty;
  *
  * @author Ahmed Alshakh www.alshakh.net
  */
-class EnvironmentBuilder {
+public class EnvironmentBuilder {
+	public static interface EnvSortable {
+		public boolean matchReference(String ref);
+		public String getReference();
+		public Set<String> getDependencies();
+	}
 
 	public static final int DOES_NOT_EXIST = -1;
 
 	private final ArrayList<EnvDef> _envDefs;
-	private boolean _isCircularDependency = false ;
-	private boolean _isMissingDependency = false;
 
 	public EnvironmentBuilder() {
 		_envDefs = new ArrayList<EnvDef>();
+	}
+	public EnvironmentBuilder(List<EnvDef> list){
+		_envDefs = new ArrayList<EnvDef>(list);
 	}
 
 	@Override
@@ -54,13 +51,14 @@ class EnvironmentBuilder {
 	/**
 	 * turning the environment builder into an actual environment.
 	 *
-	 * @param substituteMissing if true missing references will be
-	 * substituted by empty values.
 	 * @return
 	 */
-	public Environment toEnvironment() throws ScriptException {
-		//throw new RuntimeException("Cannot convert invalid environment");
-		return new Environment(toEvaluableScript());
+	public Environment toEnvironment(String symId) throws EvaluationError {
+		try {
+			return new Environment(toEvaluableScript());
+		} catch (ScriptException ex) {
+			throw new EvaluationError("Problem with preparing the environment to evaluate " + symId);
+		}
 	}
 
 	/**
@@ -109,27 +107,6 @@ class EnvironmentBuilder {
 		return _envDefs.get(idx);
 	}
 
-	public EnvDef makeEnvDef(Property property) {
-		/*
-			must check backupNormalProperty and backupConstProperty
-		before checing constProperty and NormalProperty because
-		backupNormalProperty is instance of NormalProeprty and it will match
-		and the same thing with backupConstProperty
-		*/
-		if (property instanceof BackupNormalProperty) {
-			return new BackupNormalEnvDef(property);
-		} else if (property instanceof BackupConstProperty) {
-			return new BackupConstEnvDef(property);
-		} else if (property instanceof NormalProperty) {
-			return new NormalEnvDef(property);
-		} else if (property instanceof ConstProperty) {
-			return new ConstEnvDef(property);
-		} else if (property instanceof Call) {
-			return new CallEnvDef(property);
-		}
-		throw new IllegalArgumentException("Illegal property type");
-	}
-
 	/**
 	 * add Property to the environment. if new property replaces an existing
 	 * backup Property it will replace it with real property.
@@ -137,13 +114,13 @@ class EnvironmentBuilder {
 	 * @param property
 	 */
 	public void addProperty(Property property) {
-		EnvDef envDef = makeEnvDef(property);
+		EnvDef envDef = EnvDefFactory.create(property);
 		int idx = getIndexOfReference(envDef._reference);
 		/*
 		 if property reference exists
 		 */
 		if (idx != DOES_NOT_EXIST) {
-			
+
 			// If new envDef is backup, and real one exists don't add
 			if (envDef instanceof BackupEnvDef) {
 				return;
@@ -151,12 +128,12 @@ class EnvironmentBuilder {
 			// check if existing EnvDef exisit
 			if (_envDefs.get(idx) instanceof BackupEnvDef) {
 				_envDefs.remove(idx);
-				_envDefs.add(makeEnvDef(property));
+				_envDefs.add(EnvDefFactory.create(property));
 			}
 		} /*
 		 if property doesn't exist
 		 */ else {
-			_envDefs.add(makeEnvDef(property));
+			_envDefs.add(EnvDefFactory.create(property));
 		}
 	}
 
@@ -166,56 +143,107 @@ class EnvironmentBuilder {
 		}
 	}
 
-	public void addCallCollection(Collection<Call> calls) {
-		for (Call c : calls) {
-			addCall(c);
-		}
+	public void prepare(Evaluator evaluator) throws SyntaxError, EvaluationError {
+		processCalls(evaluator);	
+		sort(_envDefs);
 	}
 
-	public void addCall(Call call) {
-		EnvDef ed = new CallEnvDef(call);
-		if (_envDefs.contains(ed)) {
-			return; // no duplication
-		}
-		_envDefs.add(ed);
-	}
-
-	public void prepare() {
-		sortDefs(_envDefs);
-	}
-
-	public void processCalls() {
-	/*	Set<String> callRefs = new HashSet<String>();
-		for (EnvDef ed : _envDefs) {
-			if (ed.isCall()) {
-				callRefs.add(ed._reference);
+	private void processCalls(Evaluator evaluator)  throws SyntaxError, EvaluationError{
+		List<CallEnvDef> calls =  getAndSortCallEnvDef();
+		_envDefs.removeAll(calls);
+		//
+		for(CallEnvDef call : calls){
+			Set<String> deps = getDependenciesOfReferences(call.getDependencies());
+			List<EnvDef> depTree = referencesToList(deps);
+	
+			Environment env;
+			try {
+				env = new EnvironmentBuilder(depTree).toEnvironment(call._reference);
+			} catch (EvaluationError ex) {
+				throw new EvaluationError("Error while processing the call "+call._reference+" : " + ex.getMessage());
+			}
+			Product product;
+			try {
+				product = evaluator.eval(env.resolveReference(call._property._value.toEvaluableScript()).toString());
+			} catch (SyntaxError ex) {
+				throw new SyntaxError("SyntaxError while processing the call "+call._reference+" : "  + ex.getMessage());
+			} catch (EvaluationError ex) {
+				throw new EvaluationError("EvaluationError while processing the call "+call._reference+" : "  + ex.getMessage());
+			}
+			for(ProductProperty prop: product._properties){
+				_envDefs.add(EnvDefFactory.create(prop.toEvaluableProperty(call._reference)));
 			}
 		}
-		//
-		if (callRefs.isEmpty()) {
-			return;
-		}
-		//
-		Set<String> processedCalls = new HashSet<String>();
-		//
-		Iterator callRefItr = callRefs.iterator();
-		while (callRefItr.hasNext()) {
-			EnvDef call = getEnvDefByReference(callRefs.iterator().next());
-			Set<String> callDeps = call.getDependencies();
-			for (String ref : callDeps) {
-				if (processedCalls.contains(ref)) {
-					continue;
-				}
-				EnvDef callDep = getEnvDefByReference(ref);
-				if (callDep.isCall()) {
-
-				}
-			}
-		}*/
 	}
 
-	public Product processCall(String callRef, Map<String, EnvDef> processedCalls) {
-		return null;
+	/**
+	 * Gets all callEnvDefs and sort them by dependency. to be used in
+	 * processCalls
+	 *
+	 * @return
+	 */
+	private List<CallEnvDef> getAndSortCallEnvDef() {
+		// Get List of all Calls
+		List<CallEnvDef> callList = new ArrayList<CallEnvDef>();
+		for (EnvDef envDef : _envDefs) {
+			if (envDef instanceof CallEnvDef) {
+				callList.add((CallEnvDef) envDef);
+			}
+		}
+		if (callList.isEmpty()) {
+			return callList;
+		}
+		// Sort dependencies
+		/*
+		 Calls depend on three things:
+		 1) properties of other calls {a: circle}{b: enlarge[a.x]}
+		 2) other properties.
+		 */
+		Set<String> depsCache = new HashSet<String>();
+		for (int i = 0; i < callList.size(); i++) {
+			EnvDef envDef = callList.get(i);
+			if (envDef.getDependencies().isEmpty()) {
+				continue;
+			}
+			//
+			depsCache.clear(); // new cache for every element
+			//
+			while (true) {
+				int depIdx = DOES_NOT_EXIST;
+				boolean fixDependency = false;
+				for (String depRef : envDef.getDependencies()) {
+					// Get the object from dependency
+					if(depRef.contains(".")){
+						depRef = depRef.substring(0, depRef.indexOf('.'));
+					}
+					//
+					{ // get index of call in list
+						for(int j = 0 ; j < callList.size() ; j++){
+							if(!(callList.get(j) instanceof CallEnvDef)) continue;
+							if(callList.get(j)._reference.equals(depRef)){
+								depIdx = j;
+								break;
+							}	
+						}
+					}
+					if (depIdx != DOES_NOT_EXIST && depIdx > i) {
+						fixDependency = true;
+						break;
+					}
+				}
+				if (!fixDependency) {
+					break;
+				}
+				/* check if circule dependency */
+				if (/* if not circule */!depsCache.contains(envDef._reference)) {
+
+					depsCache.add(envDef._reference);
+					Collections.swap(callList, i, depIdx);
+					envDef = callList.get(i);
+				}
+			}
+		}
+		return callList;
 	}
 
 	public boolean hasReference(String ref) {
@@ -236,26 +264,26 @@ class EnvironmentBuilder {
 		return refs.isEmpty(); // empty means all references are found
 	}
 
-	public List<EnvDef> referencesToList(Set<String> references) {
+	public List<EnvDef> referencesToList(Set<String> references) throws EvaluationError {
 		//
 		List<EnvDef> tree = new ArrayList<EnvDef>();
 		for (String ref : references) {
 			tree.add(getEnvDefByReference(ref));
 		}
-		sortDefs(tree);
+		sort(tree);
 		return tree;
 	}
 
-	public Set<String> getDependenciesOfReference(String reference) {
-		Set<String> deps = new HashSet<String>();
+	public Set<String> getDependenciesOfReferences(Set<String> depOrig) {
+		Set<String> deps = new HashSet<String>(depOrig);
 		Set<String> references = new HashSet<String>();
 
-		deps.add(reference);
 		while (!deps.isEmpty()) {
 			String depRef = deps.iterator().next();
-			if (!references.contains(depRef)) {
+			if (!references.contains(depRef)){
 				deps.addAll(getEnvDefByReference(depRef).getDependencies());
 				references.add(depRef);
+				
 			}
 			deps.remove(depRef);
 		}
@@ -279,10 +307,8 @@ class EnvironmentBuilder {
 		return missingeReferences;
 	}
 
-	/*public Set<String> getCircularReferences(){
-		
-	 }*/
-	private void sortDefs(List<EnvDef> defList) {
+	
+	public static <K extends EnvSortable> void sort(List<K> callList) throws EvaluationError {
 		/*
 		 * The algorithm
 		 * for Item in list (0 --> size)
@@ -294,43 +320,116 @@ class EnvironmentBuilder {
 		 * 		If [ Same Item is fixed twice ]
 		 * 			It's circular dependency
 		 */
-		// Reset circularDependancy varaible : It will be assigned in here
-		for (int i = 0; i < defList.size(); i++) {
-			EnvDef envDef = defList.get(i);
-			/* fix element i*/
-			{
-				Set<String> depsCache = new HashSet<String>(); // new cache for every element
-				while (!envDef.getDependencies().isEmpty()) {
-					int depIdx = DOES_NOT_EXIST;
-					boolean fixDependency = false;
-					for (String depRef : envDef.getDependencies()) {
-						depIdx = getIndexOfReference(depRef);
-						if (depIdx != DOES_NOT_EXIST && depIdx > i) {
-							fixDependency = true;
-							break;
-						}
-					}
-					if (!fixDependency) {
-						break;
-					}
-					/* check if circule dependency */
-					if (/* if not circule */!depsCache.contains(envDef._reference)) {
+		class SortInterface {
 
-						depsCache.add(envDef._reference);
-						Collections.swap(defList, i, depIdx);
-						envDef = defList.get(i);
+			private final List<K> _list;
+
+			public SortInterface(List<K> list) {
+				_list = list;
+			}
+
+			/**
+			 * POTENTIAL ERROR : if a callProperty with the
+			 * reference aaa and then a property with reference
+			 * aaa.bbb the search will return the callProperty not
+			 * the property
+			 *
+			 * @param reference
+			 * @return
+			 */
+			public K getByReference(String reference) {
+				for (K item : _list) {
+					if (item.matchReference(reference)) {
+						return item;
 					}
 				}
-			} // END : fix element i
+				return null;
+			}
+
+			public K getByIndex(int index) {
+				return _list.get(index);
+			}
+
+			public int getIndexOfReference(String reference) {
+				for (int i = 0; i < _list.size(); i++) {
+					if (_list.get(i).matchReference(reference)) {
+						return i;
+					}
+				}
+				return -1;
+			}
+
+			public void swap(String ref1, String ref2) {
+				int idx1 = -1, idx2 = -1;
+				for (int i = 0; i < _list.size(); i++) {
+					if (idx1 == -1 && _list.get(i).matchReference(ref1)) {
+						idx1 = i;
+					} else if (idx2 == -1 && _list.get(i).matchReference(ref2)) {
+						idx2 = i;
+					}
+					if (idx1 != -1 && idx2 != -1) {
+						break;
+					}
+				}
+				Collections.swap(_list, idx1, idx2);
+			}
+
+			public void swap(int idx1, String ref2) {
+				int idx2 = getIndexOfReference(ref2);
+				Collections.swap(_list, idx1, idx2);
+			}
+
+			public int getSize() {
+				return _list.size();
+			}
 		}
-		////
-	}
+		class SortUtil {
 
-	public boolean isCircularDependency() {
-		return _isCircularDependency;
-	}
+			/**
+			 *
+			 * @param sortMap
+			 * @param i
+			 * @return first unsatisfied dependency or null if all
+			 * deps are good
+			 */
+			private String firstUnsatisfiedDep(SortInterface sortMap, int i) throws EvaluationError {
+				int depIndex;
+				for (String dep : sortMap.getByIndex(i).getDependencies()) {
+					depIndex = sortMap.getIndexOfReference(dep);
+					if (depIndex > i) {
+						return dep;
+					} else if (depIndex == -1) {
+						throw new EvaluationError("lab error : missing dependency ["+dep+"]");
+					}
+				}
+				return null;
+			}
 
-	public boolean isMissingDependecy() {
-		return _isMissingDependency;
+			public void fixIndex(SortInterface sortMap, int i, Set<String> depCache) throws EvaluationError {
+				//EnvSortable envDef = sortMap.getByIndex(i);
+				String dep = firstUnsatisfiedDep(sortMap, i);
+				if (dep == null) {
+					return; // all deps are good
+				} else if (depCache.contains(dep)) {
+					throw new EvaluationError("lab error : circular dependency ["+dep+"]");
+				} else {
+					depCache.add(dep);
+				}
+
+				sortMap.swap(i, dep);
+				fixIndex(sortMap, i, depCache);
+			}
+		}
+		SortUtil sortUtil = new SortUtil();
+		SortInterface sortMap = new SortInterface(callList);
+		Set<String> depsCache = new HashSet<String>();
+		for (int idxToFix = 0; idxToFix < callList.size(); idxToFix++) {
+			EnvSortable envDef = sortMap.getByIndex(idxToFix);
+			if (envDef.getDependencies().isEmpty()) {
+				continue;
+			}
+			depsCache.clear();
+			sortUtil.fixIndex(sortMap, idxToFix, depsCache);
+		}
 	}
 }

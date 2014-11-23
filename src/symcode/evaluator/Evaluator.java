@@ -81,13 +81,13 @@ public class Evaluator {
 		}
 		switch (parseNode._type) {
 			case EMPTY:
-				return new EvalNode(EmptyAtom.INSTANCE);
+				return new EvalNode(this, EmptyAtom.INSTANCE);
 			case WRAPPER:
 				if (children != null) {
-					return new EvalNode(
+					return new EvalNode(this, 
 						new WrapperCompound(children.size()), null, children);
 				} else {
-					return new EvalNode(EmptyAtom.INSTANCE);
+					return new EvalNode(this, EmptyAtom.INSTANCE);
 				}
 			case MOLECULE:
 				MoleculeParseNode mpn = (MoleculeParseNode)parseNode;
@@ -95,11 +95,11 @@ public class Evaluator {
 				if (m == null) {
 					throw new SyntaxError("cannot find molecule " + mpn._me);
 				}
-				return new EvalNode(getMolecule(mpn._me),mpn._values, children);
+				return new EvalNode(this, getMolecule(mpn._me),mpn._values, children);
 			case NUMBER:
-				return new EvalNode(new NumberCompound(parseNode._me));
+				return new EvalNode(this, new NumberCompound(parseNode._me));
 			case QUOTED:
-				return new EvalNode(new TextCompound(parseNode._me));
+				return new EvalNode(this, new TextCompound(parseNode._me));
 			default:
 				throw new RuntimeException("SOMETHING IS WRONG WITH THE EVALUATOR -- constructEvalTree_helper() : " + parseNode._me);
 		}

@@ -1,12 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package symcode.evaluator;
 import symcode.evaluator.Tokenizer.Token;
 /**
- *
+ * Thrown to indicate an error in the parsing and matching with labs.
  * @author Ahmed Alshakh www.alshakh.net
  */
 public class SyntaxError extends Exception{

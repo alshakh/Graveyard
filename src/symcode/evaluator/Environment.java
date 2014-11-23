@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -63,14 +65,18 @@ public class Environment {
 	 * @param id
 	 * @return 
 	 */
-	public Set<ProductProperty> evalMolecule(String id) throws ScriptException {
-		Set<ProductProperty> properties = new HashSet<ProductProperty>();
-		Iterator<Map.Entry<Object, Object>> itr = ((NativeObject)_engine.eval(id)).entrySet().iterator();
-		while(itr.hasNext()){
-			Map.Entry entry = itr.next();
-			properties.add(new ProductProperty(entry.getKey().toString(), objectToValue(entry.getValue())));
+	public Set<ProductProperty> evalMolecule(String id) throws EvaluationError {
+		try {
+			Set<ProductProperty> properties = new HashSet<ProductProperty>();
+			Iterator<Map.Entry<Object, Object>> itr = ((NativeObject)_engine.eval(id)).entrySet().iterator();
+			while(itr.hasNext()){
+				Map.Entry entry = itr.next();
+				properties.add(new ProductProperty(entry.getKey().toString(), objectToValue(entry.getValue())));
+			}
+			return properties;
+		} catch (ScriptException ex) {
+			throw new EvaluationError("script error during molecule ("+id+") :"+ex.getMessage());
 		}
-		return properties;
 	}
 }
 

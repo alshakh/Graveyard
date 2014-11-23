@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package symcode.evaluator;
 
 /**
- *
+ * Thrown to indicate an error while evaluating the code using the labs.
  * @author Ahmed Alshakh www.alshakh.net
  */
 public class EvaluationError extends Exception {
