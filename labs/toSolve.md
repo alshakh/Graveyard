@@ -1,4 +1,3 @@
-* molecules using outside molecules (root uses rectangle molecule for radex bonded atom). Maybe outside Labs ?!
 * Inferring properties
     - compound height, width based on largest bondedAtom
     - atom width and height based on actual svg code

@@ -16,3 +16,5 @@ The difference between Compount and a SingleAtom is "atoms":[...] property
 properties with _ prefix is customProperty :::: if want to use backup property for a molecule, you MUST provide a backup properties.
 	
 Current implementation does not allow name duplication in const names in Compounds and Bonded Atom
+
+Now, version property is not used or have any effect
