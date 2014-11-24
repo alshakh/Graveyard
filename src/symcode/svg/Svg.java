@@ -99,6 +99,7 @@ public abstract class Svg {
 		String svgToConvert = this.toFullSvg().toString();
 		SVGIcon icon;
 		StringReader reader = new StringReader(svgToConvert);
+		SVGCache.getSVGUniverse().clear();
 		java.net.URI uri = SVGCache.getSVGUniverse().loadSVG(reader, "myImage"); 
 		icon = new SVGIcon();
 		icon.setSvgURI(uri);
