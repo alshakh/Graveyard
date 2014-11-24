@@ -69,6 +69,8 @@ public abstract class Svg {
 		       +"\n"
 		       +"</g>";
 	}
+	public abstract Svg scale(double xFactor, double yFactor);
+	
 	protected static String indentEveryLine(String str){
 		return indentEveryLine(str,1);
 	}

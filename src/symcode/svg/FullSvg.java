@@ -35,5 +35,10 @@ public class FullSvg extends Svg{
 	public Type getType() {
 		return Svg.Type.FULL;
 	}
+
+	@Override
+	public Svg scale(double xFactor, double yFactor) {
+		throw new UnsupportedOperationException("No scaling for full SVG"); 
+	}
 	
 }

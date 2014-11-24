@@ -37,6 +37,7 @@ public class StripSvg extends Svg {
 		       + "</svg>", super._width, super._height);
 	}
 
+	
 	@Override
 	public Svg combine(Svg other) {
 		if(other.getType() == Svg.Type.FULL){
@@ -62,6 +63,12 @@ public class StripSvg extends Svg {
 	@Override
 	public Type getType() {
 		return Svg.Type.STRIP;
+	}
+
+	@Override
+	public Svg scale(double xFactor, double yFactor) {
+		String newC = "<g transform=\"scale("+xFactor+", "+ yFactor+")\">"+_content + "</g>";
+		return new StripSvg(newC,_width*xFactor, _height*yFactor);
 	}
 
 }
