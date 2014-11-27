@@ -1,0 +1,138 @@
+{
+    "id": "positionLab",
+    "version": "1.2.3",
+    "elements": [
+        {
+            "id" : "pushRight",
+            "backupProperties" : {
+                "$$1" : "0"
+            },
+            "const" : {
+                "gap" : "$$1",
+            },
+            "w" : "gap + content.w",
+            "h" : "content.h",
+            "atoms" : [
+                {
+                    "id" : "content",
+                    "w" : "$1.w",
+                    "h" : "$1.h",
+                    "x" : "gap",
+                    "svg" : "<<<$1.svg>>>"
+                }
+            ]
+        },
+        {
+            "id" : "pushLeft",
+            "backupProperties" : {
+                "$$1" : "0"
+            },
+            "const" : {
+                "gap" : "$$1",
+            },
+            "w" : "gap + content.w",
+            "h" : "content.h",
+            "atoms" : [
+                {
+                    "id" : "content",
+                    "w" : "$1.w",
+                    "h" : "$1.h",
+                    "x" : "0",
+                    "svg" : "<<<$1.svg>>>"
+                }
+            ]
+        },
+        {
+            "id" : "pushDown",
+            "backupProperties" : {
+                "$$1" : "0"
+            },
+            "const" : {
+                "gap" : "$$1",
+            },
+            "w" : "content.w",
+            "h" : "gap + content.h",
+            "atoms" : [
+                {
+                    "id" : "content",
+                    "w" : "$1.w",
+                    "h" : "$1.h",
+                    "y" : "gap",
+                    "svg" : "<<<$1.svg>>>"
+                }
+            ]
+        },
+        {
+            "id" : "pushUp",
+            "backupProperties" : {
+                "$$1" : "0"
+            },
+            "const" : {
+                "gap" : "$$1"
+            },
+            "w" : "content.w",
+            "h" : "gap + content.h",
+            "atoms" : [
+                {
+                    "id" : "content",
+                    "w" : "$1.w",
+                    "h" : "$1.h",
+                    "y" : "0",
+                    "svg" : "<<<$1.svg>>>"
+                }
+            ]
+        },
+        {
+            "id" : "VStack",
+            "backupProperties" : {
+                "$$1" : "0"
+            },
+            "const" : {
+                "gap" : "$$1"
+            },
+            "w" : "Math.max(upper.w, downer.w)",
+            "h" : "upper.h + downer.h + gap",
+            "atoms" : [
+                {
+                    "id" : "upper",
+                    "w" : "$1.w",
+                    "h" : "$1.h",
+                    "svg" : "<<<$1.svg>>>"
+                },
+                {
+                    "id" : "downer",
+                    "w" : "$2.w",
+                    "h" : "$2.h",
+                    "y" : "upper.h + gap",
+                    "svg" : "<<<$2.svg>>>"
+                }
+            ]
+        },
+        {
+            "id" : "HStack",
+            "backupProperties" : {
+                "$$1" : "0"
+            },
+            "const" : {
+                "gap" : "$$1"
+            },
+            "w" : "lefter.w + righter.w + gap",
+            "h" : "Math.max(lefter.h, righter.h)",
+            "atoms" : [
+                {
+                    "id" : "lefter",
+                    "w" : "$1.w",
+                    "h" : "$1.h",
+                    "svg" : "<<<$1.svg>>>"
+                },
+                {
+                    "id" : "righter",
+                    "w" : "$2.w",
+                    "h" : "$2.h",
+                    "x" : "lefter.h + gap",
+                    "svg" : "<<<$2.svg>>>"
+                }
+            ]
+        },
+    ]
+}
