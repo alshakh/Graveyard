@@ -1,5 +1,6 @@
 package symcode;
 
+import symcode.gui.MainFrame;
 import symcode.svg.FullSvg;
 import symcode.svg.Svg;
 
@@ -13,7 +14,7 @@ public class Main {
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) {
-		
+		MainFrame.main(null);
 	}
 	
 	public static final Svg EXAMPLE_SVG = new FullSvg("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"
