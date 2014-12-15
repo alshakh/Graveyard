@@ -1,0 +1,33 @@
+{
+    "id" : "debug",
+    "version" : "0",
+    "elements" : [
+        {
+            "id" : "sqrt",
+            "w" : "radix.w + radical.w",
+            "h" : "radical.h",
+            "atoms" : [
+                {
+                        "id" : "radix",
+                        "x" : "radical.w",
+                        "h" : "10",
+                        "svg" : "<rect width=\"<<<content.w>>>\" height=\"10\" style=\"fill:rgb(0,255,0)\" />"
+                },
+                {
+                        "id" : "radical",
+                        "w" : "50",
+                        "h" : "content.y + content.h",
+                        "svg" : "<rect width=\"50\" height=\"<<<radical.h>>>\" style=\"fill:rgb(0,0,255)\" />"
+                },
+                {
+                        "id" : "content",
+                        "w" : "$1.w",
+                        "h" : "$1.h",
+                        "x" : "radix.x",
+                        "y" : "radix.h",
+                        "svg" : "<<<$1.svg>>>"
+                }
+            ]
+        }
+    ]
+}
