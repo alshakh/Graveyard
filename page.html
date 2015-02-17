@@ -44,16 +44,19 @@
             var shader = glSetup.addShaderProg("shader-vs","shader-fs");
 
             var verts = [];
-            for ( var i = 0 ; i < 100 ; i ++ ) {
-                var p = [];
-                p[0] = Math.round(2*Math.random())-1;
-                p[1] = Math.round(2*Math.random())-1;
-                p[2] = Math.round(2*Math.random())-1;
-
-                verts.push(p);
+            var tr = [
+                -1,-1, 1, +1,-1, 1, -1,+1, 1,    -1,+1, 1, +1,-1, 1, +1,+1, 1,
+                +1,-1,-1, -1,-1,-1, +1,+1,-1,    +1,+1,-1, -1,-1,-1, -1,+1,-1,
+                +1,-1,+1, +1,-1,-1, +1,+1,+1,    +1,+1,+1, +1,-1,-1, +1,+1,-1,
+                -1,-1,-1, -1,-1,+1, -1,+1,-1,    -1,+1,-1, -1,-1,+1, -1,+1,+1,
+                -1,+1,+1, +1,+1,+1, -1,+1,-1,    -1,+1,-1, +1,+1,+1, +1,+1,-1,
+                -1,-1,-1, +1,-1,-1, -1,-1,+1,    -1,-1,+1, +1,-1,-1, +1,-1,+1,
+            ];
+            for ( var i = 0 ; i < tr.length ; i+=3 ) {
+                verts.push([tr[i],tr[i+1], tr[i+2]]);
             }
             var rgb = [];
-            for ( var i = 0 ; i < 100 ; i ++ ) {
+            for ( var i = 0 ; i < 36 ; i ++ ) {
                 rgb.push([Math.round(Math.random()),Math.round(Math.random()),Math.round(Math.random())]);
             }
 

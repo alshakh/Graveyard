@@ -47,8 +47,19 @@ var glSetup = {
         glSetup.gl = initWebGL();
         // dim
         glSetup.dim = dim;
+        // matrices
+        glSetup.resetMatrices();
+    },
+    resetMatrices : function() {
         // projection matrix
-        glSetup.project(glSetup.FOV, 1/* square */, dim);
+        glSetup.project(glSetup.FOV, 1/* square */, glSetup.dim);
+        // ModelViewMatrix
+        mat4.translate(glSetup.modelViewMatrix, glSetup.modelViewMatrix, [0,0,-glSetup.dim]);// TMP
+        mat4.rotate(glSetup.modelViewMatrix, glSetup.modelViewMatrix, Math.PI/2,[1,1,1]);// TMP
+    },
+    changeDim : function() {
+        // project
+        // ?? modelViewMatrix
     },
     addShaderProg : function(vertID, fragID) {
         /*
@@ -100,9 +111,9 @@ var glSetup = {
         return glSetup.shaderProgs.push(thisProg) - 1;
     },
     project : function(fov, asp, dim) {
-        // mat4.identity(glSetup.projectionMatrix);
-        // mat4.perspective(glSetup.projectionMatrix, fov, asp, dim/16, 16*dim);
-        mat4.ortho(glSetup.projectionMatrix,-2.5,+2.5,-2.5,+2.5,-2.5,+2.5);
+        mat4.identity(glSetup.projectionMatrix);
+        mat4.perspective(glSetup.projectionMatrix, fov, asp, dim/16, 16*dim);
+        //mat4.ortho(glSetup.projectionMatrix,-2.5,+2.5,-2.5,+2.5,-2.5,+2.5);
     },
     createObject : function (vertVecArr, rgbVecArr, normalVecArr, shaderProgI) {
         var gl = glSetup.gl;
@@ -126,7 +137,7 @@ var glSetup = {
             vertBuffer : makeBuffer(vecArrToArr(vertVecArr)) ,
             rgbBuffer : makeBuffer(vecArrToArr(rgbVecArr)) ,
             normalBuffer : makeBuffer(vecArrToArr(normalVecArr)) ,
-            modelViewMatrix : mat4.create(),
+            transformationMatrix : mat4.create(),
             shaderProgIdx : shaderProgI,
             material : { // todo
                 specular : [1,1,1,1]
@@ -136,15 +147,14 @@ var glSetup = {
     rotate : function() {
         var m = glSetup.modelViewMatrix;
         mat4.rotate(m,m,0.3,[0,0,1]);
-        glSetup.display(); // TMP
     },
     display : function() {
         var draw = function(object) {
             var shaderProgIdx = object.shaderProgIdx;
             var gl = glSetup.gl;
 
-            var modelViewMatrix = mat4.create();
-            mat4.mul(modelViewMatrix, glSetup.modelViewMatrix,object.modelViewMatrix);
+             var modelViewMatrix = mat4.create();
+             mat4.mul(modelViewMatrix, glSetup.modelViewMatrix,object.transformationMatrix);
 
             //  use Shader program
             var shaderProg = glSetup.shaderProgs[shaderProgIdx];
