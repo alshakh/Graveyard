@@ -145,11 +145,14 @@ var Scene = {
         mat4.perspective(Scene.projectionMatrix, fov, asp, dim/16, 16*dim);
         //mat4.ortho(Scene.projectionMatrix,-2.5,+2.5,-2.5,+2.5,-2.5,+2.5);
     },
-    createObject : function (vertVecArr, rgbVecArr, normalVecArr, shaderProgI, texI, texVecArr, drawMode ) {
+    /**
+     * object must have "points","rgb","normal","shaderProg"
+     */
+    createObject : function (info) {
         var gl = Scene.gl;
 
-        if(texI == undefined) texI = -1;
-        if(drawMode == undefined) drawMode = gl.TRIANGLES;
+        if(info.textureIdx == undefined) info.textureIdx = -1;
+        if(info.drawMode == undefined) info.drawMode = gl.TRIANGLES;
 
         var vecArrToArr = function ( vecArr ) {
             var a = [];
@@ -167,19 +170,19 @@ var Scene = {
             return buffer;
         };
         var texBuffer = undefined;
-        if(texI > -1) {
-            texBuffer = makeBuffer(vecArrToArr(texVecArr));
+        if(info.textureIdx > -1) {
+            texBuffer = makeBuffer(vecArrToArr(info.textureCoord));
         }
         return {
-            no : vertVecArr.length,
-            vertBuffer : makeBuffer(vecArrToArr(vertVecArr)) ,
-            rgbBuffer : makeBuffer(vecArrToArr(rgbVecArr)) ,
-            normalBuffer : makeBuffer(vecArrToArr(normalVecArr)) ,
+            no : info.points.length,
+            vertBuffer : makeBuffer(vecArrToArr(info.points)) ,
+            rgbBuffer : makeBuffer(vecArrToArr(info.rgb)) ,
+            normalBuffer : makeBuffer(vecArrToArr(info.normals)) ,
             textureBuffer : texBuffer,
             transformationMatrix : mat4.create(),
-            shaderProgIdx : shaderProgI,
-            drawMode : drawMode,
-            textureIdx : texI,
+            shaderProgIdx : info.shaderProgIdx,
+            drawMode : info.drawMode,
+            textureIdx : info.textureIdx,
             material : { // todo
                 specular : [1,1,1,1],
                 emission : [0,0,0,1],

@@ -123,15 +123,19 @@
                 var eqn = function (x,y) { 
                     return [ x, y , x*y ]
                 }
-                var surface = Surface.createSurface(eqn, eqn, -2,2,-2,2,10,10);
-                var obj = new Scene.createObject(surface.points, surface.rgb, surface.normals, shader,undefined,undefined,Scene.gl.TRIANGLES);
-                Scene.addObject(obj);
-                var wireFrame = Surface.createWireFrame(eqn,[0,0,0],-2,2,-2,2,10,10);
-                var obj = new Scene.createObject(wireFrame.points, wireFrame.rgb, wireFrame.normals, shader,undefined,undefined,Scene.gl.LINES);
-                mat4.translate(obj.transformationMatrix,obj.transformationMatrix, [0,0,0.1]);
+                // var surface = Surface.createSurface(eqn, eqn, -2,2,-2,2,10,10);
+                // surface.shaderProgIdx = shader;
+                // var obj = new Scene.createObject(surface);
+                // Scene.addObject(obj);
 
+                var wireFrame = Surface.createWireFrame(eqn,[0,0,0],-2,2,-2,2,10,10);
+                wireFrame.shaderProgIdx = shader;
+                wireFrame.drawMode = Scene.gl.LINES;
+
+                var obj = new Scene.createObject(wireFrame);
+                // mat4.translate(obj.transformationMatrix,obj.transformationMatrix, [0,0,0.1]);
                 Scene.addObject(obj);
-                console.log(obj);
+                // console.log(obj);
 
                 Scene.display();
             })();
