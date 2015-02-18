@@ -11,6 +11,7 @@ var glSetup = {
     addObject : function(obj) { 
         glSetup.objects.push(obj);
     },
+    textures : [],
     light : {
         position : [1,0,2],
         specular : [1,1,1,1],
@@ -58,6 +59,27 @@ var glSetup = {
         glSetup.dim = dim;
         // matrices
         glSetup.resetMatrices();
+    },
+    initTexture : function(imgSrc) {
+        var gl = glSetup.gl;
+        var handleLoadedTexture = function(texture) {
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+            gl.bindTexture(gl.TEXTURE_2D, null);
+        };
+        var tex = gl.createTexture();
+        tex.image = new Image();
+        tex.image.crossOrigin = "Anonymous"
+        tex.image.onload = function() {
+            handleLoadedTexture(tex);
+        }
+
+        tex.image.src = imgSrc;
+        glSetup.textures.push(tex);
+        return glSetup.textures.length - 1 ;
     },
     resetMatrices : function() {
         // projection matrix
@@ -123,14 +145,16 @@ var glSetup = {
         mat4.perspective(glSetup.projectionMatrix, fov, asp, dim/16, 16*dim);
         //mat4.ortho(glSetup.projectionMatrix,-2.5,+2.5,-2.5,+2.5,-2.5,+2.5);
     },
-    createObject : function (vertVecArr, rgbVecArr, normalVecArr, shaderProgI) {
+    createObject : function (vertVecArr, rgbVecArr, normalVecArr, shaderProgI, texI, texVecArr ) {
+        if(texI == undefined) texI = -1;
+
         var gl = glSetup.gl;
         var vecArrToArr = function ( vecArr ) {
             var a = [];
             for( var i = 0 ; i < vecArr.length ; i++ ) {
-                a.push(vecArr[i][0]);
-                a.push(vecArr[i][1]);
-                a.push(vecArr[i][2]);
+                for ( var j = 0 ; j < vecArr[i].length ; j++ ) {
+                    a.push(vecArr[i][j]);
+                }
             }
             return a;
         };
@@ -140,13 +164,19 @@ var glSetup = {
             gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(array),gl.STATIC_DRAW);
             return buffer;
         };
+        var texBuffer = undefined;
+        if(texI > -1) {
+            texBuffer = makeBuffer(vecArrToArr(texVecArr));
+        }
         return {
             no : vertVecArr.length,
             vertBuffer : makeBuffer(vecArrToArr(vertVecArr)) ,
             rgbBuffer : makeBuffer(vecArrToArr(rgbVecArr)) ,
             normalBuffer : makeBuffer(vecArrToArr(normalVecArr)) ,
+            textureBuffer : texBuffer,
             transformationMatrix : mat4.create(),
             shaderProgIdx : shaderProgI,
+            textureIdx : texI,
             material : { // todo
                 specular : [1,1,1,1],
                 emission : [0,0,0,1],
@@ -197,18 +227,26 @@ var glSetup = {
             gl.uniform1f(gl.getUniformLocation(shaderProg,"materialShininess") , object.material.shininess);
 
 
-            var enableAttrib = function( attribName, buffer ) {
+
+            var enableAttrib = function(size, attribName, buffer ) {
                 gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
                 var attribLoc = gl.getAttribLocation(shaderProg,attribName);
                 gl.enableVertexAttribArray(attribLoc);
-                gl.vertexAttribPointer(attribLoc,3,gl.FLOAT,false,0,0);
+                gl.vertexAttribPointer(attribLoc,size,gl.FLOAT,false,0,0);
                 return attribLoc;
             }
 
             var attributes = [];
-            attributes.push(enableAttrib ( "point", object.vertBuffer ))
-            attributes.push(enableAttrib ( "rgb", object.rgbBuffer ))
-            attributes.push(enableAttrib ( "normal", object.rgbBuffer ))
+            attributes.push(enableAttrib (3, "point", object.vertBuffer ))
+            attributes.push(enableAttrib (3, "rgb", object.rgbBuffer ))
+            attributes.push(enableAttrib (3, "normal", object.rgbBuffer ))
+            if(object.textureIdx !== -1 ) {
+                attributes.push(enableAttrib (2, "texCoord", object.textureBuffer ))
+
+                gl.activeTexture(gl.TEXTURE0);
+                gl.bindTexture(gl.TEXTURE_2D, glSetup.textures[object.textureIdx]);
+                gl.uniform1i(shaderProg.samplerUniform, 0);
+            }
 
             //  Draw all vertexes
             gl.drawArrays(gl.TRIANGLES,0,object.no);
@@ -280,6 +318,7 @@ glUtils = {
         var cube = {};
         var points = cube.points = [];
         var normals = cube.normals = [];
+        var texCoord = cube.texCoord  = [];
         var tmp =
             [
             -1,-1, 1, +1,-1, 1, -1,+1, 1,    -1,+1, 1, +1,-1, 1, +1,+1, 1,
@@ -301,6 +340,10 @@ glUtils = {
             [0,+1,0],[0,+1,0],[0,+1,0],[0,+1,0],[0,+1,0],[0,+1,0],
             [0,-1,0],[0,-1,0],[0,-1,0],[0,-1,0],[0,-1,0],[0,-1,0],
         ]
+
+        for ( var i = 0 ; i < normals.length ; i ++ ) {
+            texCoord.push([Math.round(Math.random()),Math.round(Math.random())]);
+        }
         return cube;
     }
 }

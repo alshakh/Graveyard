@@ -13,6 +13,7 @@
             attribute vec3 point;
             attribute vec3 rgb;
             attribute vec3 normal;
+            attribute vec2 texCoord;
 
             uniform mat4 projectionMatrix;
             uniform mat4 modelViewMatrix;
@@ -60,10 +61,12 @@
                     return color;
             }
             varying vec4 fColor;
+            varying vec2 fTexCoord;
 
             void main(void)
             {
                 fColor = phong();
+                fTexCoord = texCoord;
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(point,1.0);
             }
         </script> 
@@ -74,9 +77,13 @@
         <script id="shader-fs" type="x-shader/x-fragment"> 
             precision highp float;
             varying vec4 fColor;
+
+            varying vec2 fTexCoord;
+            uniform sampler2D uSampler;
+
             void main(void)
             {
-                gl_FragColor = fColor;
+                gl_FragColor = fColor + texture2D(uSampler, fTexCoord);
             }
         </script> 
 
@@ -89,6 +96,8 @@
 
                 var shader = glSetup.addShaderProg("shader-vs","shader-fs");
 
+                var tex = glSetup.initTexture("crate.bmp");
+
                 function abc() {
                     var sphere = glUtils.sphere(0.5);
                     var rgb = [];
@@ -100,18 +109,19 @@
                     glSetup.addObject(obj);
                 }
                 function cbd() {
-                    var sphere = glUtils.sphere(0.2);
+                    var sphere = glUtils.cube();
                     var rgb = [];
                     for ( var i = 0 ; i < sphere.points.length ; i ++ ) {
-                        rgb.push([0.2,0.2,0.2]);
+                        rgb.push([Math.random(),Math.random(),Math.random()]);
                     }
-                    var obj = new glSetup.createObject(sphere.points, rgb, sphere.normals, shader);
+                    var obj = new glSetup.createObject(sphere.points, rgb, sphere.normals, shader, tex, sphere.texCoord);
                     mat4.translate(obj.transformationMatrix,obj.transformationMatrix, [1,0,0]);
                     glSetup.addObject(obj);
                 }
-                abc();
+
                 cbd();
-                console.log(glSetup.objects);
+
+
 
                 glSetup.display();
             })();
