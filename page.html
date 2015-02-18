@@ -83,30 +83,39 @@
         <script src="lib/gl-matrix.js"></script>
         <script src="webgl-setup.js"></script>
 
-
         <script>
-            glSetup.init("board", 4);
+            (function() {
+                glSetup.init("board", 4);
 
-            var shader = glSetup.addShaderProg("shader-vs","shader-fs");
+                var shader = glSetup.addShaderProg("shader-vs","shader-fs");
 
+                function abc() {
+                    var sphere = glUtils.sphere(0.5);
+                    var rgb = [];
+                    for ( var i = 0 ; i < sphere.points.length ; i ++ ) {
+                        //rgb.push([Math.round(Math.random()),Math.round(Math.random()),Math.round(Math.random())]);
+                        rgb.push([0.5,0,0]);
+                    }
+                    var obj = new glSetup.createObject(sphere.points, rgb, sphere.normals, shader);
+                    glSetup.addObject(obj);
+                }
+                function cbd() {
+                    var sphere = glUtils.sphere(0.2);
+                    var rgb = [];
+                    for ( var i = 0 ; i < sphere.points.length ; i ++ ) {
+                        rgb.push([0.2,0.2,0.2]);
+                    }
+                    var obj = new glSetup.createObject(sphere.points, rgb, sphere.normals, shader);
+                    mat4.translate(obj.transformationMatrix,obj.transformationMatrix, [1,0,0]);
+                    glSetup.addObject(obj);
+                }
+                abc();
+                cbd();
+                console.log(glSetup.objects);
 
-            var sphere = glUtils.sphere(1);
-
-            var rgb = [];
-            for ( var i = 0 ; i < sphere.points.length ; i ++ ) {
-                //rgb.push([Math.round(Math.random()),Math.round(Math.random()),Math.round(Math.random())]);
-                rgb.push([0.5,0,0]);
-            }
-
-            console.log(sphere);
-            var obj = glSetup.createObject(sphere.points, rgb, sphere.normals, shader);
-            glSetup.addObject(obj);
-            glSetup.display();
-
-            function moveLight ( point ) {
-                glSetup.light.position = point;
                 glSetup.display();
-            }
+            })();
+
         </script>
     </body>
 </html>

@@ -1,5 +1,6 @@
 var glSetup = {
     FOV : 45,
+    CLEAR_COLOR : [0.2,0.2,0.2],
     dim : undefined,
     gl : undefined,
     canvas : undefined,
@@ -11,7 +12,7 @@ var glSetup = {
         glSetup.objects.push(obj);
     },
     light : {
-        position : [0,0,0],
+        position : [1,0,2],
         specular : [1,1,1,1],
         ambient : [0.3,0.3,0.3,1],
         diffuse : [1,1,1,1]
@@ -47,7 +48,9 @@ var glSetup = {
             //  Set viewport to entire canvas
             gl.viewport(0,0,canvas.width,canvas.height);
             gl.enable(gl.DEPTH_TEST);
-            gl.clearColor(0.8,0.8,0.8,1);
+
+            var cC = glSetup.CLEAR_COLOR;
+            gl.clearColor(cC[0],cC[1],cC[2],1);
             return gl;
         }
         glSetup.gl = initWebGL();
@@ -159,23 +162,23 @@ var glSetup = {
         glSetup.display();
     },
     display : function() {
+        var gl = glSetup.gl;
+
+        gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+
+
         var draw = function(object) {
             var shaderProgIdx = object.shaderProgIdx;
-            var gl = glSetup.gl;
 
-             var modelViewMatrix = mat4.create();
-             mat4.mul(modelViewMatrix, glSetup.modelViewMatrix,object.transformationMatrix);
+            var modelViewMatrix = mat4.create();
+            mat4.mul(modelViewMatrix, glSetup.modelViewMatrix,object.transformationMatrix);
 
             //  use Shader program
             var shaderProg = glSetup.shaderProgs[shaderProgIdx];
             gl.useProgram(shaderProg);
 
-            gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
-
             var normalMatrix = mat3.create();
             mat3.normalFromMat4(normalMatrix, modelViewMatrix);
-
-            console.log(normalMatrix);
 
             //  Set projection and modelview matrixes
             gl.uniformMatrix4fv(gl.getUniformLocation(shaderProg,"projectionMatrix") , false , new Float32Array(glSetup.projectionMatrix));
@@ -187,11 +190,11 @@ var glSetup = {
             gl.uniform4fv(gl.getUniformLocation(shaderProg,"lightAmbient")  , new Float32Array(glSetup.light.ambient));
             gl.uniform4fv(gl.getUniformLocation(shaderProg,"lightDiffuse")  , new Float32Array(glSetup.light.diffuse));
 
-            gl.uniform4fv(gl.getUniformLocation(shaderProg,"materialEmission")  , new Float32Array(obj.material.emission));
-            gl.uniform4fv(gl.getUniformLocation(shaderProg,"materialAmbient")   , new Float32Array(obj.material.ambient));
-            gl.uniform4fv(gl.getUniformLocation(shaderProg,"materialSpecular")   , new Float32Array(obj.material.specular));
-            gl.uniform4fv(gl.getUniformLocation(shaderProg,"materialDiffuse")   , new Float32Array(obj.material.diffuse));
-            gl.uniform1f(gl.getUniformLocation(shaderProg,"materialShininess") , obj.material.shininess);
+            gl.uniform4fv(gl.getUniformLocation(shaderProg,"materialEmission")  , new Float32Array(object.material.emission));
+            gl.uniform4fv(gl.getUniformLocation(shaderProg,"materialAmbient")   , new Float32Array(object.material.ambient));
+            gl.uniform4fv(gl.getUniformLocation(shaderProg,"materialSpecular")   , new Float32Array(object.material.specular));
+            gl.uniform4fv(gl.getUniformLocation(shaderProg,"materialDiffuse")   , new Float32Array(object.material.diffuse));
+            gl.uniform1f(gl.getUniformLocation(shaderProg,"materialShininess") , object.material.shininess);
 
 
             var enableAttrib = function( attribName, buffer ) {
@@ -247,9 +250,9 @@ glUtils = {
 
         var s2c = function(phi, theta) {
             return [
-                glUtils.cos(phi)*glUtils.sin(theta),
-                glUtils.sin(phi)*glUtils.sin(theta),
-                                 glUtils.cos(theta)
+                r*glUtils.cos(phi)*glUtils.sin(theta),
+                r*glUtils.sin(phi)*glUtils.sin(theta),
+                r*                 glUtils.cos(theta)
             ];
         };
 
