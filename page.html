@@ -89,10 +89,11 @@
 
         <script src="lib/gl-matrix.js"></script>
         <script src="Scene.js"></script>
+        <script src="Surface.js"></script>
 
         <script>
             (function() {
-                Scene.init("board", 4);
+                Scene.init("board", 10);
 
                 var shader = Scene.addShaderProg("shader-vs","shader-fs");
 
@@ -119,9 +120,18 @@
                     Scene.addObject(obj);
                 }
 
-                cbd();
+                var eqn = function (x,y) { 
+                    return [ x, y , x*y ]
+                }
+                var surface = Surface.createSurface(eqn, eqn, -2,2,-2,2,10,10);
+                var obj = new Scene.createObject(surface.points, surface.rgb, surface.normals, shader,undefined,undefined,Scene.gl.TRIANGLES);
+                Scene.addObject(obj);
+                var wireFrame = Surface.createWireFrame(eqn,[0,0,0],-2,2,-2,2,10,10);
+                var obj = new Scene.createObject(wireFrame.points, wireFrame.rgb, wireFrame.normals, shader,undefined,undefined,Scene.gl.LINES);
+                mat4.translate(obj.transformationMatrix,obj.transformationMatrix, [0,0,0.1]);
 
-
+                Scene.addObject(obj);
+                console.log(obj);
 
                 Scene.display();
             })();

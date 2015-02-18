@@ -145,10 +145,12 @@ var Scene = {
         mat4.perspective(Scene.projectionMatrix, fov, asp, dim/16, 16*dim);
         //mat4.ortho(Scene.projectionMatrix,-2.5,+2.5,-2.5,+2.5,-2.5,+2.5);
     },
-    createObject : function (vertVecArr, rgbVecArr, normalVecArr, shaderProgI, texI, texVecArr ) {
-        if(texI == undefined) texI = -1;
-
+    createObject : function (vertVecArr, rgbVecArr, normalVecArr, shaderProgI, texI, texVecArr, drawMode ) {
         var gl = Scene.gl;
+
+        if(texI == undefined) texI = -1;
+        if(drawMode == undefined) drawMode = gl.TRIANGLES;
+
         var vecArrToArr = function ( vecArr ) {
             var a = [];
             for( var i = 0 ; i < vecArr.length ; i++ ) {
@@ -176,6 +178,7 @@ var Scene = {
             textureBuffer : texBuffer,
             transformationMatrix : mat4.create(),
             shaderProgIdx : shaderProgI,
+            drawMode : drawMode,
             textureIdx : texI,
             material : { // todo
                 specular : [1,1,1,1],
@@ -249,7 +252,7 @@ var Scene = {
             }
 
             //  Draw all vertexes
-            gl.drawArrays(gl.TRIANGLES,0,object.no);
+            gl.drawArrays(object.drawMode,0,object.no);
 
             //  Disable vertex arrays
             var disableAllAttributes = function() {
