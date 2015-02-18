@@ -12,14 +12,58 @@
             precision highp float;
             attribute vec3 point;
             attribute vec3 rgb;
+            attribute vec3 normal;
 
             uniform mat4 projectionMatrix;
             uniform mat4 modelViewMatrix;
+            uniform mat3 normalMatrix;
 
-            varying vec4 color;
+            uniform vec3 lightPos;
+            uniform vec4 lightSpecular;
+            uniform vec4 lightAmbient;
+            uniform vec4 lightDiffuse;
+
+            uniform vec4 materialAmbient;
+            uniform vec4 materialEmission;
+            uniform vec4 materialSpecular;
+            uniform vec4 materialDiffuse;
+            uniform float materialShininess;
+
+            vec4 phong()
+            {
+                //  P is the vertex coordinate on body
+                vec3 P = vec3(modelViewMatrix * vec4(point,1.0));
+                //  N is the object normal at P
+                vec3 N = normalize(normalMatrix * normal);
+                //  L is the light vector
+                vec3 L = normalize(lightPos - P);
+
+                //  Emission and ambient color
+                vec4 color = vec4(rgb, 1.0) + materialEmission + materialAmbient*lightAmbient ;
+
+                //  Diffuse light intensity is cosine of light and normal vectors
+                float Id = dot(L,N);
+                if (Id>0.0)
+                    {
+                        //  Add diffuse
+                        color += Id*lightDiffuse*materialDiffuse;
+                        //  R is the reflected light vector R = 2(L.N)N - L
+                        vec3 R = reflect(-L, N);
+                        //  V is the view vector (eye at the origin)
+                        vec3 V = normalize(-P);
+                        //  Specular is cosine of reflected and view vectors
+                        float Is = dot(R,V);
+                        if (Is>0.0) color += pow(Is,materialShininess)*lightSpecular*materialSpecular;
+                    }
+
+                    //  Return sum of color components
+                    return color;
+            }
+            varying vec4 fColor;
+
             void main(void)
             {
-                color = vec4(rgb,1.0);
+                fColor = phong();
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(point,1.0);
             }
         </script> 
@@ -29,10 +73,10 @@
         -->
         <script id="shader-fs" type="x-shader/x-fragment"> 
             precision highp float;
-            varying vec4 color;
+            varying vec4 fColor;
             void main(void)
             {
-                gl_FragColor = color;
+                gl_FragColor = fColor;
             }
         </script> 
 
@@ -46,17 +90,23 @@
             var shader = glSetup.addShaderProg("shader-vs","shader-fs");
 
 
-            var sphere = glUtils.sphere(2);
+            var sphere = glUtils.sphere(1);
 
             var rgb = [];
             for ( var i = 0 ; i < sphere.points.length ; i ++ ) {
-                rgb.push([Math.round(Math.random()),Math.round(Math.random()),Math.round(Math.random())]);
+                //rgb.push([Math.round(Math.random()),Math.round(Math.random()),Math.round(Math.random())]);
+                rgb.push([0.5,0,0]);
             }
 
-            var obj = glSetup.createObject(sphere.points, rgb, [], shader);
+            console.log(sphere);
+            var obj = glSetup.createObject(sphere.points, rgb, sphere.normals, shader);
             glSetup.addObject(obj);
             glSetup.display();
-            //mat4.translate(glSetup.modelViewMatrix,glSetup.modelViewMatrix, [0,0,-5]);
+
+            function moveLight ( point ) {
+                glSetup.light.position = point;
+                glSetup.display();
+            }
         </script>
     </body>
 </html>

@@ -10,6 +10,12 @@ var glSetup = {
     addObject : function(obj) { 
         glSetup.objects.push(obj);
     },
+    light : {
+        position : [0,0,0],
+        specular : [1,1,1,1],
+        ambient : [0.3,0.3,0.3,1],
+        diffuse : [1,1,1,1]
+    },
     init : function (canvasID, dim) {
         //  Init canvas
         var initCanvas = function(){
@@ -55,7 +61,6 @@ var glSetup = {
         glSetup.project(glSetup.FOV, 1/* square */, glSetup.dim);
         // ModelViewMatrix
         mat4.translate(glSetup.modelViewMatrix, glSetup.modelViewMatrix, [0,0,-glSetup.dim]);// TMP
-        mat4.rotate(glSetup.modelViewMatrix, glSetup.modelViewMatrix, Math.PI/2,[1,1,1]);// TMP
     },
     changeDim : function() {
         // project
@@ -140,13 +145,18 @@ var glSetup = {
             transformationMatrix : mat4.create(),
             shaderProgIdx : shaderProgI,
             material : { // todo
-                specular : [1,1,1,1]
+                specular : [1,1,1,1],
+                emission : [0,0,0,1],
+                ambient : [0,0,0,1],
+                diffuse : [0.3,0.4,0.7,1],
+                shininess : 16
             }
-        };
+        }
     },
     rotate : function() {
         var m = glSetup.modelViewMatrix;
-        mat4.rotate(m,m,0.3,[0,0,1]);
+        mat4.rotate(m,m,0.3,[1,1,1]);
+        glSetup.display();
     },
     display : function() {
         var draw = function(object) {
@@ -162,9 +172,27 @@ var glSetup = {
 
             gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
 
+            var normalMatrix = mat3.create();
+            mat3.normalFromMat4(normalMatrix, modelViewMatrix);
+
+            console.log(normalMatrix);
+
             //  Set projection and modelview matrixes
             gl.uniformMatrix4fv(gl.getUniformLocation(shaderProg,"projectionMatrix") , false , new Float32Array(glSetup.projectionMatrix));
             gl.uniformMatrix4fv(gl.getUniformLocation(shaderProg,"modelViewMatrix")  , false , new Float32Array(modelViewMatrix));
+            gl.uniformMatrix3fv(gl.getUniformLocation(shaderProg,"normalMatrix")  , false , new Float32Array(normalMatrix));
+
+            gl.uniform3fv(gl.getUniformLocation(shaderProg,"lightPos")  , new Float32Array(glSetup.light.position));
+            gl.uniform4fv(gl.getUniformLocation(shaderProg,"lightSpecular")  ,  new Float32Array(glSetup.light.specular));
+            gl.uniform4fv(gl.getUniformLocation(shaderProg,"lightAmbient")  , new Float32Array(glSetup.light.ambient));
+            gl.uniform4fv(gl.getUniformLocation(shaderProg,"lightDiffuse")  , new Float32Array(glSetup.light.diffuse));
+
+            gl.uniform4fv(gl.getUniformLocation(shaderProg,"materialEmission")  , new Float32Array(obj.material.emission));
+            gl.uniform4fv(gl.getUniformLocation(shaderProg,"materialAmbient")   , new Float32Array(obj.material.ambient));
+            gl.uniform4fv(gl.getUniformLocation(shaderProg,"materialSpecular")   , new Float32Array(obj.material.specular));
+            gl.uniform4fv(gl.getUniformLocation(shaderProg,"materialDiffuse")   , new Float32Array(obj.material.diffuse));
+            gl.uniform1f(gl.getUniformLocation(shaderProg,"materialShininess") , obj.material.shininess);
+
 
             var enableAttrib = function( attribName, buffer ) {
                 gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
@@ -177,6 +205,7 @@ var glSetup = {
             var attributes = [];
             attributes.push(enableAttrib ( "point", object.vertBuffer ))
             attributes.push(enableAttrib ( "rgb", object.rgbBuffer ))
+            attributes.push(enableAttrib ( "normal", object.rgbBuffer ))
 
             //  Draw all vertexes
             gl.drawArrays(gl.TRIANGLES,0,object.no);
@@ -243,5 +272,32 @@ glUtils = {
         }
 
         return sphere;
+    },
+    cube : function() {
+        var cube = {};
+        var points = cube.points = [];
+        var normals = cube.normals = [];
+        var tmp =
+            [
+            -1,-1, 1, +1,-1, 1, -1,+1, 1,    -1,+1, 1, +1,-1, 1, +1,+1, 1,
+            +1,-1,-1, -1,-1,-1, +1,+1,-1,    +1,+1,-1, -1,-1,-1, -1,+1,-1,
+            +1,-1,+1, +1,-1,-1, +1,+1,+1,    +1,+1,+1, +1,-1,-1, +1,+1,-1,
+            -1,-1,-1, -1,-1,+1, -1,+1,-1,    -1,+1,-1, -1,-1,+1, -1,+1,+1,
+            -1,+1,+1, +1,+1,+1, -1,+1,-1,    -1,+1,-1, +1,+1,+1, +1,+1,-1,
+            -1,-1,-1, +1,-1,-1, -1,-1,+1,    -1,-1,+1, +1,-1,-1, +1,-1,+1,
+        ];
+        for ( var i = 0 ; i < tmp.length ; i+=3 ) { 
+            points.push([tmp[i],tmp[i+1],tmp[i+2]]);
+        };
+
+        normals = [
+            [0,0,1],[0,0,1],[0,0,1],[0,0,1],[0,0,1],[0,0,1],
+            [0,0,-1],[0,0,-1],[0,0,-1],[0,0,-1],[0,0,-1],[0,0,-1],
+            [+1,0,0],[+1,0,0],[+1,0,0],[+1,0,0],[+1,0,0],[+1,0,0],
+            [-1,0,0],[-1,0,0],[-1,0,0],[-1,0,0],[-1,0,0],[-1,0,0],
+            [0,+1,0],[0,+1,0],[0,+1,0],[0,+1,0],[0,+1,0],[0,+1,0],
+            [0,-1,0],[0,-1,0],[0,-1,0],[0,-1,0],[0,-1,0],[0,-1,0],
+        ]
+        return cube;
     }
 }
