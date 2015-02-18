@@ -2,8 +2,12 @@
     <head>
     </head>
     <body>
-
+        <div style="float:left">
         <canvas id="board" width=500 height=500></canvas>
+    </div>
+        <div style="float:left">
+            <button type="button" onclick="Scene.rotate()">Rotate</button>
+    </div>
 
         <!--
         Vertex shader
@@ -99,42 +103,21 @@
 
                 var tex = Scene.initTexture("crate.bmp");
 
-                function abc() {
-                    var sphere = glUtils.sphere(0.5);
-                    var rgb = [];
-                    for ( var i = 0 ; i < sphere.points.length ; i ++ ) {
-                        //rgb.push([Math.round(Math.random()),Math.round(Math.random()),Math.round(Math.random())]);
-                        rgb.push([0.5,0,0]);
-                    }
-                    var obj = new Scene.createObject(sphere.points, rgb, sphere.normals, shader);
-                    Scene.addObject(obj);
-                }
-                function cbd() {
-                    var sphere = glUtils.cube();
-                    var rgb = [];
-                    for ( var i = 0 ; i < sphere.points.length ; i ++ ) {
-                        rgb.push([Math.random(),Math.random(),Math.random()]);
-                    }
-                    var obj = new Scene.createObject(sphere.points, rgb, sphere.normals, shader, tex, sphere.texCoord);
-                    mat4.translate(obj.transformationMatrix,obj.transformationMatrix, [1,0,0]);
-                    Scene.addObject(obj);
-                }
-
                 var eqn = function (x,y) { 
                     return [ x, y , x*y ]
                 }
                 var surface = Surface.createSurface(eqn, eqn, -2,2,-2,2,10,10);
                 surface.shaderProgIdx = shader;
                 surface.textureIdx = tex;
-                var obj = new Scene.createObject(surface);
+                var obj = Scene.createObject(surface);
                 Scene.addObject(obj);
 
                 var wireFrame = Surface.createWireFrame(eqn,[0,0,0],-2,2,-2,2,10,10);
                 wireFrame.shaderProgIdx = shader;
                 wireFrame.drawMode = Scene.gl.LINES;
 
-                var obj = new Scene.createObject(wireFrame);
-                // mat4.translate(obj.transformationMatrix,obj.transformationMatrix, [0,0,0.1]);
+                var obj = Scene.createObject(wireFrame);
+                mat4.translate(obj.transformationMatrix,obj.transformationMatrix, [0,0,0.01]);
                 Scene.addObject(obj);
                 // console.log(obj);
 

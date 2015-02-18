@@ -24,7 +24,47 @@ var Scene = {
             var canvas = document.getElementById(canvasID);
             canvas.width = Math.min(window.innerWidth,window.innerHeight)-10;
             canvas.height = canvas.width;
-            canvas.addEventListener('click', Scene.rotate, false);
+
+
+            //  Resize canvas
+            canvas.resize = function ()
+            {
+                var size = Math.min(window.innerWidth, window.innerHeight)-10;
+                canvas.width  = size;
+                canvas.height = size;
+                Scene.gl.viewport(0,0,size,size);
+                Scene.display();
+            }
+            document.body.onresize = canvas.resize;
+
+            var move = 0;
+            var xOld = 0 ; yOld = 0;
+
+            canvas.onmousedown = function (ev) {
+                move  = 1;
+                xOld = ev.clientX;
+                yOld = ev.clientY;
+            }
+
+            //  Mouse button released
+            canvas.onmouseup = function (ev) {
+                move  = 0;
+            }
+
+            //  Mouse movement
+            canvas.onmousemove = function (ev) {
+                if (move==0) return;
+                //  Update angles
+                dX = ev.clientX-xOld;
+                dY = ev.clientY-yOld;
+                //  Store location
+                xOld = ev.clientX;
+                yOld = ev.clientY;
+
+                var factor = 20;
+
+                Scene.rotate(dX/factor,dY/factor);
+            }
             return canvas;
         }
         var canvas = Scene.canvas = initCanvas();
@@ -192,9 +232,10 @@ var Scene = {
             }
         }
     },
-    rotate : function() {
+    rotate : function(ph,th) {
         var m = Scene.modelViewMatrix;
-        mat4.rotate(m,m,0.3,[1,1,1]);
+        mat4.rotate(m,m,ph,[0,1,0]);
+        mat4.rotate(m,m,th,[1,0,0]);
         Scene.display();
     },
     display : function() {
