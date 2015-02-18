@@ -5,13 +5,15 @@ var Scene = {
     gl : undefined,
     canvas : undefined,
     projectionMatrix : mat4.create(),
-    modelViewMatrix : mat4.create(),
     shaderProgs : [],
     objects : [],
     addObject : function(obj) { 
         Scene.objects.push(obj);
     },
-    textures : [],
+    angle : {
+        phi : 0,
+        theta : 0 
+    }, textures : [],
     light : {
         position : [1,0,2],
         specular : [1,1,1,1],
@@ -54,16 +56,14 @@ var Scene = {
             //  Mouse movement
             canvas.onmousemove = function (ev) {
                 if (move==0) return;
+                var Factor = 20;
                 //  Update angles
-                dX = ev.clientX-xOld;
-                dY = ev.clientY-yOld;
+                Scene.angle.phi   += (ev.clientX-xOld)/Factor;
+                Scene.angle.theta += (ev.clientY-yOld)/Factor;
                 //  Store location
                 xOld = ev.clientX;
                 yOld = ev.clientY;
-
-                var factor = 20;
-
-                Scene.rotate(dX/factor,dY/factor);
+                Scene.display();
             }
             return canvas;
         }
@@ -98,7 +98,8 @@ var Scene = {
         // dim
         Scene.dim = dim;
         // matrices
-        Scene.resetMatrices();
+        Scene.project();
+
     },
     initTexture : function(imgSrc) {
         var gl = Scene.gl;
@@ -121,15 +122,10 @@ var Scene = {
         Scene.textures.push(tex);
         return Scene.textures.length - 1 ;
     },
-    resetMatrices : function() {
-        // projection matrix
-        Scene.project(Scene.FOV, 1/* square */, Scene.dim);
-        // ModelViewMatrix
-        mat4.translate(Scene.modelViewMatrix, Scene.modelViewMatrix, [0,0,-Scene.dim]);// TMP
-    },
-    changeDim : function() {
-        // project
-        // ?? modelViewMatrix
+    changeDim : function(newDim) {
+        Scene.dim = newDim;
+        Scene.project();
+        Scene.display();
     },
     addShaderProg : function(vertID, fragID) {
         /*
@@ -180,11 +176,12 @@ var Scene = {
         var thisProg = compileShaderProg(Scene.gl, vertID, fragID);
         return Scene.shaderProgs.push(thisProg) - 1;
     },
-    project : function(fov, asp, dim) {
+    project : function() {
         mat4.identity(Scene.projectionMatrix);
-        mat4.perspective(Scene.projectionMatrix, fov, asp, dim/16, 16*dim);
+        mat4.perspective(Scene.projectionMatrix, Scene.FOV , 1 , Scene.dim/16, 16*Scene.dim);
         //mat4.ortho(Scene.projectionMatrix,-2.5,+2.5,-2.5,+2.5,-2.5,+2.5);
     },
+
     /**
      * object must have "points","rgb","normal","shaderProg"
      */
@@ -232,23 +229,22 @@ var Scene = {
             }
         }
     },
-    rotate : function(ph,th) {
-        var m = Scene.modelViewMatrix;
-        mat4.rotate(m,m,ph,[0,1,0]);
-        mat4.rotate(m,m,th,[1,0,0]);
-        Scene.display();
-    },
     display : function() {
         var gl = Scene.gl;
 
         gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
 
 
+        var gModelViewMatrix = mat4.create();
+        mat4.translate(gModelViewMatrix, gModelViewMatrix, [0,0,-Scene.dim]);// TMP
+        mat4.rotate(gModelViewMatrix,gModelViewMatrix,Scene.angle.phi, [0,1,0]);
+        mat4.rotate(gModelViewMatrix,gModelViewMatrix,Scene.angle.theta, [1,0,0]);
+
         var draw = function(object) {
             var shaderProgIdx = object.shaderProgIdx;
 
             var modelViewMatrix = mat4.create();
-            mat4.mul(modelViewMatrix, Scene.modelViewMatrix,object.transformationMatrix);
+            mat4.mul(modelViewMatrix, gModelViewMatrix,object.transformationMatrix);
 
             //  use Shader program
             var shaderProg = Scene.shaderProgs[shaderProgIdx];
