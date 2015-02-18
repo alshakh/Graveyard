@@ -201,3 +201,47 @@ var glSetup = {
         }
     }
 }
+
+glUtils = {
+    toRadians : function ( deg ) {
+        return deg * Math.PI / 180;
+    },
+    sin : function( deg ) {
+        return Math.sin(glUtils.toRadians(deg));
+    },
+    cos : function( deg ) {
+        return Math.cos(glUtils.toRadians(deg));
+    },
+    sphere : function( r , inc ) {
+        // return object { points : [], normals : [] }
+        if ( inc === undefined ) inc = 5;
+
+        var s2c = function(phi, theta) {
+            return [
+                glUtils.cos(phi)*glUtils.sin(theta),
+                glUtils.sin(phi)*glUtils.sin(theta),
+                                 glUtils.cos(theta)
+            ];
+        };
+
+
+        var sphere = {};
+        var points = sphere.points = [];
+        var normals = sphere.normals = [];
+        for ( var theta = 0 ; theta < 180 ; theta+=inc ) {
+            for ( var phi = 0 ; phi < 360 ; phi += inc ) {
+                p0 = s2c(phi       , theta );
+                p1 = s2c(phi + inc , theta );
+                p2 = s2c(phi       , theta + inc );
+                p3 = s2c(phi + inc , theta + inc );
+
+                points.push(p0,p1,p2);
+                points.push(p1,p2,p3);
+                normals.push(p0,p1,p2);
+                normals.push(p1,p2,p3);
+            }
+        }
+
+        return sphere;
+    }
+}

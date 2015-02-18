@@ -43,24 +43,15 @@
 
             var shader = glSetup.addShaderProg("shader-vs","shader-fs");
 
-            var verts = [];
-            var tr = [
-                -1,-1, 1, +1,-1, 1, -1,+1, 1,    -1,+1, 1, +1,-1, 1, +1,+1, 1,
-                +1,-1,-1, -1,-1,-1, +1,+1,-1,    +1,+1,-1, -1,-1,-1, -1,+1,-1,
-                +1,-1,+1, +1,-1,-1, +1,+1,+1,    +1,+1,+1, +1,-1,-1, +1,+1,-1,
-                -1,-1,-1, -1,-1,+1, -1,+1,-1,    -1,+1,-1, -1,-1,+1, -1,+1,+1,
-                -1,+1,+1, +1,+1,+1, -1,+1,-1,    -1,+1,-1, +1,+1,+1, +1,+1,-1,
-                -1,-1,-1, +1,-1,-1, -1,-1,+1,    -1,-1,+1, +1,-1,-1, +1,-1,+1,
-            ];
-            for ( var i = 0 ; i < tr.length ; i+=3 ) {
-                verts.push([tr[i],tr[i+1], tr[i+2]]);
-            }
+
+            var sphere = glUtils.sphere(2);
+
             var rgb = [];
-            for ( var i = 0 ; i < 36 ; i ++ ) {
+            for ( var i = 0 ; i < sphere.points.length ; i ++ ) {
                 rgb.push([Math.round(Math.random()),Math.round(Math.random()),Math.round(Math.random())]);
             }
 
-            var obj = glSetup.createObject(verts, rgb, [], shader);
+            var obj = glSetup.createObject(sphere.points, rgb, [], shader);
             glSetup.addObject(obj);
             glSetup.display();
             //mat4.translate(glSetup.modelViewMatrix,glSetup.modelViewMatrix, [0,0,-5]);
