@@ -1,4 +1,4 @@
-var glSetup = {
+var Scene = {
     FOV : 45,
     CLEAR_COLOR : [0.2,0.2,0.2],
     dim : undefined,
@@ -9,7 +9,7 @@ var glSetup = {
     shaderProgs : [],
     objects : [],
     addObject : function(obj) { 
-        glSetup.objects.push(obj);
+        Scene.objects.push(obj);
     },
     textures : [],
     light : {
@@ -24,10 +24,10 @@ var glSetup = {
             var canvas = document.getElementById(canvasID);
             canvas.width = Math.min(window.innerWidth,window.innerHeight)-10;
             canvas.height = canvas.width;
-            canvas.addEventListener('click', glSetup.rotate, false);
+            canvas.addEventListener('click', Scene.rotate, false);
             return canvas;
         }
-        var canvas = glSetup.canvas = initCanvas();
+        var canvas = Scene.canvas = initCanvas();
         //  Init WebGL
         var initWebGL = function() {
             var gl;
@@ -50,18 +50,18 @@ var glSetup = {
             gl.viewport(0,0,canvas.width,canvas.height);
             gl.enable(gl.DEPTH_TEST);
 
-            var cC = glSetup.CLEAR_COLOR;
+            var cC = Scene.CLEAR_COLOR;
             gl.clearColor(cC[0],cC[1],cC[2],1);
             return gl;
         }
-        glSetup.gl = initWebGL();
+        Scene.gl = initWebGL();
         // dim
-        glSetup.dim = dim;
+        Scene.dim = dim;
         // matrices
-        glSetup.resetMatrices();
+        Scene.resetMatrices();
     },
     initTexture : function(imgSrc) {
-        var gl = glSetup.gl;
+        var gl = Scene.gl;
         var handleLoadedTexture = function(texture) {
             gl.bindTexture(gl.TEXTURE_2D, texture);
             gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
@@ -78,14 +78,14 @@ var glSetup = {
         }
 
         tex.image.src = imgSrc;
-        glSetup.textures.push(tex);
-        return glSetup.textures.length - 1 ;
+        Scene.textures.push(tex);
+        return Scene.textures.length - 1 ;
     },
     resetMatrices : function() {
         // projection matrix
-        glSetup.project(glSetup.FOV, 1/* square */, glSetup.dim);
+        Scene.project(Scene.FOV, 1/* square */, Scene.dim);
         // ModelViewMatrix
-        mat4.translate(glSetup.modelViewMatrix, glSetup.modelViewMatrix, [0,0,-glSetup.dim]);// TMP
+        mat4.translate(Scene.modelViewMatrix, Scene.modelViewMatrix, [0,0,-Scene.dim]);// TMP
     },
     changeDim : function() {
         // project
@@ -137,18 +137,18 @@ var glSetup = {
             //  Return program
             return prog;
         }
-        var thisProg = compileShaderProg(glSetup.gl, vertID, fragID);
-        return glSetup.shaderProgs.push(thisProg) - 1;
+        var thisProg = compileShaderProg(Scene.gl, vertID, fragID);
+        return Scene.shaderProgs.push(thisProg) - 1;
     },
     project : function(fov, asp, dim) {
-        mat4.identity(glSetup.projectionMatrix);
-        mat4.perspective(glSetup.projectionMatrix, fov, asp, dim/16, 16*dim);
-        //mat4.ortho(glSetup.projectionMatrix,-2.5,+2.5,-2.5,+2.5,-2.5,+2.5);
+        mat4.identity(Scene.projectionMatrix);
+        mat4.perspective(Scene.projectionMatrix, fov, asp, dim/16, 16*dim);
+        //mat4.ortho(Scene.projectionMatrix,-2.5,+2.5,-2.5,+2.5,-2.5,+2.5);
     },
     createObject : function (vertVecArr, rgbVecArr, normalVecArr, shaderProgI, texI, texVecArr ) {
         if(texI == undefined) texI = -1;
 
-        var gl = glSetup.gl;
+        var gl = Scene.gl;
         var vecArrToArr = function ( vecArr ) {
             var a = [];
             for( var i = 0 ; i < vecArr.length ; i++ ) {
@@ -187,12 +187,12 @@ var glSetup = {
         }
     },
     rotate : function() {
-        var m = glSetup.modelViewMatrix;
+        var m = Scene.modelViewMatrix;
         mat4.rotate(m,m,0.3,[1,1,1]);
-        glSetup.display();
+        Scene.display();
     },
     display : function() {
-        var gl = glSetup.gl;
+        var gl = Scene.gl;
 
         gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
 
@@ -201,24 +201,24 @@ var glSetup = {
             var shaderProgIdx = object.shaderProgIdx;
 
             var modelViewMatrix = mat4.create();
-            mat4.mul(modelViewMatrix, glSetup.modelViewMatrix,object.transformationMatrix);
+            mat4.mul(modelViewMatrix, Scene.modelViewMatrix,object.transformationMatrix);
 
             //  use Shader program
-            var shaderProg = glSetup.shaderProgs[shaderProgIdx];
+            var shaderProg = Scene.shaderProgs[shaderProgIdx];
             gl.useProgram(shaderProg);
 
             var normalMatrix = mat3.create();
             mat3.normalFromMat4(normalMatrix, modelViewMatrix);
 
             //  Set projection and modelview matrixes
-            gl.uniformMatrix4fv(gl.getUniformLocation(shaderProg,"projectionMatrix") , false , new Float32Array(glSetup.projectionMatrix));
+            gl.uniformMatrix4fv(gl.getUniformLocation(shaderProg,"projectionMatrix") , false , new Float32Array(Scene.projectionMatrix));
             gl.uniformMatrix4fv(gl.getUniformLocation(shaderProg,"modelViewMatrix")  , false , new Float32Array(modelViewMatrix));
             gl.uniformMatrix3fv(gl.getUniformLocation(shaderProg,"normalMatrix")  , false , new Float32Array(normalMatrix));
 
-            gl.uniform3fv(gl.getUniformLocation(shaderProg,"lightPos")  , new Float32Array(glSetup.light.position));
-            gl.uniform4fv(gl.getUniformLocation(shaderProg,"lightSpecular")  ,  new Float32Array(glSetup.light.specular));
-            gl.uniform4fv(gl.getUniformLocation(shaderProg,"lightAmbient")  , new Float32Array(glSetup.light.ambient));
-            gl.uniform4fv(gl.getUniformLocation(shaderProg,"lightDiffuse")  , new Float32Array(glSetup.light.diffuse));
+            gl.uniform3fv(gl.getUniformLocation(shaderProg,"lightPos")  , new Float32Array(Scene.light.position));
+            gl.uniform4fv(gl.getUniformLocation(shaderProg,"lightSpecular")  ,  new Float32Array(Scene.light.specular));
+            gl.uniform4fv(gl.getUniformLocation(shaderProg,"lightAmbient")  , new Float32Array(Scene.light.ambient));
+            gl.uniform4fv(gl.getUniformLocation(shaderProg,"lightDiffuse")  , new Float32Array(Scene.light.diffuse));
 
             gl.uniform4fv(gl.getUniformLocation(shaderProg,"materialEmission")  , new Float32Array(object.material.emission));
             gl.uniform4fv(gl.getUniformLocation(shaderProg,"materialAmbient")   , new Float32Array(object.material.ambient));
@@ -244,7 +244,7 @@ var glSetup = {
                 attributes.push(enableAttrib (2, "texCoord", object.textureBuffer ))
 
                 gl.activeTexture(gl.TEXTURE0);
-                gl.bindTexture(gl.TEXTURE_2D, glSetup.textures[object.textureIdx]);
+                gl.bindTexture(gl.TEXTURE_2D, Scene.textures[object.textureIdx]);
                 gl.uniform1i(shaderProg.samplerUniform, 0);
             }
 
@@ -266,8 +266,8 @@ var glSetup = {
             //gl.useProgram(0);
         }
 
-        for ( var i = 0 ; i < glSetup.objects.length ; i++ ) {
-            draw(glSetup.objects[i]);
+        for ( var i = 0 ; i < Scene.objects.length ; i++ ) {
+            draw(Scene.objects[i]);
         }
     }
 }

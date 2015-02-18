@@ -88,15 +88,15 @@
         </script> 
 
         <script src="lib/gl-matrix.js"></script>
-        <script src="webgl-setup.js"></script>
+        <script src="Scene.js"></script>
 
         <script>
             (function() {
-                glSetup.init("board", 4);
+                Scene.init("board", 4);
 
-                var shader = glSetup.addShaderProg("shader-vs","shader-fs");
+                var shader = Scene.addShaderProg("shader-vs","shader-fs");
 
-                var tex = glSetup.initTexture("crate.bmp");
+                var tex = Scene.initTexture("crate.bmp");
 
                 function abc() {
                     var sphere = glUtils.sphere(0.5);
@@ -105,8 +105,8 @@
                         //rgb.push([Math.round(Math.random()),Math.round(Math.random()),Math.round(Math.random())]);
                         rgb.push([0.5,0,0]);
                     }
-                    var obj = new glSetup.createObject(sphere.points, rgb, sphere.normals, shader);
-                    glSetup.addObject(obj);
+                    var obj = new Scene.createObject(sphere.points, rgb, sphere.normals, shader);
+                    Scene.addObject(obj);
                 }
                 function cbd() {
                     var sphere = glUtils.cube();
@@ -114,16 +114,16 @@
                     for ( var i = 0 ; i < sphere.points.length ; i ++ ) {
                         rgb.push([Math.random(),Math.random(),Math.random()]);
                     }
-                    var obj = new glSetup.createObject(sphere.points, rgb, sphere.normals, shader, tex, sphere.texCoord);
+                    var obj = new Scene.createObject(sphere.points, rgb, sphere.normals, shader, tex, sphere.texCoord);
                     mat4.translate(obj.transformationMatrix,obj.transformationMatrix, [1,0,0]);
-                    glSetup.addObject(obj);
+                    Scene.addObject(obj);
                 }
 
                 cbd();
 
 
 
-                glSetup.display();
+                Scene.display();
             })();
 
         </script>
