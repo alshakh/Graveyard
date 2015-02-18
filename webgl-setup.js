@@ -163,8 +163,8 @@ var glSetup = {
             gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
 
             //  Set projection and modelview matrixes
-            gl.uniformMatrix4fv(gl.getUniformLocation(shaderProg,"ProjectionMatrix") , false , new Float32Array(glSetup.projectionMatrix));
-            gl.uniformMatrix4fv(gl.getUniformLocation(shaderProg,"ModelviewMatrix")  , false , new Float32Array(modelViewMatrix));
+            gl.uniformMatrix4fv(gl.getUniformLocation(shaderProg,"projectionMatrix") , false , new Float32Array(glSetup.projectionMatrix));
+            gl.uniformMatrix4fv(gl.getUniformLocation(shaderProg,"modelViewMatrix")  , false , new Float32Array(modelViewMatrix));
 
             var enableAttrib = function( attribName, buffer ) {
                 gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
@@ -175,8 +175,8 @@ var glSetup = {
             }
 
             var attributes = [];
-            attributes.push(enableAttrib ( "XYZ", object.vertBuffer ))
-            attributes.push(enableAttrib ( "RGB", object.rgbBuffer ))
+            attributes.push(enableAttrib ( "point", object.vertBuffer ))
+            attributes.push(enableAttrib ( "rgb", object.rgbBuffer ))
 
             //  Draw all vertexes
             gl.drawArrays(gl.TRIANGLES,0,object.no);

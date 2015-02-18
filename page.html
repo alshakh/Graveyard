@@ -10,15 +10,17 @@
         -->
         <script id="shader-vs" type="x-shader/x-vertex"> 
             precision highp float;
-            attribute vec3 XYZ;
-            attribute vec3 RGB;
-            uniform mat4 ProjectionMatrix;
-            uniform mat4 ModelviewMatrix;
-            varying vec3 col;
+            attribute vec3 point;
+            attribute vec3 rgb;
+
+            uniform mat4 projectionMatrix;
+            uniform mat4 modelViewMatrix;
+
+            varying vec4 color;
             void main(void)
             {
-                col = RGB;
-                gl_Position = ProjectionMatrix * ModelviewMatrix * vec4(XYZ,1);
+                color = vec4(rgb,1.0);
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(point,1.0);
             }
         </script> 
 
@@ -27,10 +29,10 @@
         -->
         <script id="shader-fs" type="x-shader/x-fragment"> 
             precision highp float;
-            varying vec3 col;
+            varying vec4 color;
             void main(void)
             {
-                gl_FragColor = vec4(col,1);
+                gl_FragColor = color;
             }
         </script> 
 
