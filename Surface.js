@@ -19,7 +19,6 @@ var Surface = {
                 tPoints.push(p0,p1,p2);
                 tPoints.push(p1,p2,p3);
 
-
                 n0 = dqn(x       ,y);
                 n1 = dqn(x+xInc  ,y);
                 n2 = dqn(x       ,y+yInc);
@@ -36,10 +35,17 @@ var Surface = {
                 }
             }
         }
+        var tTexCoord = [];
+
+        for ( var i = 0 ; i < tPoints.length ; i++ ) {
+            var texC = [];
+            texC.push((tPoints[i][0]-x0)/xDim);
+            texC.push((tPoints[i][2]-y0)/yDim);
+            tTexCoord.push(texC);
+        }
+
         var tRgb = [];
-
         var zDim = zMax - zMin;
-
         var mapRgb = function(hue) {
             /**
              * Converts an HSV color value to RGB. Conversion formula
@@ -72,17 +78,16 @@ var Surface = {
 
                 return [r, g, b];
             }
-            return hsvToRgb(hue,1,1)
+            return hsvToRgb(hue,1,1);
         }
         for ( var i = 0 ; i < tPoints.length ; i++ ) {
             tRgb.push(mapRgb((tPoints[i][2]-zMin)/zDim));
         }
 
-        console.log(tRgb);
-
         return {
             points : tPoints,
             normals : tNormals,
+            textureCoord : tTexCoord,
             rgb : tRgb
         }
     },

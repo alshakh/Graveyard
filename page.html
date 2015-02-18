@@ -123,10 +123,11 @@
                 var eqn = function (x,y) { 
                     return [ x, y , x*y ]
                 }
-                // var surface = Surface.createSurface(eqn, eqn, -2,2,-2,2,10,10);
-                // surface.shaderProgIdx = shader;
-                // var obj = new Scene.createObject(surface);
-                // Scene.addObject(obj);
+                var surface = Surface.createSurface(eqn, eqn, -2,2,-2,2,10,10);
+                surface.shaderProgIdx = shader;
+                surface.textureIdx = tex;
+                var obj = new Scene.createObject(surface);
+                Scene.addObject(obj);
 
                 var wireFrame = Surface.createWireFrame(eqn,[0,0,0],-2,2,-2,2,10,10);
                 wireFrame.shaderProgIdx = shader;
