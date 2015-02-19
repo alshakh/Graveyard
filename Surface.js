@@ -19,13 +19,12 @@ var Surface = {
                 tPoints.push(p0,p1,p2);
                 tPoints.push(p1,p2,p3);
 
-                n0 = dqn(x       ,y);
-                n1 = dqn(x+xInc  ,y);
-                n2 = dqn(x       ,y+yInc);
-                n3 = dqn(x+xInc  ,y+yInc);
+                n0 = dqn(p0[0], p0[1], p0[2]);
+                n1 = dqn(p1[0], p1[1], p1[2]);
+                n2 = dqn(p2[0], p2[1], p2[2]);
+                n3 = dqn(p3[0], p3[1], p3[2]);
                 tNormals.push(p0,p1,p2);
                 tNormals.push(p1,p2,p3);
-
 
                 if ( zMin === undefined || zMin > p0[2] ) {
                     zMin = p0[2];
@@ -40,7 +39,7 @@ var Surface = {
         for ( var i = 0 ; i < tPoints.length ; i++ ) {
             var texC = [];
             texC.push((tPoints[i][0]-x0)/xDim);
-            texC.push((tPoints[i][2]-y0)/yDim);
+            texC.push((tPoints[i][1]-y0)/yDim);
             tTexCoord.push(texC);
         }
 

@@ -2,14 +2,16 @@
     <head>
     </head>
     <body>
-        <div style="float:left">
-        <canvas id="board" width=500 height=500></canvas>
-    </div>
-        <div style="float:left">
-            <button type="button" onclick="Scene.rotate()">Rotate</button>
-            <input type="range" min="1" max="10" step="0.3" value="Scene.dim" oninput="Scene.changeDim(this.value)" onchange="Scene.changeDim(this.value)"/>
-    </div>
 
+        <div style="float:left">
+            <canvas id="board" width=500 height=500></canvas>
+        </div>
+        <div style="float:left">
+            <button type="button" onclick="">Rotate</button>
+            <input type="range" min="1" max="10" step="0.3" value="Scene.dim" oninput="Scene.changeDim(this.value)" onchange="Scene.changeDim(this.value)"/>
+            <label for="wireFrameCB"><input id="wireFrameCB" type="checkbox" onclick="Gui.handleCheckBox(this, Gui.WIREFRAME)">Wire Frame</label>
+            <label for="axisCB"><input id="axisCB" type="checkbox" onclick="axisCBFunc(this);">Axis</label>
+        </div>
         <!--
         Vertex shader
         -->
@@ -45,7 +47,7 @@
                 vec3 L = normalize(lightPos - P);
 
                 //  Emission and ambient color
-                vec4 color = vec4(rgb, 1.0) + materialEmission + materialAmbient*lightAmbient ;
+                vec4 color =  materialEmission + materialAmbient*lightAmbient ;
 
                 //  Diffuse light intensity is cosine of light and normal vectors
                 float Id = dot(L,N);
@@ -70,7 +72,7 @@
 
             void main(void)
             {
-                fColor = phong();
+                fColor = phong() + vec4(rgb, 1.0) ;
                 fTexCoord = texCoord;
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(point,1.0);
             }
@@ -97,52 +99,90 @@
         <script src="Surface.js"></script>
 
         <script>
-            (function() {
+            // gui functions
+        var Gui = {
+            WIREFRAME : 1,
+            SURFACE : 2,
+            LIGHTPOS : 3,
+            TEXTURE : 4,
+            surfaceObj : undefined,
+            wireFrameObj : undefined,
+            lightBulbObj : undefined,
+            init : function() {
                 Scene.init("board", 4);
-
                 var shader = Scene.addShaderProg("shader-vs","shader-fs");
-
                 var tex = Scene.initTexture("crate.bmp");
 
+
+
+                { // light Bulb
+                    var bulbInfo = glUtils.sphere(0.2);
+                    bulbInfo.shaderProgIdx = shader;
+
+                    var tRgb = [];
+                    for ( var i = 0 ; i < bulbInfo.points.length ; i++ ) {
+                        tRgb[i] = [1,1,1];
+                    }
+                    bulbInfo.rgb = tRgb;
+
+                    var lightBulbObj = Scene.createObject(bulbInfo);
+
+                    var lBTrMatrix = lightBulbObj.transformationMatrix;
+                    mat4.translate(lBTrMatrix, lBTrMatrix , Scene.light.position);
+
+                    Scene.addObject(lightBulbObj);
+                    Gui.lightBulbObj = lightBulbObj;
+                }
+
+
+                // surface equations
                 var eqn = function (x,y) { 
-                    return [ x, y , x*y ]
+                    return [ x, y , Math.pow(x,2)-Math.pow(y,2) ];
+                }
+                var dqn = function(x,y,z) {
+                    return [2*x, -2*y, -1];
                 }
 
-                var lightSphere = glUtils.sphere(0.2);
-                lightSphere.shaderProgIdx = shader;
-                var tmpRgb = [];
-                for ( var i = 0 ; i < lightSphere.points.length ; i++ ) {
-                    tmpRgb[i] = [1,1,1];
+                { // Surface
+                    var surfaceInfo = Surface.createSurface(eqn, dqn, -2,2,-2,2,10,10);
+                    surfaceInfo.textureIdx = tex;
+                    surfaceInfo.shaderProgIdx = shader;
+
+                    Gui.surfaceObj = Scene.createObject(surfaceInfo);
+
+                    Scene.addObject(Gui.surfaceObj);
                 }
-                lightSphere.rgb = tmpRgb;
-                var lightObj = Scene.createObject(lightSphere);
-                mat4.translate(lightObj.transformationMatrix, lightObj.transformationMatrix , Scene.light.position);
-                Scene.addObject(lightObj);
 
-                var surface = Surface.createSurface(eqn, eqn, -2,2,-2,2,10,10);
-                surface.shaderProgIdx = shader;
-                surface.textureIdx = tex;
-                var obj = Scene.createObject(surface);
-                Scene.addObject(obj);
+                { // wireFrame
+                    var wireFrameInfo = Surface.createWireFrame(eqn,[0,0,0],-2,2,-2,2,10,10);
+                    wireFrameInfo.shaderProgIdx = shader;
+                    wireFrameInfo.drawMode = Scene.gl.LINES;
+                    Gui.wireFrameObj = Scene.createObject(wireFrameInfo);
+                    Scene.addObject(Gui.wireFrameObj);
+                }
 
-                var wireFrame = Surface.createWireFrame(eqn,[0,0,0],-2,2,-2,2,10,10);
-                wireFrame.shaderProgIdx = shader;
-                wireFrame.drawMode = Scene.gl.LINES;
-
-                var obj = Scene.createObject(wireFrame);
-                mat4.translate(obj.transformationMatrix,obj.transformationMatrix, [0,0,0.01]);
-                Scene.addObject(obj);
-
-                // var s = glUtils.sphere(1);
-                // s.shaderProgIdx = shader;
-                // var tmpRgb = [];
-                // for ( var i = 0 ; i < lightSphere.points.length ; i++ ) {
-                //     tmpRgb[i] = [0.4,0.4,0.0];
-                // }
-                // s.rgb = tmpRgb;
-                // Scene.addObject(Scene.createObject(s));
                 Scene.display();
-            })();
+            },
+            handleCheckBox : function(cb,id) {
+                if(id == Gui.WIREFRAME) {
+                    if(cb.checked){
+                        Gui.wireFrameObj.show();
+                    } else {
+                        Gui.wireFrameObj.hide();
+                    }
+                } else if(id == Gui.SURAFCE) {
+                    if(cb.checked){
+                        Gui.surfaceObj.show();
+                    } else {
+                        Gui.surfaceObj.hide();
+                    }
+                }
+
+                Scene.display();
+            }
+        }
+        Gui.init();
+
 
         </script>
     </body>

@@ -15,7 +15,7 @@ var Scene = {
         theta : 0 
     }, textures : [],
     light : {
-        position : [1,0,2],
+        position : [0,0,4],
         specular : [1,1,1,1],
         ambient : [0.3,0.3,0.3,1],
         diffuse : [1,1,1,1]
@@ -220,6 +220,9 @@ var Scene = {
             shaderProgIdx : info.shaderProgIdx,
             drawMode : info.drawMode,
             textureIdx : info.textureIdx,
+            visible : true,
+            show : function() { this.visible = true },
+            hide : function() { this.visible = false },
             material : { // todo
                 specular : [1,1,1,1],
                 emission : [0,0,0,1],
@@ -310,7 +313,9 @@ var Scene = {
         }
 
         for ( var i = 0 ; i < Scene.objects.length ; i++ ) {
-            draw(Scene.objects[i]);
+            if( Scene.objects[i].visible ) { 
+                draw(Scene.objects[i]);
+            }
         }
     }
 }
