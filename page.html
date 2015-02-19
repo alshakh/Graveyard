@@ -7,10 +7,11 @@
             <canvas id="board" width=500 height=500></canvas>
         </div>
         <div style="float:left">
-            <button type="button" onclick="">Rotate</button>
-            <input type="range" min="1" max="10" step="0.3" value="Scene.dim" oninput="Scene.changeDim(this.value)" onchange="Scene.changeDim(this.value)"/>
-            <label for="wireFrameCB"><input id="wireFrameCB" type="checkbox" onclick="Gui.handleCheckBox(this, Gui.WIREFRAME)">Wire Frame</label>
-            <label for="axisCB"><input id="axisCB" type="checkbox" onclick="axisCBFunc(this);">Axis</label>
+            <label for="dimRg"><input id="dimRg" type="range" min="1" max="10" step="0.3" value="Scene.dim" oninput="Scene.changeDim(this.value)" onchange="Scene.changeDim(this.value)"/>Dim</label><br/>
+            <label for="wireFrameCB"><input id="wireFrameCB" type="checkbox" onclick="Gui.handleCheckBox(this, Gui.WIREFRAME)" checked=true>Wire Frame</label><br/>
+            <label for="surfaceCB"><input id="surfaceCB" type="checkbox" onclick="Gui.handleCheckBox(this, Gui.SURFACE)" checked=true>Surface</label><br/>
+            <!-- TODO : <label for="textureCB"><input id="textureCB" type="checkbox" onclick="Gui.handleCheckBox(this, Gui.TEXTURE)" checked=false>Texture</label><br/> -->
+            <label for="lightBulbCB"><input id="lightBulbCB" type="checkbox" onclick="Gui.handleCheckBox(this, Gui.LIGHTBULB)" checked=true>Light Bulb</label><br/>
         </div>
         <!--
         Vertex shader
@@ -94,7 +95,7 @@
             }
         </script> 
 
-        <script src="lib/gl-matrix.js"></script>
+        <script src="gl-matrix.js"></script>
         <script src="Scene.js"></script>
         <script src="Surface.js"></script>
 
@@ -103,16 +104,15 @@
         var Gui = {
             WIREFRAME : 1,
             SURFACE : 2,
-            LIGHTPOS : 3,
+            LIGHTBULB : 3,
             TEXTURE : 4,
             surfaceObj : undefined,
             wireFrameObj : undefined,
             lightBulbObj : undefined,
             init : function() {
-                Scene.init("board", 4);
+                Scene.init("board", 10);
                 var shader = Scene.addShaderProg("shader-vs","shader-fs");
-                var tex = Scene.initTexture("crate.bmp");
-
+                var tex = Scene.initTexture("chess.bmp");
 
 
                 { // light Bulb
@@ -139,13 +139,20 @@
                 var eqn = function (x,y) { 
                     return [ x, y , Math.pow(x,2)-Math.pow(y,2) ];
                 }
-                var dqn = function(x,y,z) {
+                var grdnt = function(x,y,z) {
                     return [2*x, -2*y, -1];
                 }
+                var x0 = -2,
+                x1 = 2,
+                y0 = -2,
+                y1 = 2,
+                xParts = 10,
+                yParts = 10;
 
                 { // Surface
-                    var surfaceInfo = Surface.createSurface(eqn, dqn, -2,2,-2,2,10,10);
+                    var surfaceInfo = Surface.createSurface(eqn, grdnt, x0, x1, y0, y1, xParts, yParts);
                     surfaceInfo.textureIdx = tex;
+                    Gui.texIdStore = tex;
                     surfaceInfo.shaderProgIdx = shader;
 
                     Gui.surfaceObj = Scene.createObject(surfaceInfo);
@@ -154,28 +161,47 @@
                 }
 
                 { // wireFrame
-                    var wireFrameInfo = Surface.createWireFrame(eqn,[0,0,0],-2,2,-2,2,10,10);
+                    var wireFrameInfo = Surface.createWireFrame(eqn,[0,0,0],x0, x1, y0, y1, xParts, yParts);
                     wireFrameInfo.shaderProgIdx = shader;
                     wireFrameInfo.drawMode = Scene.gl.LINES;
                     Gui.wireFrameObj = Scene.createObject(wireFrameInfo);
+
+                    var trMtx = Gui.wireFrameObj.transformationMatrix;
+                    mat4.translate(trMtx, trMtx, [0,0,0.003]);
+
                     Scene.addObject(Gui.wireFrameObj);
                 }
 
                 Scene.display();
+                window.setTimeout(Scene.display, 50); // because textures don't load instantly !!
+                window.setTimeout(Scene.display, 200); // just in case 50 ms is not enough
             },
             handleCheckBox : function(cb,id) {
-                if(id == Gui.WIREFRAME) {
-                    if(cb.checked){
-                        Gui.wireFrameObj.show();
-                    } else {
-                        Gui.wireFrameObj.hide();
-                    }
-                } else if(id == Gui.SURAFCE) {
-                    if(cb.checked){
-                        Gui.surfaceObj.show();
-                    } else {
-                        Gui.surfaceObj.hide();
-                    }
+                var procObj = function(obj) { 
+                        if(cb.checked){
+                            obj.show();
+                        } else {
+                            obj.hide();
+                        }
+                }
+                switch(id) {
+                    case Gui.SURFACE :
+                        procObj(Gui.surfaceObj);
+                        break;
+                        Gui.lightBulbObj.show();
+                    case Gui.WIREFRAME : 
+                        procObj(Gui.wireFrameObj);
+                        break;
+                    case Gui.LIGHTBULB : 
+                        procObj(Gui.lightBulbObj);
+                        break;
+                    case Gui.TEXTURE : 
+                        if(cb.checked){
+                            Gui.surfaceObj.textureIdx=Gui.texIdStore;
+                        } else {
+                            Gui.surfaceObj.textureIdx=-1;
+                        }
+                        break;
                 }
 
                 Scene.display();

@@ -207,7 +207,7 @@ var Scene = {
             return buffer;
         };
         var texBuffer = undefined;
-        if(info.textureIdx > -1) {
+        if(info.textureCoord !== undefined) {
             texBuffer = makeBuffer(vecArrToArr(info.textureCoord));
         }
         return {
